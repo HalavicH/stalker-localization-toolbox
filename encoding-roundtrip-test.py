@@ -1,5 +1,7 @@
 import glob
 import codecs
+import os
+
 from lxml import etree
 import re
 from colorama import Fore, init
@@ -8,6 +10,21 @@ encoding_string = '<?xml version="1.0" encoding="windows-1251"?>'
 
 init(autoreset=True)
 
+def process_includes(content):
+    lines = content.splitlines()
+    processed_lines = []
+    for line in lines:
+        if line.strip().startswith('#include'):
+            # Extract the included file path
+            included_file_path = line.split('"')[1]
+            included_file_path = os.path.join("./gamedata/configs", included_file_path.replace("\\", "/"))
+            with codecs.open(included_file_path, 'r', encoding='windows-1251') as included_file:
+                included_content = included_file.read()
+                processed_lines.append(included_content)
+            os.rename(included_file_path, included_file_path + ".include")
+        else:
+            processed_lines.append(line)
+    return '\n'.join(processed_lines)
 
 def remove_xml_declaration(xml_string):
     # Regular expression pattern to match the XML declaration with any amount of whitespace
@@ -26,7 +43,7 @@ def remove_xml_declaration(xml_string):
 
 def format_xml(xml_string):
     # Replace -- with ** in comments before parsing, handle multiline comments with re.DOTALL
-    xml_string = re.sub(r'<!--(.*?)-->', lambda x: '<!--' + x.group(1).replace('--', '**') + '-->', xml_string,
+    xml_string = re.sub(r'<!--(.*?)-->', lambda x: '<!--' + x.group(1).replace('-', '#') + '-->', xml_string,
                         flags=re.DOTALL)
 
     # Parse the XML string
@@ -60,10 +77,12 @@ def format_xml(xml_string):
     return formatted_xml
 
 
-def convert_encoding_roundtrip(file_path):
+def process_file(file_path):
     # Read the file in Windows-1251 encoding
     with codecs.open(file_path, 'r', encoding='windows-1251') as file:
         content = file.read()
+
+    process_includes(content)
 
     # remove encoding
     content_no_declaration = remove_xml_declaration(content)
@@ -86,14 +105,23 @@ def main():
     # Define the directory to search (change this to your directory)
     directory = './**/*.xml'
 
+    failed_files = {}
     # Get the list of all XML files in the specified directory and subdirectories
     xml_files = glob.glob(directory, recursive=True)
 
     # Perform the encoding roundtrip for each XML file
     for file_path in xml_files:
-        print(f'Processing {file_path}')
-        convert_encoding_roundtrip(file_path)
+        try:
+            print(f'Processing {file_path}')
+            process_file(file_path)
+        except Exception as e:
+            print(Fore.RED + f"Error processing {Fore.RED + file_path}: {e}")
+            failed_files[file_path] = e
 
+    print("#" * 80)
+    print("Failed files:")
+    for file in failed_files:
+        print(f"File: '{file}'\n\tError: {failed_files[file]}\n")
 
 if __name__ == "__main__":
     main()
