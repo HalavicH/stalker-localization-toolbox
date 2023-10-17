@@ -1,5 +1,6 @@
 import glob
 import codecs
+import os
 from lxml import etree
 from colorama import Fore, init
 import xmlschema
@@ -28,10 +29,28 @@ schema_xml = """
 schema = xmlschema.XMLSchema(schema_xml)
 
 
+def process_includes(content, file_path):
+    lines = content.splitlines()
+    processed_lines = []
+    base_dir = os.path.dirname(file_path)
+    for line in lines:
+        if line.strip().startswith('#include'):
+            # Extract the included file path
+            included_file_path = line.split('"')[1]
+            included_file_path = os.path.join(base_dir, included_file_path)
+            with codecs.open(included_file_path, 'r', encoding='windows-1251') as included_file:
+                included_content = included_file.read()
+                processed_lines.append(included_content)
+        else:
+            processed_lines.append(line)
+    return '\n'.join(processed_lines)
+
+
 def validate_xml(xml_string):
     try:
+        # Replace -- with __ in comments
+        xml_string = xml_string.replace('--', '__')
         xml_tree = etree.fromstring(xml_string)
-        xml_tree.xinclude()  # Process include statements
         return xml_tree
     except etree.XMLSyntaxError as e:
         raise ValueError(f"XML Syntax Error: {e}")
@@ -45,9 +64,8 @@ def validate_schema(xml_tree):
 def check_and_add_header(xml_tree):
     if not xml_tree.docinfo.xml_version:
         print(Fore.YELLOW + "Warning: Missing XML header. Adding header.")
-        xml_string = f'<?xml version="1.0" encoding="windows-1251"?>\n{etree.tostring(xml_tree, encoding="unicode")}'
-        xml_tree = etree.fromstring(xml_string)
-    return xml_tree
+        return f'<?xml version="1.0" encoding="windows-1251"?>\n{etree.tostring(xml_tree, encoding="unicode")}'
+    return etree.tostring(xml_tree, encoding='unicode')
 
 
 def process_file(file_path):
@@ -55,12 +73,15 @@ def process_file(file_path):
         with codecs.open(file_path, 'r', encoding='windows-1251') as file:
             content = file.read()
 
+        # Process #include statements
+        content = process_includes(content, file_path)
+        content = content.replace('<?xml version="1.0" encoding="windows-1251"?>', '').strip()
         content_utf8 = content.encode('utf-8').decode('utf-8')
+
         xml_tree = validate_xml(content_utf8)
         validate_schema(xml_tree)
-        xml_tree = check_and_add_header(xml_tree)
 
-        content_roundtrip = etree.tostring(xml_tree, encoding='windows-1251', pretty_print=True).decode('windows-1251')
+        content_roundtrip = check_and_add_header(xml_tree)
 
         with codecs.open(file_path, 'w', encoding='windows-1251') as file:
             file.write(content_roundtrip)
