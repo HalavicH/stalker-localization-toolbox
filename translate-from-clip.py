@@ -2,6 +2,7 @@ import googletrans
 import requests
 import pyperclip
 import sys
+import pync
 
 from colorama import Fore
 
@@ -21,7 +22,6 @@ def translate_deepl(text, target_language, src_language=None):
         data['source_lang'] = src_language.upper()
 
     response = requests.post(url, headers=headers, data=data)
-    print(response)
     response_json = response.json()
 
     if response.status_code != 200:
@@ -30,9 +30,14 @@ def translate_deepl(text, target_language, src_language=None):
     return response_json['translations'][0]['text']
 
 
-def translate_text_google(text, target_language, src_language=None):
+def translate_text_google(text, target_language, src_language="auto"):
+    print("Src language: ", src_language)
     translator = googletrans.Translator()
-    translation = translator.translate(text, src=src_language, dest=target_language)
+    if src_language is None:
+        translation = translator.translate(text, dest=target_language)
+    else:
+        translation = translator.translate(text, src=src_language, dest=target_language)
+
     return translation.text
 
 
@@ -45,17 +50,31 @@ def main():
         target_language = sys.argv[1]
         from_language = None
     else:
-        target_language = 'uk'
-        from_language = 'ru'
+        print("Provide the dest translation language!")
+        return
 
-    translated_text = translate_deepl(source_text, target_language, from_language)
     text_google = translate_text_google(source_text, target_language, from_language)
+    translated_text = translate_deepl(source_text, target_language, from_language)
     pyperclip.copy(translated_text)
-    print(f'Original text: {source_text}')
-    print(f'Original lang: {from_language}')
-    print(f'Target lang  : {target_language}')
-    print(f'Translated DeepL: ' + Fore.CYAN + translated_text + Fore.RESET)
-    print(f'Translated Google: ' + Fore.YELLOW + text_google + Fore.RESET)
+
+    message = ""
+    message += "Lang from: %s, Lang to: %s" % (from_language, target_language)
+    message += "Original text: %s\n" % source_text
+    message += "Translated DeepL: %s\n" % (Fore.CYAN + translated_text + Fore.RESET)
+    message += "Translated Google: %s\n" % (Fore.YELLOW + text_google + Fore.RESET)
+    print(message)
+
+    message = ""
+    message += "Original: %s\n" % source_text
+    message += "DeepL: %s\n" % translated_text
+    message += "Google: %s\n" % text_google
+
+    pync.notify(
+        message=message,
+        title='Translation completed',
+        subtitle="From: '%s', To: '%s'" % ("auto" if from_language is None else from_language, target_language),
+        sound=None
+    )
 
 
 if __name__ == "__main__":
