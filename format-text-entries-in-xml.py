@@ -32,8 +32,9 @@ def format_text(text, indent):
     lines = text.split('\n')
     wrapped_lines = []
     for line in lines:
-        wrapped_line = textwrap.fill(line, width=85, expand_tabs=False, replace_whitespace=False)
-        wrapped_lines.append(wrapped_line)
+        wrapped_line = textwrap.fill("\\n" + line, width=85, expand_tabs=False, replace_whitespace=False)
+        for subline in wrapped_line.split("\n"):
+            wrapped_lines.append(subline)
 
     # Step 3: Indent everything according to the position of the <text> tag
     indented_lines = [indent + line for line in wrapped_lines]
