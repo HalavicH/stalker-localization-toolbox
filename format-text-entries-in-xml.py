@@ -39,7 +39,12 @@ def format_text(text, indent):
     # Step 3: Indent everything according to the position of the <text> tag
     indented_lines = [indent + line for line in wrapped_lines]
 
-    return '\n' + '\n'.join(indented_lines)
+    # Remove 2 characters so '\n' is not at the same level as other text
+    for i in range(0, len(indented_lines)):
+        if "\\n" in indented_lines[i]:
+            indented_lines[i] = indented_lines[i][2:]
+
+    return '\n' + '\n'.join(indented_lines) + '\n'
 
 
 def reformat_xml(xml_file):
@@ -58,4 +63,5 @@ def reformat_xml(xml_file):
 
 # Call the function with your XML file
 # reformat_xml(sys.argv[1])
-reformat_xml('/Users/oleksandrkholiavko/IdeaProjects/stalker-gamma-0.9.1-ukr/gamedata/configs/text/eng/st_items_tools.xml')
+reformat_xml(
+    '/Users/oleksandrkholiavko/IdeaProjects/stalker-gamma-0.9.1-ukr/gamedata/configs/text/eng/st_items_tools.xml')
