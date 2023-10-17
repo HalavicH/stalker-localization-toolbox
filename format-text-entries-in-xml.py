@@ -26,13 +26,13 @@ def format_text(text, indent):
     text = ' '.join(text.split())
 
     # Step 2: Place line breaks before \n
-    text = text.replace(r'\\n', '\n\\n')
+    text = text.replace('\\n', '\n\\n')
 
     # Step 4: Wrap lines by word if longer than 85 char without inserting \n symbol
     lines = text.split('\n')
     wrapped_lines = []
     for line in lines:
-        wrapped_line = textwrap.fill("\\n" + line, width=85, expand_tabs=False, replace_whitespace=False)
+        wrapped_line = textwrap.fill(line, width=85, expand_tabs=False, replace_whitespace=False)
         for subline in wrapped_line.split("\n"):
             wrapped_lines.append(subline)
 
