@@ -5,6 +5,8 @@
 
 import os
 import re
+import time
+
 from lxml import etree
 from googletrans import Translator
 from colorama import Fore
@@ -47,7 +49,7 @@ def translate_deepl(text, target_language, src_language=None):
     translated_text = response_json['translations'][0]['text']
     guessed_language = response_json['translations'][0]['detected_source_language']
     if guessed_language is not None:
-        print("DeepL guessed lang: " + guessed_language)
+        print(Fore.BLUE + "DeepL"+ Fore.RESET + " guessed lang: " + guessed_language)
 
     return translated_text
 
@@ -61,10 +63,18 @@ def detect_language(text, possible_languages=["uk", "en", "ru", "fr", "es"]):
     return None, 0.0
 
 
-def translate_xml(input_path, from_lang, to_lang):
-    # Create output directory if not exists
-    output_dir = os.path.join('./translated', os.path.dirname(input_path[2:]))
-    os.makedirs(output_dir, exist_ok=True)
+def translate_xml(input_path, from_lang, to_lang, override):
+    if override.lower() == "y":
+        print(Fore.YELLOW + "\nWARNING! Override mode is on. Source file will be overriden!\n" + Fore.RESET)
+        output_path = input_path
+        time.sleep(1)
+    else:
+        output_dir = os.path.join('./translated', os.path.dirname(input_path))
+        # Create output directory if not exists
+        os.makedirs(output_dir, exist_ok=True)
+        output_path = os.path.join('./translated', input_path)
+
+    print(f"Destination file is: '{Fore.GREEN + output_path + Fore.RESET}'")
 
     # Parse the XML, preserving comments
     parser = etree.XMLParser(encoding=INPUT_ENCODING, remove_blank_text=True)
@@ -80,7 +90,6 @@ def translate_xml(input_path, from_lang, to_lang):
             process_text_block(from_lang, original_text, text_elem, to_lang, translator)
 
     # Write the translated XML to the output path
-    output_path = os.path.join(output_dir, os.path.basename(input_path))
     with open(output_path, 'wb') as f:
         f.write(etree.tostring(root, pretty_print=True, encoding=OUTPUT_ENCODING, xml_declaration=True))
 
@@ -96,13 +105,13 @@ def translate_xml(input_path, from_lang, to_lang):
 
 def process_text_block(from_lang, original_text, text_elem, to_lang, translator):
     print("")
-    print("Original text     :" + Fore.YELLOW + original_text + Fore.RESET)
+    print("Original text     : " + Fore.YELLOW + original_text + Fore.RESET)
     (detected_lang, confidence) = detect_language(original_text)
-    print(f"Detected lang    : {Fore.CYAN + str(detected_lang) + Fore.RESET}, confidence {Fore.CYAN + str(confidence) + Fore.RESET}")
+    print(f"Detected lang     : {Fore.CYAN + str(detected_lang) + Fore.RESET}, confidence {Fore.CYAN + str(confidence) + Fore.RESET}")
     if detected_lang is None or confidence < 0.5:
         # print(f"Detected lang is not confident enough. Using supplied lang: {Fore.YELLOW + from_lang + Fore.RESET}")
         # detected_lang = from_lang
-        print(f"Can't detect language. Skip this entry")
+        print(Fore.RED + "Can't detect language. Skip this entry" + Fore.RESET)
         return
 
     if detected_lang == to_lang:
@@ -120,28 +129,28 @@ def process_text_block(from_lang, original_text, text_elem, to_lang, translator)
     for placeholder, token in placeholder_mapping.items():
         guarded_text = guarded_text.replace(placeholder, token)
 
-    print("Guarded           :" + Fore.LIGHTBLUE_EX + guarded_text + Fore.RESET)
+    print("Guarded           : " + Fore.LIGHTBLUE_EX + guarded_text + Fore.RESET)
 
     # Translate the text with tokens
     # translated_text = translator.translate(guarded_text, src=detected_lang, dest=to_lang).text
     translated_text = translate_deepl(guarded_text, to_lang)
-    print("Translated        : " + Fore.LIGHTMAGENTA_EX + translated_text + Fore.RESET)
+    print("Translated        : " + Fore.GREEN + translated_text + Fore.RESET)
 
     # Restore original placeholders in the translated text
     restored_text = translated_text
     for placeholder, token in placeholder_mapping.items():
         restored_text = restored_text.replace(token, placeholder)
 
-    print("Unguarded         :" + Fore.CYAN + restored_text + Fore.RESET)
+    print("Unguarded         : " + Fore.CYAN + restored_text + Fore.RESET)
     text_elem.text = restored_text
 
 
 if __name__ == '__main__':
     import sys
 
-    if len(sys.argv) != 4:
-        print(f'Usage: {sys.argv[0]} <input_xml_path> <from_lang> <to_lang>'),
+    if len(sys.argv) != 5:
+        print(f'Usage: {sys.argv[0]} <input_xml_path> <from_lang> <to_lang> <override y/n>'),
         sys.exit(1)
 
-    input_path, from_lang, to_lang = sys.argv[1:4]
-    translate_xml(input_path, from_lang, to_lang)
+    input_path, from_lang, to_lang, override = sys.argv[1:5]
+    translate_xml(input_path, from_lang, to_lang, override)
