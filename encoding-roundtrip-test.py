@@ -9,15 +9,25 @@ encoding_string = '<?xml version="1.0" encoding="windows-1251"?>'
 init(autoreset=True)
 
 
+def remove_xml_declaration(xml_string):
+    # Regular expression pattern to match the XML declaration with any amount of whitespace
+    pattern = re.compile(r'<\?xml.*?\?>', re.IGNORECASE)
+    # Use re.sub to replace the matched text with an empty string
+    string_was_here = 'xml_encoding_string_was_here'
+    xml_string_without_declaration = re.sub(pattern, string_was_here, xml_string)
+
+    if string_was_here in xml_string_without_declaration:
+        xml_string_without_declaration = xml_string_without_declaration.replace(string_was_here, '')
+    else:
+        print(Fore.YELLOW + f"File ... doesn't have encoding header in it")
+
+    return xml_string_without_declaration
+
+
 def format_xml(xml_string):
     # Replace -- with ** in comments before parsing, handle multiline comments with re.DOTALL
     xml_string = re.sub(r'<!--(.*?)-->', lambda x: '<!--' + x.group(1).replace('--', '**') + '-->', xml_string,
                         flags=re.DOTALL)
-
-    if encoding_string in xml_string:
-        xml_string.replace(encoding_string, '')
-    else:
-        print(Fore.YELLOW + f"File ... doesn't have encoding header in it")
 
     # Parse the XML string
     parser = etree.XMLParser(remove_blank_text=True)
@@ -55,10 +65,21 @@ def convert_encoding_roundtrip(file_path):
     with codecs.open(file_path, 'r', encoding='windows-1251') as file:
         content = file.read()
 
-    formatted_text = format_xml(content.encode())
+    # remove encoding
+    content_no_declaration = remove_xml_declaration(content)
+
+    # Format text
+    formatted_text = format_xml(content_no_declaration)
+
+    # Append encoding
+    formatted_text = encoding_string + "\n" + formatted_text
+
+    if content != formatted_text:
+        print("Modified")
+
     # Write the roundtrip content back to the file
-    with codecs.open(file_path, 'w', encoding='windows-1251') as file:
-        file.write(formatted_text)
+    with open(file_path, 'wb', ) as file:
+        file.write(formatted_text.encode('windows-1251'))
 
 
 def main():
@@ -70,8 +91,8 @@ def main():
 
     # Perform the encoding roundtrip for each XML file
     for file_path in xml_files:
+        print(f'Processing {file_path}')
         convert_encoding_roundtrip(file_path)
-        print(f'Processed {file_path}')
 
 
 if __name__ == "__main__":
