@@ -1,66 +1,53 @@
-from lxml import etree
 import re
+from lxml import etree
 
-def format_xml(xml_string):
-    # Replace -- with ** in comments before parsing, handle multiline comments with re.DOTALL
-    xml_string = re.sub(r'<!--(.*?)-->', lambda x: '<!--' + x.group(1).replace('--', '**') + '-->', xml_string, flags=re.DOTALL)
 
-    # Parse the XML string
-    parser = etree.XMLParser(remove_blank_text=True)
-    root = etree.fromstring(xml_string, parser)
+def escape_ampersands(xml_string):
+    lines = xml_string.split('\n')
+    corrected_lines = []
+    for line_number, line in enumerate(lines, start=1):
+        corrected_line = ''
+        column_number = 1
+        while column_number <= len(line):
+            if line[column_number - 1] == '&':
+                # Check if it's part of a recognized character entity
+                if re.match(r'&(amp|lt|gt|quot|apos|#x[0-9a-fA-F]+|#\d+);', line[column_number - 1:]):
+                    # Skip past the character entity
+                    entity_end = line[column_number - 1:].index(';') + column_number
+                    corrected_line += line[column_number - 1:entity_end]
+                    column_number = entity_end
+                else:
+                    print(f"Misused '&'. Replacing & with &amp; at {line_number}:{column_number}")
+                    corrected_line += '&amp;'
+            else:
+                corrected_line += line[column_number - 1]
+            column_number += 1
+        corrected_lines.append(corrected_line)
+    corrected_xml_string = '\n'.join(corrected_lines)
+    return corrected_xml_string
 
-    # Function to add indentation and a blank line before comments
-    def indent(elem, level=0):
-        i = "\n" + level * "    "
-        if len(elem):
-            if not elem.text or not elem.text.strip():
-                elem.text = i + "    "
-            if not elem.tail or not elem.tail.strip():
-                elem.tail = i
-            for elem in elem:
-                indent(elem, level + 1)
-            if not elem.tail or not elem.tail.strip():
-                elem.tail = i
-        else:
-            if level and (not elem.tail or not elem.tail.strip()):
-                elem.tail = i
 
-    indent(root)
+def check_and_correct_xml(xml_string):
+    corrected_xml_string = escape_ampersands(xml_string)
 
-    # Convert the XML tree to a string
-    formatted_xml = etree.tostring(root, encoding='unicode')
+    try:
+        # Try parsing the corrected XML string
+        etree.fromstring(corrected_xml_string)
+        return corrected_xml_string
+    except etree.XMLSyntaxError as e:
+        # If there's still a syntax error, print the error and return the original string
+        print(f"XML syntax error: {e}")
+        return xml_string
 
-    # Add a blank line before comments
-    formatted_xml = re.sub(r'(\s)<!--', r'\1\n<!--', formatted_xml)
-
-    return formatted_xml
 
 # Example XML string
-xml_string = """
-<string_table>
-	<string id="st_ignite_fire">
-	<text>Розпалити ($$ACTION_USE$$)</text>
-</string>
-<string id="st_ignite_wait"> <!-- My comment in very uncomfortable place ------------ -->
+xml_string = """<root>
+<child>Data & more data</child>
+<child>10 &lt; 20 &amp; 30 &gt; 20</child>
+</root>"""
 
-<text>
-Треба трохи почекати, перш ніж розпалювати знову</text>
+# Check and correct the XML
+corrected_xml_string = check_and_correct_xml(xml_string)
 
-</string>
-<string id="st_ignite_far">
-<text>Або поряд немає багаття, або Ви стоїте занадто далеко</text>
-</string>
-<string id="st_extinguish_fire">
-<text>Загасити ($$ACTION_USE$$)</text>
-</string>
-<string id="actor_inventory_box_use">
-<text>Відкрити ($$ACTION_USE$$)</text>
-</string>
-</string_table>
-"""
-
-# Get the formatted XML
-formatted_xml = format_xml(xml_string)
-
-# Print the formatted XML
-print(formatted_xml)
+# Print the corrected XML
+print(corrected_xml_string)
