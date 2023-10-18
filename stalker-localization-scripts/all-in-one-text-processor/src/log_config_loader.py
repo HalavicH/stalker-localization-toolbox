@@ -1,8 +1,13 @@
 import logging.config
+import os
 
 
 def configure_logging():
-    logging.config.fileConfig(fname='../resources/logging_config.ini', disable_existing_loggers=False)
+    curr_dir = os.path.dirname(__file__)
+
+    ini = os.path.abspath(os.path.join(curr_dir, '../resources/logger_config.ini'))
+    # print("Starting with logger config at " + ini)
+    logging.config.fileConfig(fname=(ini), disable_existing_loggers=False)
 
 
 def get_main_logger() -> logging.Logger:
