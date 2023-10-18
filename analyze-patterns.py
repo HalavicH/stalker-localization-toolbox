@@ -3,14 +3,24 @@ import json
 import argparse
 import subprocess
 import time
+import xml.etree.ElementTree as ET
 
+import pprint as pp
+
+import colorama
+from colorama import Fore
+
+colorama.init(autoreset=True)
+
+# Dictionary keys
 SUMMARY_KEY = "summary"
 PER_FILE_KEY = "per_file"
-
+PER_TEXT_TAG_KEY = "per_text_tag"
 FILENAME_KEY = "file_name"
 PATTERNS_KEY = "patterns"
-
+STRING_ID_KEY = "string_id"
 NEWLINE_PATTERN = "\\n"
+
 PLACEHOLDER_S_PATTERN = "%s"
 PLACEHOLDER_GRAY_PATTERN = "%c[ui_gray_2]"
 PLACEHOLDER_LIGHT_GRAY_PATTERN = "%c[ui_gray_1]"
@@ -36,6 +46,8 @@ patterns = [
     PLACEHOLDER_WHITE_PATTERN
 ]
 
+failed_files = {}
+CURRENT_FILE_ISSUES = []
 
 def serialize_analysis(analysis, file_path):
     with open(file_path, 'w') as file:
@@ -62,44 +74,72 @@ def build_file_name():
     return file_name
 
 
-def analyze_patterns_in_file(file_path, patterns):
-    print("Analyzing file: " + file_path)
+def analyze_patterns_in_text(text, patterns):
+    return {pattern: text.count(pattern) for pattern in patterns}
 
+def analyze_patterns_in_file(file_path, patterns):
+    print(f"Analyzing file: {file_path}")
     with open(file_path, 'r', encoding='windows-1251', errors='ignore') as file:
-        text = file.read()
-    patterns_dict = {
-        FILENAME_KEY: file_path,
-        PATTERNS_KEY: {pattern: text.count(pattern) for pattern in patterns}
+        xml_content = file.read()
+    tree = ET.ElementTree(ET.fromstring(xml_content))
+    per_text_tag_analysis = {}
+    for string_tag in tree.findall('.//string'):
+        string_id = string_tag.get('id')
+        text_tag = string_tag.find('text')
+        if text_tag is not None:
+            text_content = text_tag.text if text_tag.text else ''
+            per_text_tag_analysis[string_id] = analyze_patterns_in_text(text_content, patterns)
+    file_patterns_dict = {
+        pattern: sum(tag_patterns.get(pattern, 0) for tag_patterns in per_text_tag_analysis.values())
+        for pattern in patterns
     }
-    print(patterns_dict[PATTERNS_KEY])
-    return patterns_dict
+    file_analysis = {
+        FILENAME_KEY: file_path,
+        PATTERNS_KEY: file_patterns_dict,
+        PER_TEXT_TAG_KEY: per_text_tag_analysis
+    }
+    print(file_patterns_dict)
+    return file_analysis
 
 
 def compare_analyses(previous_analysis, current_analysis, patterns):
     mismatched_files = []
     for current, previous in zip(current_analysis[PER_FILE_KEY], previous_analysis[PER_FILE_KEY]):
-        mismatched_patterns = []
+        file_mismatched_patterns = {}
         for pattern in patterns:
-            previous_count = previous[PATTERNS_KEY].get(pattern, 0)
-            current_count = current[PATTERNS_KEY].get(pattern, 0)
-            if previous_count != current_count:
-                difference = current_count - previous_count
-                change = f"{abs(difference)} more" if difference > 0 else f"{abs(difference)} less"
-                mismatched_patterns.append((pattern, change))
-        if mismatched_patterns:
-            mismatched_files.append((current[FILENAME_KEY], mismatched_patterns))
+            prev_count = previous[PATTERNS_KEY].get(pattern, 0)
+            curr_count = current[PATTERNS_KEY].get(pattern, 0)
+            if prev_count != curr_count:
+                change = curr_count - prev_count
+                file_mismatched_patterns[pattern] = (prev_count, curr_count, change)
+        per_text_tag_mismatched_patterns = {}
+        for string_id, current_tag_patterns in current[PER_TEXT_TAG_KEY].items():
+            previous_tag_patterns = previous[PER_TEXT_TAG_KEY].get(string_id, {})
+            for pattern in patterns:
+                prev_count = previous_tag_patterns.get(pattern, 0)
+                curr_count = current_tag_patterns.get(pattern, 0)
+                if prev_count != curr_count:
+                    change = curr_count - prev_count
+                    per_text_tag_mismatched_patterns.setdefault(string_id, {})[pattern] = (
+                    prev_count, curr_count, change)
+        if file_mismatched_patterns or per_text_tag_mismatched_patterns:
+            mismatched_files.append((current[FILENAME_KEY], file_mismatched_patterns, per_text_tag_mismatched_patterns))
 
     if mismatched_files:
         print("#" * 80)
         print("\t\tMismatched files:")
-        for file, mismatches in mismatched_files:
+        for file, file_mismatches, text_tag_mismatches in mismatched_files:
             print(f"\nFile: '{file}'")
-            for pattern, change in mismatches:
-                print(f"\tPattern: '{pattern}', {change} than before")
-    else:
-        print("#" * 30)
-        print("Versions match! Jolly good!")
-        print("#" * 30)
+            for pattern, counts in file_mismatches.items():
+                prev_count, curr_count, change = counts
+                print(
+                    f"\tPattern: '{pattern}', {abs(change)} {'more' if change > 0 else 'less'} than before. Before {prev_count} after {curr_count}")
+            for string_id, tag_mismatches in text_tag_mismatches.items():
+                print(f"\tstring: '{string_id}'")
+                for pattern, counts in tag_mismatches.items():
+                    prev_count, curr_count, change = counts
+                    print(
+                        f"\t\tPattern: '{pattern}', {abs(change)} {'more' if change > 0 else 'less'} than before. Before {prev_count} after {curr_count}")
 
 
 def add_summary(file_analysis):
@@ -115,7 +155,8 @@ def add_summary(file_analysis):
         results[SUMMARY_KEY][pattern] = pattern_val
 
     results[PER_FILE_KEY] = file_analysis
-    print(f"Summary: {results[SUMMARY_KEY]}")
+    print(f"Summary:")
+    pp.pprint(results[SUMMARY_KEY])
 
     return results
 
@@ -129,12 +170,28 @@ def main():
     xml_files = glob.glob(directory, recursive=True)
 
     print(f"Found {len(xml_files)} xml_files")
-    file_analysis = [analyze_patterns_in_file(file_path, patterns) for file_path in xml_files]
+
+    file_analysis = []
+    for file_path in xml_files:
+        try:
+            CURRENT_FILE_ISSUES.clear()
+            file_analysis.append(analyze_patterns_in_file(file_path, patterns))
+        except Exception as e:
+            print(Fore.RED + f"Error processing {Fore.RED + file_path}: {e}")
+            CURRENT_FILE_ISSUES.append(Fore.RED + f"Error: {e}" + Fore.RESET)
+            failed_files[file_path] = list(CURRENT_FILE_ISSUES)
+
+    print()
+    print("#" * 80)
+    print("\t\t\tFailed files:")
+    for file in failed_files:
+        print(f"\nFile: '{file}'")
+        for issue in failed_files[file]:
+            print("\t" + issue)
 
     current_analysis = add_summary(file_analysis)
 
     # Serialize the current analysis to a file
-    timestamp = int(time.time())
     serialize_analysis(current_analysis, build_file_name())
 
     if args.compare:
