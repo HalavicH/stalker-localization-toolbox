@@ -49,7 +49,7 @@ def format_text(text, indent):
         if "\\n" in indented_lines[i]:
             indented_lines[i] = indented_lines[i][2:]
 
-    return '\n' + '\n'.join(indented_lines) + '\n'
+    return '\n' + '\n'.join(indented_lines) + '\n' + (" " * 8)
 
 
 def process_file(xml_file):
@@ -62,6 +62,7 @@ def process_file(xml_file):
             text_elem.text = format_text(text_elem.text, ' ' * 12)  # Assuming indent of 12 spaces
 
     indent(root)
+
     # Write the reformatted XML to a new file
     tree.write(xml_file, encoding='windows-1251', xml_declaration=True, pretty_print=True)
 

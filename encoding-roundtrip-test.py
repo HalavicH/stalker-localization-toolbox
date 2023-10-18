@@ -6,7 +6,7 @@ from lxml import etree
 import re
 from colorama import Fore, init
 
-encoding_string = '<?xml version="1.0" encoding="windows-1251"?>'
+encoding_string = "<?xml version='1.0' encoding='WINDOWS-1251'?>"
 
 init(autoreset=True)
 
