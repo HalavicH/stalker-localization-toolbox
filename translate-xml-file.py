@@ -8,7 +8,8 @@ import re
 from lxml import etree
 from googletrans import Translator
 from colorama import Fore
-from langdetect import detect
+import requests
+from langdetect import detect_langs
 
 # Constants for configuration
 INPUT_ENCODING = 'windows-1251'
@@ -18,22 +19,60 @@ OUTPUT_ENCODING = 'windows-1251'
 placeholder_mapping = {
     '%s': 'PLACEHOLDER_PERCENT_S',
     '%c': 'PLACEHOLDER_PERCENT_C',
-    '\\n': '\n',
+    # '\\n': '\n',
     # Add any other static placeholders and their corresponding tokens here
 }
+
+API_KEY = 'c31842ed-.............-468770f60f2d:fx'
+
+
+def translate_deepl(text, target_language, src_language=None):
+    url = 'https://api-free.deepl.com/v2/translate'
+    headers = {
+        'Authorization': f'DeepL-Auth-Key {API_KEY}'
+    }
+    data = {
+        'text': text,
+        'target_lang': target_language.upper(),
+    }
+    if src_language:
+        data['source_lang'] = src_language.upper()
+
+    response = requests.post(url, headers=headers, data=data)
+    response_json = response.json()
+
+    if response.status_code != 200:
+        raise Exception(f'Error: {response_json.get("message", "API request failed")}')
+
+    translated_text = response_json['translations'][0]['text']
+    guessed_language = response_json['translations'][0]['detected_source_language']
+    if guessed_language is not None:
+        print("DeepL guessed lang: " + guessed_language)
+
+    return translated_text
+
+
+def detect_language(text, possible_languages=["uk", "en", "ru", "fr", "es"]):
+    detections = detect_langs(text)
+    for detection in detections:
+        lang, confidence = str(detection).split(':')
+        if lang in possible_languages:
+            return lang, float(confidence)
+    return None, 0.0
+
 
 def translate_xml(input_path, from_lang, to_lang):
     # Create output directory if not exists
     output_dir = os.path.join('./translated', os.path.dirname(input_path[2:]))
     os.makedirs(output_dir, exist_ok=True)
-    
+
     # Parse the XML, preserving comments
     parser = etree.XMLParser(encoding=INPUT_ENCODING, remove_blank_text=True)
     tree = etree.parse(input_path, parser=parser)
     root = tree.getroot()
-    
+
     translator = Translator()
-    
+
     # Translate text inside <text> tags
     for text_elem in root.xpath('//text'):
         original_text = text_elem.text
@@ -50,13 +89,26 @@ def translate_xml(input_path, from_lang, to_lang):
         xml_content = f.read()
 
     xml_content = xml_content.replace('  ', '    ').replace('--><', '-->\n<')
-    
+
     with open(output_path, 'w', encoding=OUTPUT_ENCODING) as f:
         f.write(xml_content)
 
 
 def process_text_block(from_lang, original_text, text_elem, to_lang, translator):
     print("")
+    print("Original text     :" + Fore.YELLOW + original_text + Fore.RESET)
+    (detected_lang, confidence) = detect_language(original_text)
+    print(f"Detected lang    : {Fore.CYAN + str(detected_lang) + Fore.RESET}, confidence {Fore.CYAN + str(confidence) + Fore.RESET}")
+    if detected_lang is None or confidence < 0.5:
+        # print(f"Detected lang is not confident enough. Using supplied lang: {Fore.YELLOW + from_lang + Fore.RESET}")
+        # detected_lang = from_lang
+        print(f"Can't detect language. Skip this entry")
+        return
+
+    if detected_lang == to_lang:
+        print(Fore.GREEN + "Already translated to: " + to_lang + Fore.RESET)
+        return
+
     # Find and replace dynamic placeholders ($$...$$) with unique tokens
     dynamic_placeholders = re.findall(r'\$\$.*?\$\$', original_text)
     for idx, placeholder in enumerate(dynamic_placeholders, start=1):
@@ -68,25 +120,28 @@ def process_text_block(from_lang, original_text, text_elem, to_lang, translator)
     for placeholder, token in placeholder_mapping.items():
         guarded_text = guarded_text.replace(placeholder, token)
 
-    print("Guarded:    " + guarded_text)
+    print("Guarded           :" + Fore.LIGHTBLUE_EX + guarded_text + Fore.RESET)
 
     # Translate the text with tokens
-    translated_text = translator.translate(guarded_text, src=from_lang, dest=to_lang).text
-    print("Translated: " + translated_text)
+    # translated_text = translator.translate(guarded_text, src=detected_lang, dest=to_lang).text
+    translated_text = translate_deepl(guarded_text, to_lang)
+    print("Translated        : " + Fore.LIGHTMAGENTA_EX + translated_text + Fore.RESET)
 
     # Restore original placeholders in the translated text
     restored_text = translated_text
     for placeholder, token in placeholder_mapping.items():
         restored_text = restored_text.replace(token, placeholder)
 
-    print("Unguarded:  " + Fore.CYAN + restored_text + Fore.RESET)
+    print("Unguarded         :" + Fore.CYAN + restored_text + Fore.RESET)
     text_elem.text = restored_text
+
 
 if __name__ == '__main__':
     import sys
+
     if len(sys.argv) != 4:
         print(f'Usage: {sys.argv[0]} <input_xml_path> <from_lang> <to_lang>'),
         sys.exit(1)
-    
+
     input_path, from_lang, to_lang = sys.argv[1:4]
     translate_xml(input_path, from_lang, to_lang)
