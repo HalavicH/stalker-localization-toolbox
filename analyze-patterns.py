@@ -46,11 +46,15 @@ def deserialize_analysis(file_path):
     with open(file_path, 'r') as file:
         return json.load(file)
 
+
 def build_file_name():
     timestamp = int(time.time())
     try:
-        branch = subprocess.check_output(['git', 'rev-parse', '--abbrev-ref', 'HEAD'], text=True).strip().replace('/', '-').replace(' ', '_')
-        commit_name = subprocess.check_output(['git', 'log', '-1', '--pretty=format:%s'], text=True).strip().replace(' ', '_').replace('/', '-').replace(':', '-')
+        branch = subprocess.check_output(['git', 'rev-parse', '--abbrev-ref', 'HEAD'], text=True).strip().replace('/',
+                                                                                                                  '-').replace(
+            ' ', '_')
+        commit_name = subprocess.check_output(['git', 'log', '-1', '--pretty=format:%s'], text=True).strip().replace(
+            ' ', '_').replace('/', '-').replace(':', '-')
         commit_hash = subprocess.check_output(['git', 'rev-parse', '--short', 'HEAD'], text=True).strip()
         file_name = f'pattern-analysis_br-{branch}_cmt-{commit_name}_hash-{commit_hash}_time-{timestamp}.txt'
     except subprocess.CalledProcessError:
@@ -74,17 +78,24 @@ def analyze_patterns_in_file(file_path, patterns):
 def compare_analyses(previous_analysis, current_analysis, patterns):
     mismatched_files = []
     for current, previous in zip(current_analysis[PER_FILE_KEY], previous_analysis[PER_FILE_KEY]):
-        if current[PATTERNS_KEY] != previous[PATTERNS_KEY]:
-            mismatched_files.append((current[FILENAME_KEY], previous[PATTERNS_KEY], current[PATTERNS_KEY]))
+        mismatched_patterns = []
+        for pattern in patterns:
+            previous_count = previous[PATTERNS_KEY].get(pattern, 0)
+            current_count = current[PATTERNS_KEY].get(pattern, 0)
+            if previous_count != current_count:
+                difference = current_count - previous_count
+                change = f"{abs(difference)} more" if difference > 0 else f"{abs(difference)} less"
+                mismatched_patterns.append((pattern, change))
+        if mismatched_patterns:
+            mismatched_files.append((current[FILENAME_KEY], mismatched_patterns))
 
     if mismatched_files:
         print("#" * 80)
         print("\t\tMismatched files:")
-        for file, previous_counts, current_counts in mismatched_files:
+        for file, mismatches in mismatched_files:
             print(f"\nFile: '{file}'")
-            for pattern in patterns:
-                print(
-                    f"\tPattern: '{pattern}', Previous count: {previous_counts.get(pattern, 0)}, Current count: {current_counts.get(pattern, 0)}")
+            for pattern, change in mismatches:
+                print(f"\tPattern: '{pattern}', {change} than before")
     else:
         print("#" * 30)
         print("Versions match! Jolly good!")
