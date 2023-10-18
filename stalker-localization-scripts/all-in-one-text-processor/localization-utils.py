@@ -8,9 +8,9 @@ It's capable of:
 """
 
 import argparse
-import logging
 
 from src.log_config_loader import get_main_logger
+from src.commands import *
 
 log = get_main_logger()
 
@@ -21,42 +21,45 @@ def parse_args():
     subparsers = parser.add_subparsers(dest='command', help='Sub-commands available:')
 
     # validate-encoding | ve
-    parser_ve = subparsers.add_parser('validate-encoding', aliases=['ve'],
+    parser_ve = subparsers.add_parser(VALIDATE_ENCODING, aliases=CMD_TO_ALIASES[VALIDATE_ENCODING],
                                       help='Validate encoding of a file or directory')
     parser_ve.add_argument('path', help='Path to file or directory')
 
     # fix-encoding | fe
-    parser_fe = subparsers.add_parser('fix-encoding', aliases=['fe'],
+    parser_fe = subparsers.add_parser(FIX_ENCODING, aliases=CMD_TO_ALIASES[FIX_ENCODING],
                                       help='Fix encoding of a file or directory (Warning: may break encoding if detected wrongly)')
     parser_fe.add_argument('path', help='Path to file or directory')
 
     # validate-xml | vx
-    parser_vx = subparsers.add_parser('validate-xml', aliases=['vx'], help='Validate XML of a file or directory')
+    parser_vx = subparsers.add_parser(VALIDATE_XML, aliases=CMD_TO_ALIASES[VALIDATE_XML],
+                                      help='Validate XML of a file or directory')
     parser_vx.add_argument('path', help='Path to file or directory')
 
     # format-xml | fx
-    parser_fx = subparsers.add_parser('format-xml', aliases=['fx'], help='Format XML of a file or directory')
+    parser_fx = subparsers.add_parser(FORMAT_XML, aliases=CMD_TO_ALIASES[FORMAT_XML],
+                                      help='Format XML of a file or directory')
     parser_fx.add_argument('path', help='Path to file or directory')
 
     # check-primary-lang | cpl
-    parser_cpl = subparsers.add_parser('check-primary-lang', aliases=['cpl'],
+    parser_cpl = subparsers.add_parser(CHECK_PRIMARY_LANG, aliases=CMD_TO_ALIASES[CHECK_PRIMARY_LANG],
                                        help='Check primary language of a file or directory')
     parser_cpl.add_argument('path', help='Path to file or directory')
 
     # translate | tr
-    parser_tr = subparsers.add_parser('translate', aliases=['tr'], help='Translate text in a file or directory')
+    parser_tr = subparsers.add_parser(TRANSLATE, aliases=CMD_TO_ALIASES[TRANSLATE],
+                                      help='Translate text in a file or directory')
     parser_tr.add_argument('path', help='Path to file or directory')
     parser_tr.add_argument('--from', dest='from_lang', help='Source language (auto-detect if missing)')
     parser_tr.add_argument('--to', dest='to_lang', required=True, help='Target language')
     parser_tr.add_argument('--api-key', required=True, help='API key for translation service')
 
     # analyze-patterns | ap
-    parser_ap = subparsers.add_parser('analyze-patterns', aliases=['ap'],
+    parser_ap = subparsers.add_parser(ANALYZE_PATTERNS, aliases=CMD_TO_ALIASES[ANALYZE_PATTERNS],
                                       help='Analyze patterns in a file or directory')
     parser_ap.add_argument('path', help='Path to file or directory')
 
     # fix-known-broken-patterns | fbp
-    parser_fbp = subparsers.add_parser('fix-known-broken-patterns', aliases=['fbp'],
+    parser_fbp = subparsers.add_parser(FIX_KNOWN_BROKEN_PATTERNS, aliases=CMD_TO_ALIASES[FIX_KNOWN_BROKEN_PATTERNS],
                                        help='Fix known broken patterns in a file or directory')
     parser_fbp.add_argument('path', help='Path to file or directory')
 
@@ -73,7 +76,8 @@ def parse_args():
 
 def main():
     # log.debug("Start")
-    args = parse_args()
+    args: argparse.Namespace = parse_args()
+
     # process_files(args.path)
     log.info(args)
 
