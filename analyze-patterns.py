@@ -1,57 +1,135 @@
 import glob
+import json
+import argparse
+import subprocess
 import time
 
+SUMMARY_KEY = "summary"
+PER_FILE_KEY = "per_file"
 
-def count_patterns_in_text(text, patterns):
-    counts = {pattern: text.count(pattern) for pattern in patterns}
-    return counts
+FILENAME_KEY = "file_name"
+PATTERNS_KEY = "patterns"
+
+NEWLINE_PATTERN = "\\n"
+PLACEHOLDER_S_PATTERN = "%s"
+PLACEHOLDER_GRAY_PATTERN = "%c[ui_gray_2]"
+PLACEHOLDER_LIGHT_GRAY_PATTERN = "%c[ui_gray_1]"
+PLACEHOLDER_BLUE_PATTERN = "%c[d_cyan]"
+PLACEHOLDER_ORANGE_PATTERN = "%c[d_orange]"
+PLACEHOLDER_RED_PATTERN = "%c[d_red]"
+PLACEHOLDER_PURPLE_PATTERN = "%c[d_purple]"
+PLACEHOLDER_GREEN_PATTERN = "%c[d_green]"
+PLACEHOLDER_YELLOW_PATTERN = "%c[0,250,250,0]"
+PLACEHOLDER_WHITE_PATTERN = "%c[0,255,255,255]"
+
+patterns = [
+    NEWLINE_PATTERN,
+    PLACEHOLDER_S_PATTERN,
+    PLACEHOLDER_GRAY_PATTERN,
+    PLACEHOLDER_LIGHT_GRAY_PATTERN,
+    PLACEHOLDER_BLUE_PATTERN,
+    PLACEHOLDER_ORANGE_PATTERN,
+    PLACEHOLDER_RED_PATTERN,
+    PLACEHOLDER_PURPLE_PATTERN,
+    PLACEHOLDER_GREEN_PATTERN,
+    PLACEHOLDER_YELLOW_PATTERN,
+    PLACEHOLDER_WHITE_PATTERN
+]
+
+
+def serialize_analysis(analysis, file_path):
+    with open(file_path, 'w') as file:
+        json.dump(analysis, file, indent=4)
+
+
+def deserialize_analysis(file_path):
+    with open(file_path, 'r') as file:
+        return json.load(file)
+
+def build_file_name():
+    timestamp = int(time.time())
+    try:
+        branch = subprocess.check_output(['git', 'rev-parse', '--abbrev-ref', 'HEAD'], text=True).strip().replace('/', '-').replace(' ', '_')
+        commit_name = subprocess.check_output(['git', 'log', '-1', '--pretty=format:%s'], text=True).strip().replace(' ', '_').replace('/', '-').replace(':', '-')
+        commit_hash = subprocess.check_output(['git', 'rev-parse', '--short', 'HEAD'], text=True).strip()
+        file_name = f'pattern-analysis_br-{branch}_cmt-{commit_name}_hash-{commit_hash}_time-{timestamp}.txt'
+    except subprocess.CalledProcessError:
+        file_name = f'pattern-analysis_{timestamp}.txt'
+    return file_name
 
 
 def analyze_patterns_in_file(file_path, patterns):
-    with open(file_path, 'r', encoding='utf-8', errors='ignore') as file:
+    print("Analyzing file: " + file_path)
+
+    with open(file_path, 'r', encoding='windows-1251', errors='ignore') as file:
         text = file.read()
-    return count_patterns_in_text(text, patterns)
+    patterns_dict = {
+        FILENAME_KEY: file_path,
+        PATTERNS_KEY: {pattern: text.count(pattern) for pattern in patterns}
+    }
+    print(patterns_dict[PATTERNS_KEY])
+    return patterns_dict
+
+
+def compare_analyses(previous_analysis, current_analysis, patterns):
+    mismatched_files = []
+    for current, previous in zip(current_analysis[PER_FILE_KEY], previous_analysis[PER_FILE_KEY]):
+        if current[PATTERNS_KEY] != previous[PATTERNS_KEY]:
+            mismatched_files.append((current[FILENAME_KEY], previous[PATTERNS_KEY], current[PATTERNS_KEY]))
+
+    if mismatched_files:
+        print("#" * 80)
+        print("\t\tMismatched files:")
+        for file, previous_counts, current_counts in mismatched_files:
+            print(f"\nFile: '{file}'")
+            for pattern in patterns:
+                print(
+                    f"\tPattern: '{pattern}', Previous count: {previous_counts.get(pattern, 0)}, Current count: {current_counts.get(pattern, 0)}")
+    else:
+        print("#" * 30)
+        print("Versions match! Jolly good!")
+        print("#" * 30)
+
+
+def add_summary(file_analysis):
+    results = {
+        SUMMARY_KEY: {},
+        PER_FILE_KEY: None
+    }
+    for pattern in patterns:
+        pattern_val = 0
+        for file in file_analysis:
+            pattern_val += file[PATTERNS_KEY][pattern]
+
+        results[SUMMARY_KEY][pattern] = pattern_val
+
+    results[PER_FILE_KEY] = file_analysis
+    print(f"Summary: {results[SUMMARY_KEY]}")
+
+    return results
 
 
 def main():
-    # Define the directory to search (change this to your directory)
+    parser = argparse.ArgumentParser(description='Analyze and compare pattern occurrences in XML files.')
+    parser.add_argument('--compare', metavar='FILE', type=str, help='a file path to a previous analysis for comparison')
+    args = parser.parse_args()
+
     directory = './**/*.xml'
-
-    # Define the patterns to look for
-    patterns = ['\\n', '%s']
-
-    # Initialize a dictionary to hold total counts
-    total_counts = {pattern: 0 for pattern in patterns}
-
-    # Get the list of all XML files in the specified directory and subdirectories
     xml_files = glob.glob(directory, recursive=True)
 
-    # Initialize a list to hold the result strings
-    result_strings = []
+    print(f"Found {len(xml_files)} xml_files")
+    file_analysis = [analyze_patterns_in_file(file_path, patterns) for file_path in xml_files]
 
-    # Analyze each XML file
-    for file_path in xml_files:
-        print(f'Analyzing {file_path}')
-        counts = analyze_patterns_in_file(file_path, patterns)
-        result_string = f'{file_path}:\n' + '\n'.join([f'{pattern}: {count}' for pattern, count in counts.items()])
-        print(result_string)
-        result_strings.append(result_string)
+    current_analysis = add_summary(file_analysis)
 
-        # Update total counts
-        for pattern, count in counts.items():
-            total_counts[pattern] += count
-
-    # Print and save the total counts
-    total_result_string = 'Total:\n' + '\n'.join([f'{pattern}: {count}' for pattern, count in total_counts.items()])
-    print(total_result_string)
-    result_strings.append(total_result_string)
-
-    # Get the current timestamp
+    # Serialize the current analysis to a file
     timestamp = int(time.time())
+    serialize_analysis(current_analysis, build_file_name())
 
-    # Write the results to a file
-    with open(f'pattern-analysis-{timestamp}.txt', 'w') as file:
-        file.write('\n\n'.join(result_strings))
+    if args.compare:
+        print("\nComparing previous analysis to freshly-generated")
+        previous_analysis = deserialize_analysis(args.compare)
+        compare_analyses(previous_analysis, current_analysis, patterns)
 
 
 if __name__ == "__main__":
