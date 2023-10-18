@@ -1,4 +1,7 @@
+import codecs
 import glob
+import re
+import sys
 
 import colorama
 import lxml.etree as etree
@@ -9,6 +12,8 @@ from colorama import Fore
 colorama.init(autoreset=True)
 
 CURRENT_FILE_ISSUES = []
+
+encoding_string = "<?xml version='1.0' encoding='WINDOWS-1251'?>"
 
 def indent(elem, level=0):
     i = "\n" + level * "    "
@@ -52,10 +57,30 @@ def format_text(text, indent):
     return '\n' + '\n'.join(indented_lines) + '\n' + (" " * 8)
 
 
+def remove_xml_declaration(xml_string, file_path):
+    # Regular expression pattern to match the XML declaration with any amount of whitespace
+    pattern = re.compile(r'<\?xml.*?\?>', re.IGNORECASE)
+    # Use re.sub to replace the matched text with an empty string
+    string_was_here = 'xml_encoding_string_was_here'
+    xml_string_without_declaration = re.sub(pattern, string_was_here, xml_string)
+
+    if string_was_here in xml_string_without_declaration:
+        xml_string_without_declaration = xml_string_without_declaration.replace(string_was_here, '')
+    else:
+        reset = Fore.YELLOW + f"Warning: File {file_path} doesn't have encoding header in it" + Fore.RESET
+        print(reset)
+        CURRENT_FILE_ISSUES.append(reset)
+
+    return xml_string_without_declaration
+
 def process_file(xml_file):
+    with codecs.open(xml_file, 'r', encoding='windows-1251') as file:
+        content = file.read()
+
+    content = remove_xml_declaration(content, xml_file)
+
     parser = etree.XMLParser(remove_blank_text=True)  # This will help preserve the indentations
-    tree = etree.parse(xml_file, parser)
-    root = tree.getroot()
+    root = etree.fromstring(content, parser)
 
     for string_elem in root:
         for text_elem in string_elem:
@@ -63,11 +88,27 @@ def process_file(xml_file):
 
     indent(root)
 
+    # Convert the XML tree to a string
+    formatted_xml = etree.tostring(root, encoding='unicode')
+
+    # Add a blank line before comments
+    formatted_xml = re.sub(r'(\s)<!--', r'\1\n<!--', formatted_xml)
+
+    # Append encoding
+    formatted_text = encoding_string + "\n" + formatted_xml
+
     # Write the reformatted XML to a new file
-    tree.write(xml_file, encoding='windows-1251', xml_declaration=True, pretty_print=True)
+    # Write the roundtrip content back to the file
+    with open(xml_file, 'wb', ) as file:
+        file.write(formatted_text.encode('windows-1251'))
 
 
 def main():
+    if len(sys.argv) == 2:
+        print("Singlefile mode")
+        process_file(sys.argv[1])
+        return
+
     # Define the directory to search (change this to your directory)
     directory = './**/*.xml'
 

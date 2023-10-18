@@ -1,6 +1,7 @@
 import glob
 import codecs
 import os
+import sys
 
 from lxml import etree
 import re
@@ -136,6 +137,11 @@ def process_file(file_path):
 
 
 def main():
+    if len(sys.argv) == 2:
+        print("Singlefile mode")
+        process_file(sys.argv[1])
+        return
+
     # Define the directory to search (change this to your directory)
     directory = './**/*.xml'
 
