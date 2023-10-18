@@ -6,6 +6,7 @@ import time
 import xml.etree.ElementTree as ET
 
 import pprint as pp
+from datetime import datetime
 
 import colorama
 from colorama import Fore
@@ -13,6 +14,7 @@ from colorama import Fore
 colorama.init(autoreset=True)
 
 # Dictionary keys
+META_DATA_KEY = "meta_data"
 SUMMARY_KEY = "summary"
 PER_FILE_KEY = "per_file"
 PER_TEXT_TAG_KEY = "per_text_tag"
@@ -172,24 +174,45 @@ def compare_analyses(previous_analysis, current_analysis, patterns):
         print("Versions match! Jolly good!")
         print("#" * 30)
 
-def add_summary(file_analysis):
-    results = {
-        SUMMARY_KEY: {},
-        PER_FILE_KEY: None
-    }
+def add_summary(current_analysis):
+    file_analysis = current_analysis.pop(PER_FILE_KEY)
+
+    current_analysis[SUMMARY_KEY] = {}
     for pattern in patterns:
         pattern_val = 0
         for file in file_analysis:
             pattern_val += file[PATTERNS_KEY][pattern]
 
-        results[SUMMARY_KEY][pattern] = pattern_val
+        current_analysis[SUMMARY_KEY][pattern] = pattern_val
 
-    results[PER_FILE_KEY] = file_analysis
     print(f"Summary:")
-    pp.pprint(results[SUMMARY_KEY])
+    pp.pprint(current_analysis[SUMMARY_KEY])
+    current_analysis[PER_FILE_KEY] = file_analysis
+    return current_analysis
 
-    return results
 
+def add_meta_data(current_analysis):
+    try:
+        branch = subprocess.check_output(['git', 'rev-parse', '--abbrev-ref', 'HEAD'], text=True).strip().replace('/',
+                                                                                                                  '-').replace(
+            ' ', '_')
+        commit_name = subprocess.check_output(['git', 'log', '-1', '--pretty=format:%s'], text=True).strip().replace(
+            ' ', '_').replace('/', '-')
+        commit_hash = subprocess.check_output(['git', 'rev-parse', 'HEAD'], text=True).strip()
+        git_info = {
+            "branch": branch,
+            "commit_name": commit_name,
+            "commit_hash": commit_hash
+        }
+    except subprocess.CalledProcessError:
+        git_info = "Unavailable"
+
+    current_analysis[META_DATA_KEY] = {
+        "git-info": git_info,
+        "time-generated": datetime.now().strftime("%m/%d/%Y, %H:%M:%S")
+    }
+
+    return current_analysis
 
 def main():
     parser = argparse.ArgumentParser(description='Analyze and compare pattern occurrences in XML files.')
@@ -201,7 +224,11 @@ def main():
 
     print(f"Found {len(xml_files)} xml_files")
 
+    current_analysis = {}
+    current_analysis = add_meta_data(current_analysis)
+
     file_analysis = []
+    current_analysis[PER_FILE_KEY] = file_analysis
     for file_path in xml_files:
         try:
             CURRENT_FILE_ISSUES.clear()
@@ -219,7 +246,7 @@ def main():
         for issue in failed_files[file]:
             print("\t" + issue)
 
-    current_analysis = add_summary(file_analysis)
+    current_analysis = add_summary(current_analysis)
 
     # Serialize the current analysis to a file
     serialize_analysis(current_analysis, build_file_name())
