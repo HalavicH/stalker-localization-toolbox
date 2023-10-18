@@ -104,17 +104,43 @@ def analyze_patterns_in_file(file_path, patterns):
 
 def compare_analyses(previous_analysis, current_analysis, patterns):
     mismatched_files = []
-    for current, previous in zip(current_analysis[PER_FILE_KEY], previous_analysis[PER_FILE_KEY]):
+
+    # Get all file names from both the previous and current analyses
+    previous_file_names = set(file[FILENAME_KEY] for file in previous_analysis[PER_FILE_KEY])
+    current_file_names = set(file[FILENAME_KEY] for file in current_analysis[PER_FILE_KEY])
+
+    # Check for missing or extra files in the current analysis
+    missing_files = previous_file_names - current_file_names
+    extra_files = current_file_names - previous_file_names
+    if missing_files:
+        print(f"Missing files in current analysis: {', '.join(missing_files)}")
+    if extra_files:
+        print(f"Extra files in current analysis: {', '.join(extra_files)}")
+
+    # Only compare files that are present in both analyses
+    common_files = previous_file_names.intersection(current_file_names)
+
+    for file_name in common_files:
+        # Fetch file analysis data by file name
+        previous_file_data = next(file for file in previous_analysis[PER_FILE_KEY] if file[FILENAME_KEY] == file_name)
+        current_file_data = next(file for file in current_analysis[PER_FILE_KEY] if file[FILENAME_KEY] == file_name)
+
         file_mismatched_patterns = {}
         for pattern in patterns:
-            prev_count = previous[PATTERNS_KEY].get(pattern, 0)
-            curr_count = current[PATTERNS_KEY].get(pattern, 0)
+            prev_count = previous_file_data[PATTERNS_KEY].get(pattern, 0)
+            curr_count = current_file_data[PATTERNS_KEY].get(pattern, 0)
             if prev_count != curr_count:
                 change = curr_count - prev_count
                 file_mismatched_patterns[pattern] = (prev_count, curr_count, change)
+
         per_text_tag_mismatched_patterns = {}
-        for string_id, current_tag_patterns in current[PER_TEXT_TAG_KEY].items():
-            previous_tag_patterns = previous[PER_TEXT_TAG_KEY].get(string_id, {})
+        # Ensure that we are comparing the same string tags within the file
+        common_string_ids = set(previous_file_data[PER_TEXT_TAG_KEY].keys()).intersection(
+            set(current_file_data[PER_TEXT_TAG_KEY].keys())
+        )
+        for string_id in common_string_ids:
+            previous_tag_patterns = previous_file_data[PER_TEXT_TAG_KEY][string_id]
+            current_tag_patterns = current_file_data[PER_TEXT_TAG_KEY][string_id]
             for pattern in patterns:
                 prev_count = previous_tag_patterns.get(pattern, 0)
                 curr_count = current_tag_patterns.get(pattern, 0)
@@ -122,8 +148,9 @@ def compare_analyses(previous_analysis, current_analysis, patterns):
                     change = curr_count - prev_count
                     per_text_tag_mismatched_patterns.setdefault(string_id, {})[pattern] = (
                     prev_count, curr_count, change)
+
         if file_mismatched_patterns or per_text_tag_mismatched_patterns:
-            mismatched_files.append((current[FILENAME_KEY], file_mismatched_patterns, per_text_tag_mismatched_patterns))
+            mismatched_files.append((file_name, file_mismatched_patterns, per_text_tag_mismatched_patterns))
 
     if mismatched_files:
         print("#" * 80)
