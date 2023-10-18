@@ -167,7 +167,10 @@ def compare_analyses(previous_analysis, current_analysis, patterns):
                     prev_count, curr_count, change = counts
                     print(
                         f"\t\tPattern: '{pattern}', {abs(change)} {'more' if change > 0 else 'less'} than before. Before {prev_count} after {curr_count}")
-
+    else:
+        print("#" * 30)
+        print("Versions match! Jolly good!")
+        print("#" * 30)
 
 def add_summary(file_analysis):
     results = {
