@@ -1,3 +1,17 @@
+"""
+Script for analyzing and comparing pattern occurrences in XML files.
+
+Dependencies:
+- argparse
+- xml.etree.ElementTree
+- pprint
+- datetime
+- colorama
+
+Install with:
+pip3 install argparse xml datetime pprint colorama
+"""
+
 import glob
 import json
 import argparse
@@ -51,6 +65,7 @@ patterns = [
 failed_files = {}
 CURRENT_FILE_ISSUES = []
 
+
 def serialize_analysis(analysis, file_path):
     with open(file_path, 'w') as file:
         json.dump(analysis, file, indent=4)
@@ -79,6 +94,7 @@ def build_file_name():
 def analyze_patterns_in_text(text, patterns):
     return {pattern: text.count(pattern) for pattern in patterns}
 
+
 def analyze_patterns_in_file(file_path, patterns):
     print(f"Analyzing file: {file_path}")
     with open(file_path, 'r', encoding='windows-1251', errors='ignore') as file:
@@ -104,8 +120,14 @@ def analyze_patterns_in_file(file_path, patterns):
     return file_analysis
 
 
-def compare_analyses(previous_analysis, current_analysis, patterns):
+def compare_analyses(previous_analysis, current_analysis, PATTERNS):
     mismatched_files = []
+    total_patterns_prev = {}
+    for pattern in PATTERNS:
+        total_patterns_prev[pattern] = 0
+
+    total_patterns_curr = dict(total_patterns_prev)  # Deep copy
+    total_patterns_change = dict(total_patterns_prev)  # Deep copy
 
     # Get all file names from both the previous and current analyses
     previous_file_names = set(file[FILENAME_KEY] for file in previous_analysis[PER_FILE_KEY])
@@ -128,11 +150,15 @@ def compare_analyses(previous_analysis, current_analysis, patterns):
         current_file_data = next(file for file in current_analysis[PER_FILE_KEY] if file[FILENAME_KEY] == file_name)
 
         file_mismatched_patterns = {}
-        for pattern in patterns:
+        for pattern in PATTERNS:
             prev_count = previous_file_data[PATTERNS_KEY].get(pattern, 0)
+            total_patterns_prev[pattern] += prev_count
+
             curr_count = current_file_data[PATTERNS_KEY].get(pattern, 0)
+            total_patterns_curr[pattern] += curr_count
             if prev_count != curr_count:
                 change = curr_count - prev_count
+                total_patterns_change[pattern] += change
                 file_mismatched_patterns[pattern] = (prev_count, curr_count, change)
 
         per_text_tag_mismatched_patterns = {}
@@ -143,36 +169,51 @@ def compare_analyses(previous_analysis, current_analysis, patterns):
         for string_id in common_string_ids:
             previous_tag_patterns = previous_file_data[PER_TEXT_TAG_KEY][string_id]
             current_tag_patterns = current_file_data[PER_TEXT_TAG_KEY][string_id]
-            for pattern in patterns:
+            for pattern in PATTERNS:
                 prev_count = previous_tag_patterns.get(pattern, 0)
                 curr_count = current_tag_patterns.get(pattern, 0)
                 if prev_count != curr_count:
                     change = curr_count - prev_count
                     per_text_tag_mismatched_patterns.setdefault(string_id, {})[pattern] = (
-                    prev_count, curr_count, change)
+                        prev_count, curr_count, change)
 
         if file_mismatched_patterns or per_text_tag_mismatched_patterns:
             mismatched_files.append((file_name, file_mismatched_patterns, per_text_tag_mismatched_patterns))
 
     if mismatched_files:
-        print("#" * 80)
-        print("\t\tMismatched files:")
+        print(Fore.YELLOW + "#" * 80)
+        print(Fore.YELLOW + " " * 25 + "Mismatch in reports detected!")
+        print(Fore.YELLOW + "#" * 80)
+        print(Fore.BLUE + "#" * 10 + " Total missmatch: " + "#" * 10)
+        for pattern in PATTERNS:
+            prev_count = total_patterns_prev[pattern]
+            curr_count = total_patterns_curr[pattern]
+            change = total_patterns_change[pattern]
+            if change == 0:
+                continue
+
+            print(
+                Fore.BLUE + f"Pattern: '{pattern}', {abs(change)} {'more' if change > 0 else 'less'} than before. Before {prev_count} after {curr_count}")
+
+        print(Fore.MAGENTA + "\t" + "#" * 10 + " Mismatched files: " + "#" * 10)
         for file, file_mismatches, text_tag_mismatches in mismatched_files:
-            print(f"\nFile: '{file}'")
+            print(Fore.MAGENTA + f"\nFile: '{file}'")
             for pattern, counts in file_mismatches.items():
                 prev_count, curr_count, change = counts
                 print(
-                    f"\tPattern: '{pattern}', {abs(change)} {'more' if change > 0 else 'less'} than before. Before {prev_count} after {curr_count}")
+                    Fore.MAGENTA + f"\tPattern: '{pattern}', {abs(change)} {'more' if change > 0 else 'less'} than before. Before {prev_count} after {curr_count}")
+            print(Fore.GREEN + "\t" + "#" * 10 + " Mismatched strings: " + "#" * 10)
             for string_id, tag_mismatches in text_tag_mismatches.items():
-                print(f"\tstring: '{string_id}'")
+                print(Fore.GREEN + f"\tstring: '{string_id}'")
                 for pattern, counts in tag_mismatches.items():
                     prev_count, curr_count, change = counts
                     print(
-                        f"\t\tPattern: '{pattern}', {abs(change)} {'more' if change > 0 else 'less'} than before. Before {prev_count} after {curr_count}")
+                        Fore.GREEN + f"\t\tPattern: '{pattern}', {abs(change)} {'more' if change > 0 else 'less'} than before. Before {prev_count} after {curr_count}")
     else:
-        print("#" * 30)
-        print("Versions match! Jolly good!")
-        print("#" * 30)
+        print(Fore.GREEN + "#" * 30)
+        print(Fore.GREEN + "Versions match! Jolly good!")
+        print(Fore.GREEN + "#" * 30)
+
 
 def add_summary(current_analysis):
     file_analysis = current_analysis.pop(PER_FILE_KEY)
@@ -214,6 +255,7 @@ def add_meta_data(current_analysis):
 
     return current_analysis
 
+
 def main():
     parser = argparse.ArgumentParser(description='Analyze and compare pattern occurrences in XML files.')
     parser.add_argument('--compare', metavar='FILE', type=str, help='a file path to a previous analysis for comparison')
@@ -238,13 +280,14 @@ def main():
             CURRENT_FILE_ISSUES.append(Fore.RED + f"Error: {e}" + Fore.RESET)
             failed_files[file_path] = list(CURRENT_FILE_ISSUES)
 
-    print()
-    print("#" * 80)
-    print("\t\t\tFailed files:")
-    for file in failed_files:
-        print(f"\nFile: '{file}'")
-        for issue in failed_files[file]:
-            print("\t" + issue)
+    if len(failed_files):
+        print()
+        print("#" * 80)
+        print("\t\t\tFailed files:")
+        for file in failed_files:
+            print(f"\nFile: '{file}'")
+            for issue in failed_files[file]:
+                print("\t" + issue)
 
     current_analysis = add_summary(current_analysis)
 
