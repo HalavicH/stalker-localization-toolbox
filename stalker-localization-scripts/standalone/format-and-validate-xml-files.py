@@ -46,7 +46,7 @@ def process_includes(content):
         if line.strip().startswith('#include'):
             # Extract the included file path
             included_file_path = line.split('"')[1]
-            included_file_path = os.path.join("./gamedata/configs", included_file_path.replace("\\", "/"))
+            included_file_path = os.path.join("../../gamedata/configs", included_file_path.replace("\\", "/"))
             with codecs.open(included_file_path, 'r', encoding='windows-1251') as included_file:
                 included_content = included_file.read()
                 processed_lines.append(included_content)
