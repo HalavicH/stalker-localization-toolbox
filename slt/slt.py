@@ -1,3 +1,5 @@
+#!/usr/bin/python3
+
 """
 This script is All in one solution for working with localization of STALKER (X-ray 1.6.2+) games
 It's capable of:
@@ -8,9 +10,11 @@ It's capable of:
 """
 
 import argparse
+print("Hi")
 
-from src.log_config_loader import get_main_logger
+from src.command_processor import process_command
 from src.commands import *
+from src.log_config_loader import get_main_logger
 
 log = get_main_logger()
 
@@ -80,6 +84,7 @@ def main():
 
     # process_files(args.path)
     log.info(args)
+    process_command(args)
 
 
 if __name__ == '__main__':
