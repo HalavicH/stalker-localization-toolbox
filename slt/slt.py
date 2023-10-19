@@ -82,6 +82,9 @@ def main():
     args: argparse.Namespace = parse_args()
 
     log.debug(f"Args: {args}")
+    log.info(f"Args: {args}")
+    log.warning(f"Args: {args}")
+    log.error(f"Args: {args}")
     process_command(args)
 
 
