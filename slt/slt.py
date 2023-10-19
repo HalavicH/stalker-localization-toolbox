@@ -14,6 +14,7 @@ import argparse
 from src.command_processor import process_command
 from src.command_names import *
 from src.log_config_loader import get_main_logger
+from src.utils.colorize import *
 
 log = get_main_logger()
 
@@ -81,11 +82,34 @@ def main():
     log.debug("Start")
     args: argparse.Namespace = parse_args()
 
+    testing(args)
+
+    process_command(args)
+
+
+def testing(args):
     log.debug(f"Args: {args}")
     log.info(f"Args: {args}")
     log.warning(f"Args: {args}")
     log.error(f"Args: {args}")
-    process_command(args)
+    log.info(
+        cf_black("black") +
+        cf_red("red") +
+        cf_green("green") +
+        cf_yellow("yellow") +
+        cf_blue("blue") +
+        cf_magenta("magenta") +
+        cf_cyan("cyan") +
+        cf_white("white") +
+        cb_black("black") +
+        cb_red("red") +
+        cb_green("green") +
+        cb_yellow("yellow") +
+        cb_blue("blue") +
+        cb_magenta("magenta") +
+        cb_cyan("cyan") +
+        cb_white("white")
+    )
 
 
 if __name__ == '__main__':
