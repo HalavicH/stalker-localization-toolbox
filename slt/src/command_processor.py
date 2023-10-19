@@ -1,7 +1,7 @@
 import sys
 from argparse import Namespace
 
-from src.commands import *
+from src.command_names import *
 from src.log_config_loader import get_main_logger
 
 log = get_main_logger()
