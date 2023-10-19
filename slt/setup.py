@@ -9,5 +9,5 @@ setup(
             'slt = slt:main',
         ],
     },
-    install_requires=[],
+    install_requires=["colorlog"],
 )

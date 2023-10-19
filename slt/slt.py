@@ -10,10 +10,9 @@ It's capable of:
 """
 
 import argparse
-print("Hi")
 
 from src.command_processor import process_command
-from src.commands import *
+from src.command_names import *
 from src.log_config_loader import get_main_logger
 
 log = get_main_logger()
@@ -79,11 +78,10 @@ def parse_args():
 
 
 def main():
-    # log.debug("Start")
+    log.debug("Start")
     args: argparse.Namespace = parse_args()
 
-    # process_files(args.path)
-    log.info(args)
+    log.debug(f"Args: {args}")
     process_command(args)
 
 

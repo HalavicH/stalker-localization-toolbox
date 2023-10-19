@@ -7,7 +7,7 @@ def configure_logging():
 
     ini = os.path.abspath(os.path.join(curr_dir, '../resources/logger_config.ini'))
     # print("Starting with logger config at " + ini)
-    logging.config.fileConfig(fname=(ini), disable_existing_loggers=False)
+    logging.config.fileConfig(fname=ini, disable_existing_loggers=False)
 
 
 def get_main_logger() -> logging.Logger:
