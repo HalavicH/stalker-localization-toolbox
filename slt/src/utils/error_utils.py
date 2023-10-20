@@ -4,9 +4,8 @@ failed_files = {}
 
 
 def log_and_save_error(file: str, colored_message: str):
-    log.error(f"\nFile: '{file}'")
-    for issue in failed_files[file]:
-        log.error("\t" + issue)
+    log.error(f"File: '{file}'")
+    log.error(colored_message)
 
     if failed_files.get(file) is None:
         failed_files[file] = [colored_message]
@@ -23,8 +22,8 @@ def log_saved_errors():
         return
 
     log.error("#" * 80)
-    log.error("\t\t\tFailed files:")
+    log.error("\t\t\t\tFailed files:")
     for file in failed_files:
-        log.error(f"\nFile: '{file}'")
+        log.error(f"File: '{file}'")
         for issue in failed_files[file]:
-            log.error("\t" + issue)
+            log.error("" + issue)

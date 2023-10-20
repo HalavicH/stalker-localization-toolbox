@@ -1,3 +1,4 @@
+import os
 import threading
 
 from colorama import Fore, init
@@ -14,3 +15,7 @@ def get_thread_color():
     ]
     color = colors[thread_number % len(colors)]
     return color
+
+
+def get_term_width():
+    return os.get_terminal_size().columns

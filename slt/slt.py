@@ -13,6 +13,7 @@ import argparse
 import os
 import sys
 import time
+import traceback
 
 from src.command_processor import process_command
 from src.command_names import *
@@ -105,7 +106,7 @@ def main():
         process_command(args)
     except Exception as e:
         if os.environ.get("PY_ST"):
-            log.error(f"Failed to perform actions. Error: {e.with_traceback()}")
+            log.error(f"Failed to perform actions. Error: {traceback.format_exc()}")
         else:
             log.error(f"Failed to perform actions. Error: {e}")
 

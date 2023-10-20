@@ -9,7 +9,13 @@ ALWAYS_NAME = '\u27A4'
 logging.addLevelName(ALWAYS_LEVEL, ALWAYS_NAME)
 
 
-def always(self, message, *args, **kws):
+# Define custom logger class for autocompletion
+class ExtendedLogger(logging.Logger):
+    def always(self, message="", *args, **kws):
+        pass
+
+
+def always(self, message="", *args, **kws):
     self.log(ALWAYS_LEVEL, message, *args, **kws)
 
 
@@ -54,12 +60,12 @@ def update_log_level(_log):
         _log.warning(f"Unknown loglevel: {plog_level}")
         return _log
 
-    _log.info(f"New log level: {plog_level}")
+    _log.always(f"New log level: {plog_level}")
     _log.setLevel(new_log_level)
     return _log
 
 
-def _get_main_logger() -> logging.Logger:
+def _get_main_logger() -> ExtendedLogger:
     configure_logging()
     _logger = logging.getLogger('main')
     return update_log_level(_logger)
