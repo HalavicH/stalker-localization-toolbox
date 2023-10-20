@@ -1,9 +1,7 @@
 import glob
 import os
 
-from src.log_config_loader import get_main_logger
-
-log = get_main_logger()
+from src.log_config_loader import log
 
 
 def find_xml_files(path):

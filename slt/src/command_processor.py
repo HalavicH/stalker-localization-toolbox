@@ -1,15 +1,12 @@
-import glob
-import os
+
 import sys
 from argparse import Namespace
 
 from src.utils.error_utils import *
 from src.command_names import *
 from src.commands.validate_encoding import validate_encoding
-from src.log_config_loader import get_main_logger
 from src.utils.colorize import cf_green
-
-log = get_main_logger()
+from src.log_config_loader import log
 
 
 # Define functions for each command

@@ -16,10 +16,8 @@ import time
 
 from src.command_processor import process_command
 from src.command_names import *
-from src.log_config_loader import get_main_logger
 from src.utils.colorize import *
-
-log = get_main_logger()
+from src.log_config_loader import log
 
 
 def map_alias_to_command(args):
