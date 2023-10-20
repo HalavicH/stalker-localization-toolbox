@@ -1,6 +1,4 @@
-from log_config_loader import get_main_logger
-
-log = get_main_logger()
+from src.log_config_loader import log
 
 failed_files = {}
 
@@ -21,10 +19,12 @@ def clear_saved_errors():
 
 
 def log_saved_errors():
-    print()
-    print("#" * 80)
-    print("\t\t\tFailed files:")
+    if len(failed_files) == 0:
+        return
+
+    log.error("#" * 80)
+    log.error("\t\t\tFailed files:")
     for file in failed_files:
-        print(f"\nFile: '{file}'")
+        log.error(f"\nFile: '{file}'")
         for issue in failed_files[file]:
-            print("\t" + issue)
+            log.error("\t" + issue)

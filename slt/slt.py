@@ -99,7 +99,6 @@ def parse_args():
 def main():
     start_time = time.process_time()
 
-
     try:
         log.debug("Start")
         args: argparse.Namespace = parse_args()
@@ -114,7 +113,7 @@ def main():
 
     end_time = time.process_time()
     elapsed_time = end_time - start_time
-    log.info("Time elapsed: %.3fs" % elapsed_time)
+    log.info("Time elapsed: %s" % cf_green("%.3fs" % elapsed_time))
 
 
 def testing(args):

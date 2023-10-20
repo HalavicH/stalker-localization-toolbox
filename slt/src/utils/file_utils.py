@@ -1,9 +1,19 @@
 import glob
 import os
 
+from src.log_config_loader import get_main_logger
 
-def get_list_of_files(file_or_dirpath):
-    if os.path.isdir(file_or_dirpath):
-        xml_files = glob.glob(f'{file_or_dirpath}/**/**/*.xml', recursive=True)
+log = get_main_logger()
+
+
+def find_xml_files(path):
+    if os.path.isdir(path):
+        glob_pattern = f'{path}/**/*.xml'
     else:
-        xml_files = [file_or_dirpath]
+        glob_pattern = path
+
+    xml_files = set(glob.glob(glob_pattern, recursive=True))
+    log.debug(f"Found following glob files: {xml_files}")
+    log.info(f"Input files number: {len(xml_files)}")
+
+    return xml_files

@@ -1,8 +1,11 @@
+import glob
+import os
 import sys
-import time
 from argparse import Namespace
 
+from src.utils.error_utils import *
 from src.command_names import *
+from src.commands.validate_encoding import validate_encoding
 from src.log_config_loader import get_main_logger
 from src.utils.colorize import cf_green
 
@@ -10,10 +13,6 @@ log = get_main_logger()
 
 
 # Define functions for each command
-def validate_encoding(args):
-    log.info(f"Running {args.command} with path: {args.path}")
-
-
 def fix_encoding(args):
     log.info(f"Running {args.command} with path: {args.path}")
 
@@ -64,7 +63,9 @@ def process_command(args: Namespace):
         log.error(f"Command {args.command} is not implemented")
         sys.exit(1)
 
+    # Do actual work
     callback(args)
 
     log.info(cf_green("Done"))
 
+    log_saved_errors()

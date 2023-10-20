@@ -10,3 +10,4 @@ langdetect~=1.0.9
 prettytable~=3.9.0
 pyperclip~=1.8.2
 pync~=2.0.3
+rich~=13.5.3
