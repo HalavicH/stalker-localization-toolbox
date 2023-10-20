@@ -10,6 +10,9 @@ It's capable of:
 """
 
 import argparse
+import os
+import sys
+import time
 
 from src.command_processor import process_command
 from src.command_names import *
@@ -17,6 +20,12 @@ from src.log_config_loader import get_main_logger
 from src.utils.colorize import *
 
 log = get_main_logger()
+
+
+def map_alias_to_command(args):
+    for cmd in CMD_TO_ALIASES:
+        if args.command in CMD_TO_ALIASES[cmd]:
+            args.command = cmd
 
 
 def parse_args():
@@ -75,16 +84,37 @@ def parse_args():
     # log_group.add_argument('--verbose', action='store_true', help='Set log level to DEBUG')
 
     args = parser.parse_args()
+    log.debug(f"Args: {args}")
+
+    map_alias_to_command(args)
+
+    if args.command is None:
+        cmd_name = sys.argv[0].split("/")[-1] + " -h"
+        log.error(Fore.RESET + f"Please provide args. Use {cf_green(cmd_name)} for help")
+        sys.exit()
+
     return args
 
 
 def main():
-    log.debug("Start")
-    args: argparse.Namespace = parse_args()
+    start_time = time.process_time()
 
-    testing(args)
 
-    process_command(args)
+    try:
+        log.debug("Start")
+        args: argparse.Namespace = parse_args()
+
+        # testing(args)
+        process_command(args)
+    except Exception as e:
+        if os.environ.get("PY_ST"):
+            log.error(f"Failed to perform actions. Error: {e.with_traceback()}")
+        else:
+            log.error(f"Failed to perform actions. Error: {e}")
+
+    end_time = time.process_time()
+    elapsed_time = end_time - start_time
+    log.info("Time elapsed: %.3fs" % elapsed_time)
 
 
 def testing(args):
@@ -113,7 +143,4 @@ def testing(args):
 
 
 if __name__ == '__main__':
-    try:
-        main()
-    except Exception as e:
-        log.error(f"Failed to perform actions. Error: {e}")
+    main()

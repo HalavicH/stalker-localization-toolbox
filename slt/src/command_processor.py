@@ -1,8 +1,10 @@
 import sys
+import time
 from argparse import Namespace
 
 from src.command_names import *
 from src.log_config_loader import get_main_logger
+from src.utils.colorize import cf_green
 
 log = get_main_logger()
 
@@ -55,7 +57,14 @@ COMMAND_REGISTRY = {
 
 
 def process_command(args: Namespace):
+    log.info(f"Processing command: {args.command}")
     callback = COMMAND_REGISTRY.get(args.command)
+
     if callback is None:
         log.error(f"Command {args.command} is not implemented")
         sys.exit(1)
+
+    callback(args)
+
+    log.info(cf_green("Done"))
+
