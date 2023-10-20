@@ -39,7 +39,7 @@ def parse_args():
 
     # fix-encoding | fe
     parser_fe = subparsers.add_parser(FIX_ENCODING, aliases=CMD_TO_ALIASES[FIX_ENCODING],
-                                      help='Fix encoding of a file or directory (Warning: may break encoding if detected wrongly)')
+                                      help='Fix UTF-8 encoding of a file or directory (Warning: may break encoding if detected wrongly)')
     parser_fe.add_argument('path', help='Path to file or directory')
 
     # validate-xml | vx
