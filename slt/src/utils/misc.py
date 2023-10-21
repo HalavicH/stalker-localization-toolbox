@@ -18,4 +18,7 @@ def get_thread_color():
 
 
 def get_term_width():
-    return os.get_terminal_size().columns
+    try:
+        return os.get_terminal_size().columns
+    except Exception as e:
+        return 160

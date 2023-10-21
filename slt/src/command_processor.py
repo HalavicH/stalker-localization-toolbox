@@ -3,6 +3,7 @@ import sys
 from argparse import Namespace
 
 from src.commands.fix_encoding import fix_encoding
+from src.commands.validate_xml import validate_xml
 from src.utils.error_utils import *
 from src.command_names import *
 from src.commands.validate_encoding import validate_encoding
@@ -11,10 +12,6 @@ from src.log_config_loader import log
 
 
 # Define functions for each command
-def validate_xml(args):
-    log.info(f"Running {args.command} with path: {args.path}")
-
-
 def format_xml(args):
     log.info(f"Running {args.command} with path: {args.path}")
 

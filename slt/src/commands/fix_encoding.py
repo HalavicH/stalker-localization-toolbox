@@ -4,8 +4,6 @@ from src.utils.colorize import cf_yellow, cf_green
 from src.utils.error_utils import log_and_save_error
 from rich.pretty import pprint
 
-windows_1251 = 'windows-1251'
-
 
 def change_file_encoding(file_name, e_from, e_to):
     with open(file_name, 'r', encoding=e_from) as file:

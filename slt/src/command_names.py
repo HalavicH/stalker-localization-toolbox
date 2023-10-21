@@ -1,3 +1,4 @@
+windows_1251 = 'windows-1251'
 
 # Constants for command names
 VALIDATE_ENCODING = 'validate-encoding'

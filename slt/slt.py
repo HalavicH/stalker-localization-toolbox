@@ -106,13 +106,13 @@ def main():
         process_command(args)
     except Exception as e:
         if os.environ.get("PY_ST"):
-            log.error(f"Failed to perform actions. Error: {traceback.format_exc()}")
+            log.fatal(f"Failed to perform actions. Error: {traceback.format_exc()}")
         else:
-            log.error(f"Failed to perform actions. Error: {e}")
+            log.fatal(f"Failed to perform actions. Error: {e}")
 
     end_time = time.process_time()
     elapsed_time = end_time - start_time
-    log.info("Time elapsed: %s" % cf_green("%.3fs" % elapsed_time))
+    log.always("Done! Total time: %s" % cf_green("%.3fs" % elapsed_time))
 
 
 def testing(args):

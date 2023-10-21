@@ -3,10 +3,11 @@ from src.log_config_loader import log
 failed_files = {}
 
 
-def log_and_save_error(file: str, colored_message: str):
+def log_and_save_error(file: str, colored_message: str, level: str='error'):
     log.error(f"File: '{file}'")
     log.error(colored_message)
 
+    # TODO: save and process level
     if failed_files.get(file) is None:
         failed_files[file] = [colored_message]
     else:
