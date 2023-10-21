@@ -27,8 +27,17 @@ def map_alias_to_command(args):
             args.command = cmd
 
 
+class CustomHelpFormatter(argparse.HelpFormatter):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs, max_help_position=40, width=120)
+
+    def _format_action(self, action):
+        # Customize the formatting of action here if needed
+        return super()._format_action(action)
+
+
 def parse_args():
-    parser = argparse.ArgumentParser(description='My App Description')
+    parser = argparse.ArgumentParser(description='My App Description', formatter_class=CustomHelpFormatter)
 
     subparsers = parser.add_subparsers(dest='command', help='Sub-commands available:')
 
@@ -50,6 +59,10 @@ def parse_args():
     # format-xml | fx
     parser_fx = subparsers.add_parser(FORMAT_XML, aliases=CMD_TO_ALIASES[FORMAT_XML],
                                       help='Format XML of a file or directory')
+    parser_fx.add_argument('--fix', action='store_true', help='Fix XML issues if possible instead of skipping the file')
+    parser_fx.add_argument('--format-text-entries', action='store_true',
+                           help='Format <text> tag contents to resemble in-game appearance')
+
     parser_fx.add_argument('path', help='Path to file or directory')
 
     # check-primary-lang | cpl

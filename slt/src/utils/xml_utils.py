@@ -1,6 +1,7 @@
 import codecs
 import os
 import re
+import textwrap
 
 from lxml import etree
 from lxml.etree import _Element
@@ -61,12 +62,6 @@ def parse_xml_root(xml_string):
 
     parser = etree.XMLParser(remove_blank_text=True)
     return etree.fromstring(xml_string, parser)
-
-
-def fix_broken_comments(xml_string):
-    return re.sub(r'<!--(.*?)-->',
-                  lambda x: '<!--' + x.group(1).replace('--', '**') + '-->', xml_string,
-                  flags=re.DOTALL)
 
 
 def is_include_present(xml_string):
@@ -138,9 +133,6 @@ def add_blank_line_before_comments(formatted_xml):
 
 
 def format_xml_string(xml_string, file_path="Not provided"):
-    # Replace -- with ** in comments before parsing, handle multiline comments with re.DOTALL
-    xml_string = fix_illegal_comments(xml_string)
-
     # Parse the XML string
     root = None
     try:
@@ -148,6 +140,7 @@ def format_xml_string(xml_string, file_path="Not provided"):
     except Exception as e:
         _, msg = analyze_xml_parser_error(e)
         log_and_save_error(file_path, msg)
+        return
 
     # Function to add indentation and a blank line before comments
     indent(root)
@@ -163,8 +156,105 @@ def format_xml_string(xml_string, file_path="Not provided"):
     return updated_xml_bytes
 
 
-# Fix utils
+# Text utils
+def fold_text(text: str) -> str:
+    # Replace multiple whitespaces with a single space and trim leading/trailing whitespaces
+    folded = ' '.join(text.split())
+    folded = ' '.join(folded.split("\n"))
+    return folded
+
+
+def replace_n_sym_with_newline(text: str):
+    # Ensure that no extra newlines present
+    folded = fold_text(text)
+    replaced, count = folded.replace("\\n", "\n"), folded.count("\\n")
+    log.debug(f'Number of "\\n" replaced with newline: {count}')
+    return replaced
+
+
+def replace_new_line_with_n_sym(text: str):
+    count = text.count("\n")
+    replaced = text.replace("\n", "\\n")
+    log.debug(f'Number of newline replaced with "\\n": {count}')
+    return replaced
+
+
+def format_text_entry(text, indent_level):
+    # Step 1: Collapse the text into one line
+    text = ' '.join(text.split())
+
+    # Step 2: Place line breaks before \n
+    text = text.replace('\\n', '\n\\n')
+
+    # Step 4: Wrap lines by word if longer than 85 char without inserting \n symbol
+    lines = text.split('\n')
+    wrapped_lines = []
+    for line in lines:
+        wrapped_line = textwrap.fill(line, width=85, expand_tabs=False, replace_whitespace=False)
+        for sub_line in wrapped_line.split("\n"):
+            wrapped_lines.append(sub_line)
+
+    # Step 3: Indent everything according to the position of the <text> tag
+    indented_lines = [indent_level + line for line in wrapped_lines]
+
+    # Remove 2 characters so '\n' is not at the same level as other text
+    for i in range(0, len(indented_lines)):
+        if "\\n" in indented_lines[i]:
+            indented_lines[i] = indented_lines[i][2:]
+
+    return '\n' + '\n'.join(indented_lines) + '\n' + (" " * 8)
+
+#############
+# Fix utils #
+#############
 def fix_illegal_comments(xml_string):
-    xml_string = re.sub(r'<!--(.*?)-->', lambda x: '<!--' + x.group(1).replace('--', '**') + '-->', xml_string,
-                        flags=re.DOTALL)
-    return xml_string
+    return re.sub(r'<!--(.*?)-->',
+                  lambda x: '<!--' + x.group(1).replace('--', '**') + '-->', xml_string,
+                  flags=re.DOTALL)
+
+
+def fix_xml_declaration(xml_string, file_path):
+    no_decl, is_valid_decl = remove_xml_declaration(xml_string, file_path)
+
+    if not is_valid_decl:
+        msg = "The XML declaration is incorrect. Fixing..."
+        log.info(msg)
+
+    return declaration_str + "\n" + no_decl
+
+
+def fix_ampersand_misuse(xml_string):
+    lines = xml_string.split('\n')
+    corrected_lines = []
+    for line_number, line in enumerate(lines, start=1):
+        corrected_line = ''
+        column_number = 1
+        while column_number <= len(line):
+            if line[column_number - 1] == '&':
+                # Check if it's part of a recognized character entity
+                if re.match(r'&(amp|lt|gt|quot|apos|#x[0-9a-fA-F]+|#\d+);', line[column_number - 1:]):
+                    # Skip past the character entity
+                    entity_end = line[column_number - 1:].index(';') + column_number
+                    corrected_line += line[column_number - 1:entity_end]
+                    column_number = entity_end
+                else:
+                    message = cf_yellow(
+                        f"Misused '&' at line:{line_number}, column:{column_number}. Replacing & with &amp;")
+                    log.info(message)
+                    corrected_line += '&amp;'
+            else:
+                corrected_line += line[column_number - 1]
+            column_number += 1
+        corrected_lines.append(corrected_line)
+    corrected_xml_string = '\n'.join(corrected_lines)
+    return corrected_xml_string
+
+
+def fix_possible_errors(xml_string, file_path):
+    # String manipulation
+    fixed_comments = fix_illegal_comments(xml_string)
+    fixed_ampersand = fix_ampersand_misuse(fixed_comments)
+    resolved_includes = resolve_xml_includes(fixed_ampersand)
+
+    # XML DOM parser manipulation
+    fixed_declaration = fix_xml_declaration(resolved_includes, file_path)

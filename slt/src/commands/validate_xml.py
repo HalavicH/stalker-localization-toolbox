@@ -7,7 +7,7 @@ from rich.progress import Progress
 
 from src.log_config_loader import log
 from src.utils.colorize import cf_green, cf_red
-from src.utils.file_utils import find_xml_files
+from src.utils.file_utils import find_xml_files, read_xml
 from src.utils.misc import get_term_width
 from src.utils.xml_utils import *
 

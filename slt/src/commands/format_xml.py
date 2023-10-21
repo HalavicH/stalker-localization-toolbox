@@ -6,8 +6,8 @@ from src.utils.xml_utils import *
 
 include_example = cf_red('#include "some/other/file.xml"')
 
-
-def process_file(file_path):
+tabwidth = "    "
+def process_file(file_path, fix_errors=False, format_text=False):
     try:
         with open(file_path, 'r', encoding=windows_1251) as file:
             file.read()
@@ -17,7 +17,24 @@ def process_file(file_path):
 
     xml_string = read_xml(file_path)
 
-    formatted = format_xml_string(xml_string, file_path)
+    # Fix errors
+    fixed_xml = xml_string
+    if fix_errors:
+        fixed_xml = fix_possible_errors(xml_string, file_path)
+        if fixed_xml != xml_string:
+            log.info("Fixed typical XML errors")
+
+    # Format text entries
+    text_formatted_xml = fixed_xml
+    if fix_errors:
+        text_formatted_xml = format_text_entry(text_formatted_xml, tabwidth * 3)
+        if text_formatted_xml != fixed_xml:
+            log.info("Formatted text entries")
+
+    # Format document
+    formatted = format_xml_string(text_formatted_xml, file_path)
+    if formatted != text_formatted_xml:
+        log.info("Formatted XML schema")
 
     save_xml(file_path, formatted)
 
