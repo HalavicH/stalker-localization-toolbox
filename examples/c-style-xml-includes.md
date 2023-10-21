@@ -27,7 +27,6 @@
 ## After:
 ### In file1.xml
 ```xml
-<!-- In file1.xml -->
 <?xml version="1.0" encoding="windows-1251" standalone="yes" ?>
 <string_table>
     <!-- In file1_includes.xml -->

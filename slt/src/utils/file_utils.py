@@ -12,6 +12,9 @@ def find_xml_files(path):
         glob_pattern = path
 
     xml_files = set(glob.glob(glob_pattern, recursive=True))
+    if len(xml_files) == 0:
+        raise ValueError(f"No XML file found under path: {path}")
+
     log.debug(f"Found following glob files: {xml_files}")
     log.info(f"Input files number: {len(xml_files)}")
 

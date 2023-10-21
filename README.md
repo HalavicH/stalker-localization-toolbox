@@ -12,11 +12,11 @@ mod localizations with ease, both text and audio.
 Text:
 - [ ] Git integration (check for dirty environment / autocommit)
 - [x] Bad encoding detection and fixes
-- [ ] Resolve XML C-style includes [Example here](examples/c-style-xml-includes.md)
-- [ ] XML formatting and fix. S.T.A.L.K.E.R's XML parser has loose XML validation,
+- [x] Resolve XML C-style includes [Example here](examples/c-style-xml-includes.md)
+- [x] XML formatting and fix. S.T.A.L.K.E.R's XML parser has loose XML validation,
     and swallows files with some tokens not allowed in XML 1.0 specification.
     [Example here](examples/non-standard-xml-fix.md)
-- [ ] `<text>` entries formatting. Game's XML parser ignores extra spaces and line
+- [x] `<text>` entries formatting. Game's XML parser ignores extra spaces and line
     breaks (just like HTML). The only way you can put a line break is to use \n.
     This feature alligns text within text blocks to look alike in the game.
     [Example here](examples/text-entry-formatting.md)

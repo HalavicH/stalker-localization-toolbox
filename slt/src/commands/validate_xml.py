@@ -89,7 +89,7 @@ def validate_xml(args):
 
     results = []
     with Progress() as progress:
-        task = progress.add_task("Processing...", total=len(files))
+        task = progress.add_task("", total=len(files))
         for i, file_path in enumerate(files):
             # Truncate the file_path path if it exceeds the maximum width
             truncated_file = (

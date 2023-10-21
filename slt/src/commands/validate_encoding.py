@@ -1,3 +1,5 @@
+import time
+
 from rich.progress import Progress
 
 from prettytable import PrettyTable
@@ -6,7 +8,7 @@ from src.log_config_loader import log
 from src.utils.colorize import cf_green, cf_red
 from src.utils.encoding_utils import detect_encoding, is_file_content_win1251_compatible
 from src.utils.file_utils import find_xml_files
-from src.utils.misc import get_term_width
+from src.utils.misc import get_term_width, create_pretty_table
 
 
 def process_file(file, results: list):
@@ -33,34 +35,6 @@ def print_table(data):
     log.always(table_title + "\n" + str(table))  # PrettyTable objects can be converted to string using str()
 
 
-def create_pretty_table(columns, title=None):
-    table = PrettyTable()
-    if title is not None:
-        table.title = title
-    table.field_names = columns
-    table.align = 'l'
-    table.border = True
-
-    # Basic lines
-    table.vertical_char = u'\u2502'  # Vertical line
-    table.horizontal_char = u'\u2500'  # Horizontal line
-    table._horizontal_align_char = None  # Default is None, setting it explicitly for clarity
-    table.junction_char = u'\u253C'  # Plus
-
-    # Corner characters for smooth edges
-    table.top_left_junction_char = u'\u256D'  # Rounded top-left corner
-    table.top_right_junction_char = u'\u256E'  # Rounded top-right corner
-    table.bottom_left_junction_char = u'\u2570'  # Rounded bottom-left corner
-    table.bottom_right_junction_char = u'\u256F'  # Rounded bottom-right corner
-
-    # Junction characters for T-junctions
-    table.top_junction_char = u'\u252C'  # T-junction facing down
-    table.bottom_junction_char = u'\u2534'  # T-junction facing up
-    table.left_junction_char = u'\u251C'  # T-junction facing right
-    table.right_junction_char = u'\u2524'  # T-junction facing left
-    return table
-
-
 def validate_encoding(args):
     files = find_xml_files(args.path)
     log.always(f"Validating encoding for {cf_green(len(files))} files")
@@ -71,10 +45,9 @@ def validate_encoding(args):
     else:
         max_file_width = term_width - 60
 
-
     results = []
     with Progress() as progress:
-        task = progress.add_task("Processing...", total=len(files))
+        task = progress.add_task("", total=len(files))
         for i, file in enumerate(files):
             # Truncate the file path if it exceeds the maximum width
             truncated_file = (
@@ -89,7 +62,8 @@ def validate_encoding(args):
 
             log.debug(f"Processing file #{i}")
             process_file(file, results)
-        log.info(f"Total processed files: {len(files)}")
+
+    log.info(f"Total processed files: {len(files)}")
 
     if len(results) > 0:
         sorted_results = sorted(results, key=lambda tup: tup[1], reverse=True)

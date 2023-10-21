@@ -71,6 +71,7 @@ def is_include_present(xml_string):
 
 
 def resolve_xml_includes(xml_string):
+    trailing = "\n" if xml_string[-1] == "\n" else ""
     lines = xml_string.splitlines()
     processed_lines = []
     for line in lines:
@@ -84,7 +85,7 @@ def resolve_xml_includes(xml_string):
             # os.rename(included_file_path, included_file_path + ".include")
         else:
             processed_lines.append(line)
-    return '\n'.join(processed_lines)
+    return '\n'.join(processed_lines) + trailing
 
 
 # Error formatters
@@ -132,6 +133,10 @@ def add_blank_line_before_comments(formatted_xml):
     return '\n'.join(output_lines)
 
 
+class XmlFileProcessingError(Exception):
+    pass
+
+
 def format_xml_string(xml_string, file_path="Not provided"):
     # Parse the XML string
     root = None
@@ -140,20 +145,24 @@ def format_xml_string(xml_string, file_path="Not provided"):
     except Exception as e:
         _, msg = analyze_xml_parser_error(e)
         log_and_save_error(file_path, msg)
-        return
+        raise XmlFileProcessingError(file_path + "|" + msg)
 
     # Function to add indentation and a blank line before comments
     indent(root)
 
     # Convert the XML tree to a string
     # formatted_xml_bytes: bytes = etree.tostring(root, encoding=windows_1251)
-    formatted_xml_string = (etree.tostring(root, xml_declaration=True, encoding='utf-8')
-                            .decode('utf-8')).replace("<?xml version='1.0' encoding='utf-8'?>", declaration_str)
+    formatted_xml_string = to_utf_string_with_proper_declaration(root)
 
     # Add a blank line before comments
-    updated_xml_bytes = add_blank_line_before_comments(formatted_xml_string)
+    updated_xml_str = add_blank_line_before_comments(formatted_xml_string)
 
-    return updated_xml_bytes
+    return updated_xml_str.strip() + "\n"
+
+
+def to_utf_string_with_proper_declaration(root):
+    return (etree.tostring(root, xml_declaration=True, encoding='utf-8')
+            .decode('utf-8')).replace("<?xml version='1.0' encoding='utf-8'?>", declaration_str)
 
 
 # Text utils
@@ -204,13 +213,17 @@ def format_text_entry(text, indent_level):
 
     return '\n' + '\n'.join(indented_lines) + '\n' + (" " * 8)
 
+
 #############
 # Fix utils #
 #############
 def fix_illegal_comments(xml_string):
-    return re.sub(r'<!--(.*?)-->',
-                  lambda x: '<!--' + x.group(1).replace('--', '**') + '-->', xml_string,
-                  flags=re.DOTALL)
+    def replace_dashes(match):
+        comment_content = match.group(1)
+        # Replace sequences of '-' (more than one) with equivalent number of '#'
+        return re.sub(r'-{2,}', lambda x: '=' * len(x.group()), comment_content)
+
+    return re.sub(r'<!--(.*?)-->', lambda x: '<!--' + replace_dashes(x) + '-->', xml_string, flags=re.DOTALL)
 
 
 def fix_xml_declaration(xml_string, file_path):
@@ -220,7 +233,7 @@ def fix_xml_declaration(xml_string, file_path):
         msg = "The XML declaration is incorrect. Fixing..."
         log.info(msg)
 
-    return declaration_str + "\n" + no_decl
+    return declaration_str + no_decl
 
 
 def fix_ampersand_misuse(xml_string):
@@ -252,9 +265,15 @@ def fix_ampersand_misuse(xml_string):
 
 def fix_possible_errors(xml_string, file_path):
     # String manipulation
+    log.debug("Try to detect and fix comments")
     fixed_comments = fix_illegal_comments(xml_string)
+    log.debug("Try to detect and fix ampersand issues")
     fixed_ampersand = fix_ampersand_misuse(fixed_comments)
+    log.debug("Try to detect and resolve includes")
     resolved_includes = resolve_xml_includes(fixed_ampersand)
 
     # XML DOM parser manipulation
+    log.debug("Try to detect and fix XML declaration")
     fixed_declaration = fix_xml_declaration(resolved_includes, file_path)
+    log.debug("Done with fixing")
+    return fixed_declaration

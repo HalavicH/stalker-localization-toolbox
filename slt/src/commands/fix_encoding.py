@@ -1,3 +1,4 @@
+from src.command_names import windows_1251
 from src.commands.validate_encoding import validate_encoding
 from src.log_config_loader import log
 from src.utils.colorize import cf_yellow, cf_green

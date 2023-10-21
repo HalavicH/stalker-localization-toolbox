@@ -2,6 +2,7 @@
 
 Before:
 ```xml
+<!-- -->
 <string id="ui_mm_alife_general_dyn_noct_mutants_attacks_strength_desc">
     <text>Визначає наявність нічних мутантів, тобто кількість, яка з’явиться
 вночі.\n\n%c[pda_yellow]Примітка:%c[ui_gray_2]\nУстановлення на 100% призведе
