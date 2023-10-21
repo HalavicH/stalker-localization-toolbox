@@ -1,3 +1,4 @@
+import codecs
 import glob
 import os
 
@@ -15,3 +16,17 @@ def find_xml_files(path):
     log.info(f"Input files number: {len(xml_files)}")
 
     return xml_files
+
+
+def read_xml(file_path, encoding='windows-1251'):
+    with codecs.open(file_path, 'r', encoding=encoding) as file:
+        return file.read()
+
+
+def save_xml(file_path, xml_string, encoding='windows-1251'):
+    if isinstance(xml_string, bytes):
+        xml_string = xml_string.decode(encoding)
+
+    with codecs.open(file_path, 'w', encoding=encoding) as file:
+        return file.write(xml_string)
+

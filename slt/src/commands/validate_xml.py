@@ -16,16 +16,7 @@ include_example = cf_red('#include "some/other/file.xml"')
 
 def process_file(file_path, results):
     issues = []
-    """
-    Open file as win-1251
-        on failure -> issue wrong encoding
-    Try to load root
-        on failure -> issue:
-            no root
-            multiple roots
-    """
-    # with codecs.open(file_path, 'r', encoding='windows-1251') as file:
-    #     xml_string = file.read()
+
     # 1. Test encoding
     try:
         with open(file_path, 'r', encoding=windows_1251) as file:
