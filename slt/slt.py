@@ -20,6 +20,8 @@ from src.command_names import *
 from src.utils.colorize import *
 from src.log_config_loader import log
 
+from rich_argparse import RichHelpFormatter
+
 
 def map_alias_to_command(args):
     for cmd in CMD_TO_ALIASES:
@@ -27,7 +29,7 @@ def map_alias_to_command(args):
             args.command = cmd
 
 
-class CustomHelpFormatter(argparse.HelpFormatter):
+class CustomHelpFormatter(RichHelpFormatter):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs, max_help_position=40, width=120)
 
@@ -43,21 +45,25 @@ def parse_args():
 
     # validate-encoding | ve
     parser_ve = subparsers.add_parser(VALIDATE_ENCODING, aliases=CMD_TO_ALIASES[VALIDATE_ENCODING],
+                                      formatter_class=parser.formatter_class,
                                       help='Validate encoding of a file or directory')
     parser_ve.add_argument('path', help='Path to file or directory')
 
     # fix-encoding | fe
     parser_fe = subparsers.add_parser(FIX_ENCODING, aliases=CMD_TO_ALIASES[FIX_ENCODING],
+                                      formatter_class=parser.formatter_class,
                                       help='Fix UTF-8 encoding of a file or directory (Warning: may break encoding if detected wrongly)')
     parser_fe.add_argument('path', help='Path to file or directory')
 
     # validate-xml | vx
     parser_vx = subparsers.add_parser(VALIDATE_XML, aliases=CMD_TO_ALIASES[VALIDATE_XML],
+                                      formatter_class=parser.formatter_class,
                                       help='Validate XML of a file or directory')
     parser_vx.add_argument('path', help='Path to file or directory')
 
     # format-xml | fx
     parser_fx = subparsers.add_parser(FORMAT_XML, aliases=CMD_TO_ALIASES[FORMAT_XML],
+                                      formatter_class=parser.formatter_class,
                                       help='Format XML of a file or directory')
     parser_fx.add_argument('--fix', action='store_true', help='Fix XML issues if possible instead of skipping the file')
     parser_fx.add_argument('--format-text-entries', action='store_true',
@@ -67,11 +73,13 @@ def parse_args():
 
     # check-primary-lang | cpl
     parser_cpl = subparsers.add_parser(CHECK_PRIMARY_LANG, aliases=CMD_TO_ALIASES[CHECK_PRIMARY_LANG],
+                                       formatter_class=parser.formatter_class,
                                        help='Check primary language of a file or directory')
     parser_cpl.add_argument('path', help='Path to file or directory')
 
     # translate | tr
     parser_tr = subparsers.add_parser(TRANSLATE, aliases=CMD_TO_ALIASES[TRANSLATE],
+                                      formatter_class=parser.formatter_class,
                                       help='Translate text in a file or directory')
     parser_tr.add_argument('path', help='Path to file or directory')
     parser_tr.add_argument('--from', dest='from_lang', help='Source language (auto-detect if missing)')
@@ -80,11 +88,13 @@ def parse_args():
 
     # analyze-patterns | ap
     parser_ap = subparsers.add_parser(ANALYZE_PATTERNS, aliases=CMD_TO_ALIASES[ANALYZE_PATTERNS],
+                                      formatter_class=parser.formatter_class,
                                       help='Analyze patterns in a file or directory')
     parser_ap.add_argument('path', help='Path to file or directory')
 
     # fix-known-broken-patterns | fbp
     parser_fbp = subparsers.add_parser(FIX_KNOWN_BROKEN_PATTERNS, aliases=CMD_TO_ALIASES[FIX_KNOWN_BROKEN_PATTERNS],
+                                       formatter_class=parser.formatter_class,
                                        help='Fix known broken patterns in a file or directory')
     parser_fbp.add_argument('path', help='Path to file or directory')
 
@@ -102,7 +112,7 @@ def parse_args():
 
     if args.command is None:
         cmd_name = sys.argv[0].split("/")[-1] + " -h"
-        log.error(Fore.RESET + f"Please provide args. Use {cf_green(cmd_name)} for help")
+        log.always(f"Please provide args. Use {cf_green(cmd_name)} for help")
         sys.exit()
 
     return args

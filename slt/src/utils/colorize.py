@@ -2,9 +2,8 @@ from colorama import Fore, Back, init
 
 init(autoreset=False)
 
-""" Generic methods """
 
-
+# Generic methods
 def colorize_fore(obj, color: Fore) -> str:
     return color + str(obj) + Fore.RESET
 
@@ -13,9 +12,7 @@ def colorize_background(obj, color: Back) -> str:
     return color + str(obj) + Back.RESET
 
 
-""" Front methods """
-
-
+# Front methods
 def cf_black(obj):
     return colorize_fore(obj, Fore.BLACK)
 
