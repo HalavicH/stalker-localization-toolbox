@@ -20,7 +20,7 @@ Text:
     breaks (just like HTML). The only way you can put a line break is to use \n.
     This feature alligns text within text blocks to look alike in the game.
     [Example here](examples/text-entry-formatting.md)
-- [ ] Analysis for not translated files/text blocks
+- [x] Analysis for not translated files/text blocks
 - [ ] Automatic text translation using DeepL.
 - [ ] Search for duplicate keys
 - [ ] Grammar and typos checkup

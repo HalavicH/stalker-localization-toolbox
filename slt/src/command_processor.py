@@ -2,6 +2,7 @@
 import sys
 from argparse import Namespace
 
+from src.commands.analyze_file_language import check_primary_lang
 from src.commands.format_xml import format_xml
 from src.commands.fix_encoding import fix_encoding
 from src.commands.validate_xml import validate_xml
@@ -10,10 +11,6 @@ from src.command_names import *
 from src.commands.validate_encoding import validate_encoding
 from src.utils.colorize import cf_green
 from src.log_config_loader import log
-
-
-def check_primary_lang(args):
-    log.info(f"Running {args.command} with path: {args.path}")
 
 
 def translate(args):

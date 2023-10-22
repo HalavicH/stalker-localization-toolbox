@@ -214,6 +214,12 @@ def format_text_entry(text, indent_level):
     return '\n' + '\n'.join(indented_lines) + '\n' + (" " * 8)
 
 
+def extract_text_from_xml(xml_string):
+    root = parse_xml_root(xml_string)
+    texts = [elem.text for elem in root.xpath('//text') if elem.text and elem.text.strip()]
+    return '.\n'.join(texts)
+
+
 #############
 # Fix utils #
 #############
