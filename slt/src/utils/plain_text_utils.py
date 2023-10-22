@@ -143,6 +143,11 @@ def remove_placeholders(text):
     return text
 
 
+def purify_text(text):
+    text = fold_text(text)
+    text = remove_colors(text)
+    return remove_placeholders(text)
+
 # Detect broken placeholders
 # Constants for error types
 EXTRA_WHITESPACE_BEFORE_BRACKET = 'Extra whitespace before "["'

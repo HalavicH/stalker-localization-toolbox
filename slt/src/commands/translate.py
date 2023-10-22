@@ -12,6 +12,10 @@ from src.utils.xml_utils import extract_text_from_xml, parse_xml_root, to_utf_st
     format_xml_string
 
 
+class AccessDeniedException(Exception):
+    pass
+
+
 def translate_deepl(text, target_language, api_key, src_language=None):
     url = 'https://api-free.deepl.com/v2/translate'
     headers = {
@@ -26,6 +30,10 @@ def translate_deepl(text, target_language, api_key, src_language=None):
 
     # TODO: handle errors
     response = requests.post(url, headers=headers, data=data)
+
+    if response.status_code == 403:
+        raise AccessDeniedException()
+
     response_json = response.json()
 
     if response.status_code != 200:
@@ -54,6 +62,13 @@ def process_file(file_path, results: list, args):
             continue
 
         orig_text = elem.text
+
+        plain_text = purify_text(orig_text)
+        lang, _ = detect_language(plain_text)
+        if lang == lang_to:
+            log.debug(f"Text {orig_text} is already translated")
+            continue
+
         # prepare text for translation
         replaced_text = replace_n_sym_with_newline(orig_text)
         color_guarded_text = guard_colors(replaced_text)
@@ -85,7 +100,12 @@ def translate(args):
     action_msg = f"Translating from '{color_lang(args.from_lang)}' to '{color_lang(args.to_lang)}'"
     files = get_xml_files_and_log(args.paths, action_msg)
     results = []
-    process_files_with_progress(files, process_file, results, args)
+    try:
+        process_files_with_progress(files, process_file, results, args)
+    except AccessDeniedException:
+        log.error("Access forbidden. It seems that the token is invalid or expired")
+        return
+
     log.info(f"Total processed files: {len(files)}")
     display_report(results)
 

@@ -12,11 +12,6 @@ from src.utils.misc import create_pretty_table, color_lang
 from src.utils.plain_text_utils import *
 from src.utils.xml_utils import parse_xml_root, extract_text_from_xml
 
-def purify_text(text):
-    text = fold_text(text)
-    text = remove_colors(text)
-    return remove_placeholders(text)
-
 
 def process_file(file_path, results: list, args):
     exclude_langs = args.exclude_langs

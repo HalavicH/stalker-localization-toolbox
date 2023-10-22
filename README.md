@@ -21,7 +21,7 @@ Text:
     This feature alligns text within text blocks to look alike in the game.
     [Example here](examples/text-entry-formatting.md)
 - [x] Analysis for not translated files/text blocks
-- [ ] Automatic text translation using DeepL.
+- [x] Automatic text translation using DeepL.
 - [ ] Search for duplicate keys
 - [ ] Grammar and typos checkup
 - [ ] Capitalization of the text blocks
