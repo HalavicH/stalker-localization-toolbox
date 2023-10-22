@@ -1,5 +1,5 @@
 from src.commands.common import get_xml_files_and_log, process_files_with_progress
-from src.utils.colorize import cf_cyan
+from src.utils.colorize import cf_cyan, cf_green
 from src.utils.file_utils import read_xml, save_xml
 from src.utils.misc import create_pretty_table
 from src.utils.xml_utils import *
@@ -35,7 +35,10 @@ def format_xml_text_entries(text_formatted_xml, indent_level) -> (str, bool):
     return updated_xml_str.strip() + "\n", was_formatted
 
 
-def process_file(file_path, fix_errors=False, format_text=False):
+def process_file(file_path, result, args):
+    fix_errors = args.fix
+    format_text = args.format_text_entries
+
     was_fixed = False
     text_was_formatted = False
     was_formatted = False
@@ -104,7 +107,7 @@ def format_xml(args):
     files = get_xml_files_and_log(args.path, "Formatting XML-schema for")
 
     results = []
-    process_files_with_progress(files, process_file, results)  # Assuming process_file_format_xml exists
+    process_files_with_progress(files, process_file, results, args)  # Assuming process_file_format_xml exists
 
     log.info(f"Total processed files: {len(files)}")
     if len(results) > 0:

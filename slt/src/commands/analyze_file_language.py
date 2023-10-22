@@ -9,7 +9,8 @@ from src.utils.misc import create_pretty_table, color_lang
 from src.utils.xml_utils import parse_xml_root, extract_text_from_xml
 
 
-def process_file(file_path, results: list, detailed=False):
+def process_file(file_path, results: list, args):
+    detailed = args.detailed or False
     stats = {
         "Unknown": 0
     }
@@ -45,7 +46,7 @@ def process_file(file_path, results: list, detailed=False):
 def check_primary_lang(args):
     files = get_xml_files_and_log(args.path, "Analyzing primary language for")
     results = []
-    process_files_with_progress(files, process_file, results)
+    process_files_with_progress(files, process_file, results, args)
     log.info(f"Total processed files: {len(files)}")
     display_report(results)
 
