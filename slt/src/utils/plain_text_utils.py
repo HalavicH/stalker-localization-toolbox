@@ -74,7 +74,7 @@ def unguard_colors(text):
     text = re.sub(r'(<[^>]+_color(?:_num)?)_dot>', r'\1> •', text)
 
     # Convert back named colors
-    text = re.sub(r'<([a-zA-Z_]+)_color>', r'%c[\1]', text)
+    text = re.sub(r'<([a-zA-Z_0-9]+)_color>', r'%c[\1]', text)
 
     # Convert back numeric colors
     text = re.sub(r'<(\d+_\d+_\d+_\d+)_color_num>', lambda m: '%c[' + m.group(1).replace('_', ',') + ']', text)
@@ -100,10 +100,10 @@ def guard_placeholders(text):
 
 def unguard_placeholders(text):
     # Unguard actions
-    text = re.sub(r'<([A-Z_]+)_action>', r'$$\1$$', text)
+    text = re.sub(r'<([A-Z_0-9]+)_action>', r'$$\1$$', text)
 
     # Unguard variables
-    text = re.sub(r'<([a-z_]+)_var>', r'$\1', text)
+    text = re.sub(r'<([a-z_0-9]+)_var>', r'$\1', text)
 
     # Unguard '%s'
     text = text.replace('<s_placeholder>', '%s')
