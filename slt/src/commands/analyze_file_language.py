@@ -72,10 +72,10 @@ def check_primary_lang(args):
     results = []
     process_files_with_progress(files, process_file, results, args)
     log.info(f"Total processed files: {len(files)}")
-    display_report(results)
+    display_report(results, args.detailed)
 
 
-def display_report(report, detailed=False):
+def display_report(report, detailed):
     if len(report) == 0:
         log.info(cf_green("No files with bad encoding detected!"))
         return
@@ -105,18 +105,20 @@ def display_detailed_report(report):
     column_names = ["Filename", "Language", "Count"]
     table = create_pretty_table(column_names)
     longest = 0
-    for filename, stats in report:
+    for filename, stats, _ in report:
         if len(filename) > longest:
             longest = len(filename)
-    for filename, stats in report:
+    for filename, stats, _ in report:
         table.add_row(["─" * longest, "─" * len("Language"), "─" * len("Count")])
         table.add_row([cf_cyan(filename), cf_cyan("Language"), cf_cyan("Count")])
         sorted_keys = sorted(stats.keys())
 
         for lang in sorted_keys:
             stats_num = stats[lang]
+            if stats_num == 0:
+                continue
             if lang == "Unknown":
                 lang = cf_red(lang)
 
-            table.add_row(["", lang, stats_num])
+            table.add_row(["", color_lang(lang), stats_num])
     log.always(table_title + "\n" + str(table))  # PrettyTable objects can be converted to string using str()
