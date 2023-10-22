@@ -1,14 +1,8 @@
-import codecs
-import time
-
 from colorama import Fore
 from lxml.etree import XMLSyntaxError
-from rich.progress import Progress
 
-from src.log_config_loader import log
-from src.utils.colorize import cf_green, cf_red
-from src.utils.file_utils import find_xml_files, read_xml
-from src.utils.misc import get_term_width
+from src.commands.common import get_xml_files_and_log, process_files_with_progress
+from src.utils.file_utils import read_xml
 from src.utils.xml_utils import *
 
 include_example = cf_red('#include "some/other/file.xml"')
@@ -67,7 +61,6 @@ def process_file(file_path, results):
             results.append((file_path, issues))
             return
 
-
     # 5. Validate against schema
 
     # 6. Validate against illegal characters
@@ -78,50 +71,24 @@ def process_file(file_path, results):
 
 
 def validate_xml(args):
-    files = find_xml_files(args.path)
-    log.always(f"Validating XML-schema for {cf_green(len(files))} files")
-
-    term_width = get_term_width()
-    if term_width > 130:
-        max_file_width = term_width - 80
-    else:
-        max_file_width = term_width - 60
+    files = get_xml_files_and_log(args.path, "Validating XML-schema for")
 
     results = []
-    with Progress() as progress:
-        task = progress.add_task("", total=len(files))
-        for i, file_path in enumerate(files):
-            # Truncate the file_path path if it exceeds the maximum width
-            truncated_file = (
-                "..." + file_path[-(max_file_width - 5):]
-                if len(file_path) > max_file_width
-                else file_path.ljust(max_file_width)
-            )
+    process_files_with_progress(files, process_file, results)  # Assuming process_file_validate_xml exists
 
-            # Update the progress bar with the truncated description
-            progress.update(task, completed=i,
-                            description=f"Processing file_path [green]#{i:03}[/] with name [green]{truncated_file}[/]")
+    log.info(f"Total processed files: {len(files)}")
+    display_report(results)
 
-            log.debug(f"Processing file #{i}")
-            try:
-                process_file(file_path, results)
-            except Exception as e:
-                log_and_save_error(file_path, f"Unhandled error {e}")
-        log.info(f"Total processed files: {len(files)}")
 
-    if len(results) > 0:
-        print_report(results)
-    else:
+def display_report(report):
+    if len(report) == 0:
         log.always(cf_green("All files are valid. Congrats"))
+        return
 
-    return results
-
-
-def print_report(results):
-    sorted_results = sorted(results, key=lambda x: x[0])
+    sorted_results = sorted(report, key=lambda x: x[0])
 
     log.always(('#' * 100))
-    log.always(cf_red(f'\t\t\t\t\t Found {len(results)} invalid files:'))
+    log.always(cf_red(f'\t\t\t\t\t Found {len(report)} invalid files:'))
     log.always(('#' * 100))
 
     for file, issues in sorted_results:

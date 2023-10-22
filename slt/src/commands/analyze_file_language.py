@@ -1,20 +1,11 @@
-import rich
 from langdetect import LangDetectException
 
-from src.log_config_loader import log
-
-import time
-
-from rich.progress import Progress
-
-from prettytable import PrettyTable
-
+from src.commands.common import process_files_with_progress, get_xml_files_and_log
 from src.log_config_loader import log
 from src.utils.colorize import *
-from src.utils.encoding_utils import detect_encoding, is_file_content_win1251_compatible
-from src.utils.file_utils import find_xml_files, read_xml
+from src.utils.file_utils import read_xml
 from src.utils.lang_utils import detect_language
-from src.utils.misc import get_term_width, create_pretty_table
+from src.utils.misc import create_pretty_table
 from src.utils.xml_utils import parse_xml_root, extract_text_from_xml
 
 
@@ -68,7 +59,15 @@ def color_lang(lang):
     return colored
 
 
-def print_report(report, detailed=False):
+def check_primary_lang(args):
+    files = get_xml_files_and_log(args.path, "Analyzing primary language for")
+    results = []
+    process_files_with_progress(files, process_file, results)
+    log.info(f"Total processed files: {len(files)}")
+    display_report(results)
+
+
+def display_report(report, detailed=False):
     if len(report) == 0:
         log.info(cf_green("No files with bad encoding detected!"))
         return
@@ -86,58 +85,26 @@ def print_report(report, detailed=False):
     log.always(table_title + "\n" + str(table))  # PrettyTable objects can be converted to string using str()
 
     if detailed:
-        table_title = cf_red(f"Detailed report on language (total: {len(report)})")
-        column_names = ["Filename", "Language", "Count"]
-        table = create_pretty_table(column_names)
-
-        longest = 0
-        for filename, stats in report:
-            if len(filename) > longest:
-                longest = len(filename)
-
-        for filename, stats in report:
-            table.add_row(["─" * longest, "─" * len("Language"), "─" * len("Count")])
-            table.add_row([cf_cyan(filename), cf_cyan("Language"), cf_cyan("Count")])
-            sorted_keys = sorted(stats.keys())
-
-            for lang in sorted_keys:
-                stats_num = stats[lang]
-                if lang == "Unknown":
-                    lang = cf_red(lang)
-
-                table.add_row(["", lang, stats_num])
-
-        log.always(table_title + "\n" + str(table))  # PrettyTable objects can be converted to string using str()
+        display_detailed_report(report)
 
 
-def check_primary_lang(args):
-    files = find_xml_files(args.path)
-    log.always(f"Alanyzing primary language {cf_green(len(files))} files")
+def display_detailed_report(report):
+    table_title = cf_red(f"Detailed report on language (total: {len(report)})")
+    column_names = ["Filename", "Language", "Count"]
+    table = create_pretty_table(column_names)
+    longest = 0
+    for filename, stats in report:
+        if len(filename) > longest:
+            longest = len(filename)
+    for filename, stats in report:
+        table.add_row(["─" * longest, "─" * len("Language"), "─" * len("Count")])
+        table.add_row([cf_cyan(filename), cf_cyan("Language"), cf_cyan("Count")])
+        sorted_keys = sorted(stats.keys())
 
-    term_width = get_term_width()
-    if term_width > 130:
-        max_file_width = term_width - 80
-    else:
-        max_file_width = term_width - 60
+        for lang in sorted_keys:
+            stats_num = stats[lang]
+            if lang == "Unknown":
+                lang = cf_red(lang)
 
-    results = []
-    with Progress() as progress:
-        task = progress.add_task("", total=len(files))
-        for i, file in enumerate(files):
-            # Truncate the file path if it exceeds the maximum width
-            truncated_file = (
-                "..." + file[-(max_file_width - 5):]
-                if len(file) > max_file_width
-                else file.ljust(max_file_width)
-            )
-
-            # Update the progress bar with the truncated description
-            progress.update(task, completed=i,
-                            description=f"Processing file [green]#{i:03}[/] with name [green]{truncated_file}[/]")
-
-            log.debug(f"Processing file #{i}")
-            process_file(file, results)
-
-    log.info(f"Total processed files: {len(files)}")
-
-    print_report(results)
+            table.add_row(["", lang, stats_num])
+    log.always(table_title + "\n" + str(table))  # PrettyTable objects can be converted to string using str()

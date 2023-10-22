@@ -32,4 +32,3 @@ def save_xml(file_path, xml_string, encoding='windows-1251'):
 
     with codecs.open(file_path, 'w', encoding=encoding) as file:
         return file.write(xml_string)
-

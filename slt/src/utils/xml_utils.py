@@ -1,14 +1,13 @@
 import codecs
 import os
 import re
-import textwrap
 
 from lxml import etree
 from lxml.etree import _Element
 
 from src.command_names import windows_1251
 from src.log_config_loader import log
-from src.utils.colorize import cf_yellow, cf_green, cf_red
+from src.utils.colorize import cf_yellow, cf_red
 from src.utils.error_utils import log_and_save_error
 
 declaration_str = "<?xml version='1.0' encoding='WINDOWS-1251'?>"
@@ -166,54 +165,6 @@ def to_utf_string_with_proper_declaration(root):
 
 
 # Text utils
-def fold_text(text: str) -> str:
-    # Replace multiple whitespaces with a single space and trim leading/trailing whitespaces
-    folded = ' '.join(text.split())
-    folded = ' '.join(folded.split("\n"))
-    return folded
-
-
-def replace_n_sym_with_newline(text: str):
-    # Ensure that no extra newlines present
-    folded = fold_text(text)
-    replaced, count = folded.replace("\\n", "\n"), folded.count("\\n")
-    log.debug(f'Number of "\\n" replaced with newline: {count}')
-    return replaced
-
-
-def replace_new_line_with_n_sym(text: str):
-    count = text.count("\n")
-    replaced = text.replace("\n", "\\n")
-    log.debug(f'Number of newline replaced with "\\n": {count}')
-    return replaced
-
-
-def format_text_entry(text, indent_level):
-    # Step 1: Collapse the text into one line
-    text = ' '.join(text.split())
-
-    # Step 2: Place line breaks before \n
-    text = text.replace('\\n', '\n\\n')
-
-    # Step 4: Wrap lines by word if longer than 85 char without inserting \n symbol
-    lines = text.split('\n')
-    wrapped_lines = []
-    for line in lines:
-        wrapped_line = textwrap.fill(line, width=85, expand_tabs=False, replace_whitespace=False)
-        for sub_line in wrapped_line.split("\n"):
-            wrapped_lines.append(sub_line)
-
-    # Step 3: Indent everything according to the position of the <text> tag
-    indented_lines = [indent_level + line for line in wrapped_lines]
-
-    # Remove 2 characters so '\n' is not at the same level as other text
-    for i in range(0, len(indented_lines)):
-        if "\\n" in indented_lines[i]:
-            indented_lines[i] = indented_lines[i][2:]
-
-    return '\n' + '\n'.join(indented_lines) + '\n' + (" " * 8)
-
-
 def extract_text_from_xml(xml_string):
     root = parse_xml_root(xml_string)
     texts = [elem.text for elem in root.xpath('//text') if elem.text and elem.text.strip()]

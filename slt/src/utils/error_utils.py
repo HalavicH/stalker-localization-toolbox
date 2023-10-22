@@ -3,7 +3,7 @@ from src.log_config_loader import log
 failed_files = {}
 
 
-def log_and_save_error(file: str, colored_message: str, level: str='error'):
+def log_and_save_error(file: str, colored_message: str, level: str = 'error'):
     log.error(f"File: '{file}'")
     log.error("\t" + colored_message)
 

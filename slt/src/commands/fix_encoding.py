@@ -2,8 +2,6 @@ from src.command_names import windows_1251
 from src.commands.validate_encoding import validate_encoding
 from src.log_config_loader import log
 from src.utils.colorize import cf_yellow, cf_green
-from src.utils.error_utils import log_and_save_error
-from rich.pretty import pprint
 
 
 def change_file_encoding(file_name, e_from, e_to):
