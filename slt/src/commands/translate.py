@@ -24,6 +24,7 @@ def translate_deepl(text, target_language, api_key, src_language=None):
     if src_language:
         data['source_lang'] = src_language.upper()
 
+    # TODO: handle errors
     response = requests.post(url, headers=headers, data=data)
     response_json = response.json()
 

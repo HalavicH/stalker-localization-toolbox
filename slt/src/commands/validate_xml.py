@@ -2,6 +2,7 @@ from colorama import Fore
 from lxml.etree import XMLSyntaxError
 
 from src.commands.common import get_xml_files_and_log, process_files_with_progress
+from src.utils.colorize import cf_green
 from src.utils.file_utils import read_xml
 from src.utils.xml_utils import *
 

@@ -141,3 +141,90 @@ def remove_placeholders(text):
     text = re.sub(r'%c(?! ?\[)', '', text)
 
     return text
+
+
+# Detect broken placeholders
+# Constants for error types
+EXTRA_WHITESPACE_BEFORE_BRACKET = 'Extra whitespace before "["'
+EXTRA_WHITESPACE_INSIDE_BRACKETS = 'Extra whitespace inside "[]"'
+HYPHEN_IN_NAME = 'Hyphen in the name'
+
+
+# Error fixing functions
+def fix_whitespace_before_bracket(text_list, start, end):
+    while text_list[start] != '%':
+        text_list.pop(start)
+
+
+def fix_whitespace_inside_brackets(text_list, start, end):
+    # Remove spaces after "%c["
+    while text_list[start + 3] == ' ':
+        text_list.pop(start + 3)
+    # Remove spaces before "]"
+    while text_list[end - 2] == ' ':
+        text_list.pop(end - 2)
+        end -= 1
+
+
+def fix_hyphen_in_name(text_list, start, end):
+    for i in range(start, end):
+        if text_list[i] == '-':
+            text_list[i] = '_'
+
+        # Configuration block: error types, patterns, and fixing functions
+
+
+ERROR_CONFIG = {
+    EXTRA_WHITESPACE_BEFORE_BRACKET: {
+        'pattern': r'(\%c\s+\[)',
+        'fix': fix_whitespace_before_bracket
+    },
+    EXTRA_WHITESPACE_INSIDE_BRACKETS: {
+        'pattern': r'(\%c\[\s+|\s+\])',
+        'fix': fix_whitespace_inside_brackets
+    },
+    HYPHEN_IN_NAME: {
+        'pattern': r'(\%c\[[a-z0-9_\-]+\])',
+        'fix': fix_hyphen_in_name
+    }
+}
+
+
+def check_placeholders(text):
+    errors = []
+    for error_type, config in ERROR_CONFIG.items():
+        pattern = config['pattern']
+        for match in re.finditer(pattern, text):
+            start, end = match.span()
+            error_content = match.group(1)
+
+            # Extract snippet for the same line
+            line_start = text.rfind('\n', 0, start) + 1
+            line_end = text.find('\n', end) if text.find('\n', end) != -1 else len(text)
+            snippet = text[line_start:line_end]
+
+            # Compute row and column
+            row = text.count('\n', 0, start) + 1
+            col = start - line_start + 1
+
+            # Build error object
+            error = {
+                'position': {'row': row, 'column': col},
+                'type': error_type,
+                'snippet': snippet,
+                'content': error_content
+            }
+            errors.append(error)
+            log.debug(f"Detected: {error}")
+    return errors
+
+
+def fix_errors(text, errors):
+    # Apply refined fix function
+    return refined_fix(text)
+
+
+def refined_fix(text):
+    # Replace placeholders with unwanted spaces using regex
+    corrected_text = re.sub(r'%c\s*\[\s*(.*?)\s*\]', r'%c[\1]', text)
+    return corrected_text
