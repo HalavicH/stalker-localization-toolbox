@@ -19,7 +19,7 @@ def process_file(file, results: list):
 
 
 def validate_encoding(args):
-    files = get_xml_files_and_log(args.path, "Validating encoding for")
+    files = get_xml_files_and_log(args.paths, "Validating encoding for")
 
     results = []
     process_files_with_progress(files, process_file, results)  # Assuming process_file_validate_encoding exists

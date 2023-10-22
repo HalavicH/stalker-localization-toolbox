@@ -47,19 +47,19 @@ def parse_args():
     parser_ve = subparsers.add_parser(VALIDATE_ENCODING, aliases=CMD_TO_ALIASES[VALIDATE_ENCODING],
                                       formatter_class=parser.formatter_class,
                                       help='Validate encoding of a file or directory')
-    parser_ve.add_argument('path', help='Path to file or directory')
+    parser_ve.add_argument('paths', nargs='*', help='Paths to files or directories')
 
     # fix-encoding | fe
     parser_fe = subparsers.add_parser(FIX_ENCODING, aliases=CMD_TO_ALIASES[FIX_ENCODING],
                                       formatter_class=parser.formatter_class,
                                       help='Fix UTF-8 encoding of a file or directory (Warning: may break encoding if detected wrongly)')
-    parser_fe.add_argument('path', help='Path to file or directory')
+    parser_fe.add_argument('paths', nargs='*', help='Paths to files or directories')
 
     # validate-xml | vx
     parser_vx = subparsers.add_parser(VALIDATE_XML, aliases=CMD_TO_ALIASES[VALIDATE_XML],
                                       formatter_class=parser.formatter_class,
                                       help='Validate XML of a file or directory')
-    parser_vx.add_argument('path', help='Path to file or directory')
+    parser_vx.add_argument('paths', nargs='*', help='Paths to files or directories')
 
     # format-xml | fx
     parser_fx = subparsers.add_parser(FORMAT_XML, aliases=CMD_TO_ALIASES[FORMAT_XML],
@@ -69,13 +69,13 @@ def parse_args():
     parser_fx.add_argument('--format-text-entries', action='store_true',
                            help='Format <text> tag contents to resemble in-game appearance')
 
-    parser_fx.add_argument('path', help='Path to file or directory')
+    parser_fx.add_argument('paths', nargs='*', help='Paths to files or directories')
 
     # check-primary-lang | cpl
     parser_cpl = subparsers.add_parser(CHECK_PRIMARY_LANG, aliases=CMD_TO_ALIASES[CHECK_PRIMARY_LANG],
                                        formatter_class=parser.formatter_class,
                                        help='Check primary language of a file or directory')
-    parser_cpl.add_argument('path', help='Path to file or directory')
+    parser_cpl.add_argument('paths', nargs='*', help='Paths to files or directories')
     parser_cpl.add_argument('--exclude', dest='exclude',
                             help='Language to exclude from the report separated with "+". E.g: ' + cf_cyan("--exclude uk+en"))
     parser_cpl.add_argument('--detailed', action='store_true',
@@ -85,7 +85,7 @@ def parse_args():
     parser_tr = subparsers.add_parser(TRANSLATE, aliases=CMD_TO_ALIASES[TRANSLATE],
                                       formatter_class=parser.formatter_class,
                                       help='Translate text in a file or directory')
-    parser_tr.add_argument('path', help='Path to file or directory')
+    parser_tr.add_argument('paths', nargs='*', help='Paths to files or directories')
     parser_tr.add_argument('--from', dest='from_lang', help='Source language (auto-detect if missing)')
     parser_tr.add_argument('--to', dest='to_lang', required=True, help='Target language')
     parser_tr.add_argument('--api-key', required=True, help='API key for translation service')
@@ -94,13 +94,13 @@ def parse_args():
     parser_ap = subparsers.add_parser(ANALYZE_PATTERNS, aliases=CMD_TO_ALIASES[ANALYZE_PATTERNS],
                                       formatter_class=parser.formatter_class,
                                       help='Analyze patterns in a file or directory')
-    parser_ap.add_argument('path', help='Path to file or directory')
+    parser_ap.add_argument('paths', nargs='*', help='Paths to files or directories')
 
     # fix-known-broken-patterns | fbp
     parser_fbp = subparsers.add_parser(FIX_KNOWN_BROKEN_PATTERNS, aliases=CMD_TO_ALIASES[FIX_KNOWN_BROKEN_PATTERNS],
                                        formatter_class=parser.formatter_class,
                                        help='Fix known broken patterns in a file or directory')
-    parser_fbp.add_argument('path', help='Path to file or directory')
+    parser_fbp.add_argument('paths', nargs='*', help='Paths to files or directories')
 
     # TODO: Change log level with env variable
     # # Global logging level settings

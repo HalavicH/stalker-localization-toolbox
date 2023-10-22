@@ -15,11 +15,11 @@ from src.log_config_loader import log
 
 
 def analyze_patterns(args):
-    log.info(f"Running {args.command} with path: {args.path}")
+    log.info(f"Running {args.command} with path: {args.paths}")
 
 
 def fix_known_broken_patterns(args):
-    log.info(f"Running {args.command} with path: {args.path}")
+    log.info(f"Running {args.command} with path: {args.paths}")
 
 
 # Command Registry
@@ -44,7 +44,7 @@ def process_command(args: Namespace):
         sys.exit(1)
 
     # Do actual work
-    log.always(f"Running command '{args.command}' on path: '{args.path}'")
+    log.always(f"Running command '{args.command}' on paths: {args.paths}")
     callback(args)
 
     log.info(cf_green("Done"))

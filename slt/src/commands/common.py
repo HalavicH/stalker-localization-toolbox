@@ -8,10 +8,12 @@ from src.utils.misc import get_term_width
 
 
 # 1. Get the list of XML files and log the number of files
-def get_xml_files_and_log(path, action_msg):
-    files = find_xml_files(path)
-    log.always(f"{action_msg} {cf_green(len(files))} files")
-    return files
+def get_xml_files_and_log(paths, action_msg):
+    all_files = []
+    for path in paths:
+        all_files.extend(find_xml_files(path))
+    log.always(f"{action_msg} {cf_green(len(all_files))} files")
+    return all_files
 
 
 # 2. Determine the maximum file width for display based on terminal width

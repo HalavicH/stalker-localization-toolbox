@@ -117,7 +117,7 @@ def format_xml(args):
         log.always(cf_cyan(
             "Format <text> content option enabled. Will make text look as similar as possible to the in-game text"))
 
-    files = get_xml_files_and_log(args.path, "Formatting XML-schema for")
+    files = get_xml_files_and_log(args.paths, "Formatting XML-schema for")
 
     results = []
     process_files_with_progress(files, process_file, results, args)  # Assuming process_file_format_xml exists

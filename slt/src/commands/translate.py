@@ -82,7 +82,7 @@ def process_file(file_path, results: list, args):
 
 def translate(args):
     action_msg = f"Translating from '{color_lang(args.from_lang)}' to '{color_lang(args.to_lang)}'"
-    files = get_xml_files_and_log(args.path, action_msg)
+    files = get_xml_files_and_log(args.paths, action_msg)
     results = []
     process_files_with_progress(files, process_file, results, args)
     log.info(f"Total processed files: {len(files)}")

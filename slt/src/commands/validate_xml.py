@@ -71,7 +71,7 @@ def process_file(file_path, results):
 
 
 def validate_xml(args):
-    files = get_xml_files_and_log(args.path, "Validating XML-schema for")
+    files = get_xml_files_and_log(args.paths, "Validating XML-schema for")
 
     results = []
     process_files_with_progress(files, process_file, results)  # Assuming process_file_validate_xml exists
