@@ -5,7 +5,7 @@ import re
 from lxml import etree
 from lxml.etree import _Element
 
-from src.command_names import windows_1251
+from src.config import PRIMARY_ENCODING
 from src.log_config_loader import log
 from src.utils.colorize import cf_yellow, cf_red
 from src.utils.error_utils import log_and_save_error
@@ -34,20 +34,20 @@ def remove_xml_declaration(xml_string, file_path, log_and_save_err=True):
 
 def parse_doc_info(xml_string: str):
     parser = etree.XMLParser(recover=True)
-    tree: _Element = etree.fromstring(xml_string.encode(windows_1251), parser=parser)
+    tree: _Element = etree.fromstring(xml_string.encode(PRIMARY_ENCODING), parser=parser)
     return tree.getroottree().docinfo
 
 
 def is_valid_doc_info(doc_info, file_path=None, log_and_save_err=None):
     version = doc_info.xml_version
     encoding_lower = doc_info.encoding.lower()
-    if version != '1.0' or encoding_lower != windows_1251:
+    if version != '1.0' or encoding_lower != PRIMARY_ENCODING:
         message = cf_yellow(f"Warning: File {file_path} has invalid header in it")
         if log_and_save_err:
             log_and_save_error(file_path, message, level='warning')
         else:
             version_message = f"Expected version='1.0' got '{cf_red(version)}'" if version != '1.0' else ""
-            encoding_message = f"Expected encoding='{windows_1251}' got '{cf_red(encoding_lower)}'" if encoding_lower != windows_1251 else ""
+            encoding_message = f"Expected encoding='{PRIMARY_ENCODING}' got '{cf_red(encoding_lower)}'" if encoding_lower != PRIMARY_ENCODING else ""
             raise ValueError(f"Wrong XML declaration. {version_message}{encoding_message}")
         return False
 
@@ -56,8 +56,8 @@ def is_valid_doc_info(doc_info, file_path=None, log_and_save_err=None):
 
 def parse_xml_root(xml_string):
     if isinstance(xml_string, str):
-        log.debug(f"Provided plain string. Encoding to {windows_1251}")
-        xml_string = xml_string.encode(windows_1251)
+        log.debug(f"Provided plain string. Encoding to {PRIMARY_ENCODING}")
+        xml_string = xml_string.encode(PRIMARY_ENCODING)
 
     parser = etree.XMLParser(remove_blank_text=True)
     return etree.fromstring(xml_string, parser)
@@ -78,7 +78,7 @@ def resolve_xml_includes(xml_string):
             # Extract the included file path
             included_file_path = line.split('"')[1]
             included_file_path = os.path.join("../../gamedata/configs", included_file_path.replace("\\", "/"))
-            with codecs.open(included_file_path, 'r', encoding='windows-1251') as included_file:
+            with codecs.open(included_file_path, 'r', encoding=PRIMARY_ENCODING) as included_file:
                 included_content = included_file.read()
                 processed_lines.append(included_content)
             # os.rename(included_file_path, included_file_path + ".include")

@@ -3,6 +3,7 @@ from functools import reduce
 from langdetect import LangDetectException
 
 from src.commands.common import process_files_with_progress, get_xml_files_and_log
+from src.config import UNKNOWN_LANG, TOO_LITTLE_DATA, min_recognizable_text_length
 from src.log_config_loader import log
 from src.utils.colorize import *
 from src.utils.file_utils import read_xml
@@ -10,12 +11,6 @@ from src.utils.lang_utils import detect_language
 from src.utils.misc import create_pretty_table, color_lang
 from src.utils.plain_text_utils import *
 from src.utils.xml_utils import parse_xml_root, extract_text_from_xml
-
-min_recognizable_text_length = 30
-
-UNKNOWN_LANG = "Unknown"
-TOO_LITTLE_DATA = "Too little data"
-
 
 def purify_text(text):
     text = fold_text(text)

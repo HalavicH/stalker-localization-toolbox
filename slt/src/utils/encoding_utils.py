@@ -1,10 +1,11 @@
 import chardet
 
+from src.config import PRIMARY_ENCODING
 from src.log_config_loader import log
 from src.utils.colorize import cf_green, cf_yellow, cf_red
 
 # Constants
-ALLOWED_ENCODINGS = ['windows-1251', 'ascii']
+ALLOWED_ENCODINGS = [PRIMARY_ENCODING, 'ascii']
 
 
 def is_ascii(binary_text, file_path=""):
@@ -25,7 +26,7 @@ def detect_encoding(binary_text):
 def is_windows_1251_decodable(binary_text, file_path=""):
     try:
         # Attempt to decode the file with windows-1251 encoding
-        binary_text.decode('windows-1251')
+        binary_text.decode(PRIMARY_ENCODING)
         return True  # Successfully decoded with windows-1251
     except UnicodeDecodeError as e:
         log.debug(f"Can't decode file {file_path} as windows-1251. Error {e}")

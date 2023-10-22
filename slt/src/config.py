@@ -1,4 +1,4 @@
-windows_1251 = 'windows-1251'
+PRIMARY_ENCODING = 'windows-1251'
 
 # Constants for command names
 VALIDATE_ENCODING = 'validate-encoding'
@@ -20,3 +20,10 @@ CMD_TO_ALIASES = {
     ANALYZE_PATTERNS: ['ap'],
     FIX_KNOWN_BROKEN_PATTERNS: ['fbp'],
 }
+
+min_recognizable_text_length = 30
+
+UNKNOWN_LANG = "Unknown"
+TOO_LITTLE_DATA = "Too little data"
+
+

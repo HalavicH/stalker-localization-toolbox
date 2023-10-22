@@ -7,7 +7,6 @@ from src.utils.xml_utils import *
 
 include_example = cf_red('#include "some/other/file.xml"')
 
-
 error_str = cf_red("Error")
 
 

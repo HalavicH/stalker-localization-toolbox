@@ -1,4 +1,4 @@
-from src.command_names import windows_1251
+from src.config import PRIMARY_ENCODING
 from src.commands.validate_encoding import validate_encoding
 from src.log_config_loader import log
 from src.utils.colorize import cf_yellow, cf_green
@@ -35,7 +35,7 @@ def fix_encoding(args):
         if encoding.lower() == "utf-8":
             log.always(f"Try to change encoding from {encoding} to Windows-1251 for file {file_name}")
             try:
-                change_file_encoding(file_name, e_from=encoding, e_to=windows_1251)
+                change_file_encoding(file_name, e_from=encoding, e_to=PRIMARY_ENCODING)
                 log.info(cf_green("Success!"))
             except (UnicodeEncodeError, UnicodeDecodeError) as e:
                 pass

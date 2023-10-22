@@ -2,6 +2,7 @@ import codecs
 import glob
 import os
 
+from src.config import PRIMARY_ENCODING
 from src.log_config_loader import log
 
 
@@ -21,12 +22,12 @@ def find_xml_files(path):
     return xml_files
 
 
-def read_xml(file_path, encoding='windows-1251'):
+def read_xml(file_path, encoding=PRIMARY_ENCODING):
     with codecs.open(file_path, 'r', encoding=encoding) as file:
         return file.read()
 
 
-def save_xml(file_path, xml_string, encoding='windows-1251'):
+def save_xml(file_path, xml_string, encoding=PRIMARY_ENCODING):
     if isinstance(xml_string, bytes):
         xml_string = xml_string.decode(encoding)
 

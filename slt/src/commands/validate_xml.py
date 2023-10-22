@@ -13,10 +13,10 @@ def process_file(file_path, results):
 
     # 1. Test encoding
     try:
-        with open(file_path, 'r', encoding=windows_1251) as file:
+        with open(file_path, 'r', encoding=PRIMARY_ENCODING) as file:
             file.read()
     except UnicodeDecodeError as e:
-        msg = f"Can't open file {file_path} as {windows_1251} encoded. Error: {e}"
+        msg = f"Can't open file {file_path} as {PRIMARY_ENCODING} encoded. Error: {e}"
         log.warning(msg)
         results.append((file_path, issues))
         return
@@ -53,7 +53,7 @@ def process_file(file_path, results):
 
     # 4. Parse root
     try:
-        root = parse_xml_root(xml_string.encode(windows_1251))
+        root = parse_xml_root(xml_string.encode(PRIMARY_ENCODING))
     except Exception as e:
         is_fatal, msg = analyze_xml_parser_error(e, file_path, xml_string)
         issues.append(msg)

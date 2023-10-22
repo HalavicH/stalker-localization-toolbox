@@ -8,7 +8,7 @@ from src.commands.fix_encoding import fix_encoding
 from src.commands.translate import translate
 from src.commands.validate_xml import validate_xml
 from src.utils.error_utils import *
-from src.command_names import *
+from src.config import *
 from src.commands.validate_encoding import validate_encoding
 from src.utils.colorize import cf_green
 from src.log_config_loader import log
