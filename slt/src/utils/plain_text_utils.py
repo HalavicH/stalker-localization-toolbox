@@ -81,6 +81,7 @@ def unguard_colors(text):
 
     return text
 
+
 def guard_placeholders(text):
     # Guard actions
     text = re.sub(r'\$\$([A-Z_]+)\$\$', r'<\1_action>', text)
@@ -109,5 +110,34 @@ def unguard_placeholders(text):
 
     # Unguard '%c'
     text = text.replace('<c_placeholder>', '%c')
+
+    return text
+
+
+def remove_colors(text):
+    # Replace named colors e.g. %c[d_green] -> <d_green_color>
+    text = re.sub(r'%c\[([a-zA-Z_0-9]+)]', '', text)
+
+    # Replace numeric colors e.g. %c[0,255,255,255] -> <0_255_255_255_color_num>
+    text = re.sub(r'%c\[(\d+,\d+,\d+,\d+)]', '', text)
+
+    # Handle the dot pattern
+    text = re.sub(r'(<[^>]+_color(?:_num)?)> •', '', text)
+
+    return text
+
+
+def remove_placeholders(text):
+    # Guard actions
+    text = re.sub(r'\$\$([A-Z_]+)\$\$', r'', text)
+
+    # Guard variables
+    text = re.sub(r'\$([a-z_]+)', r'', text)
+
+    # Guard '%s'
+    text = text.replace('%s', '')
+
+    # Special case for '%c' that are not followed by '['
+    text = re.sub(r'%c(?! ?\[)', '', text)
 
     return text

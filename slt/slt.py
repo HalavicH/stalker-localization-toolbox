@@ -76,6 +76,10 @@ def parse_args():
                                        formatter_class=parser.formatter_class,
                                        help='Check primary language of a file or directory')
     parser_cpl.add_argument('path', help='Path to file or directory')
+    parser_cpl.add_argument('--exclude', dest='exclude',
+                            help='Language to exclude from the report separated with "+". E.g: ' + cf_cyan("--exclude uk+en"))
+    parser_cpl.add_argument('--detailed', action='store_true',
+                            help='Show detailed report with language occurrences per file')
 
     # translate | tr
     parser_tr = subparsers.add_parser(TRANSLATE, aliases=CMD_TO_ALIASES[TRANSLATE],

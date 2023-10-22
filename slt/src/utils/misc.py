@@ -68,7 +68,7 @@ def color_lang(lang):
 
     colored = lang_to_colored.get(lang)
     if colored is None:
-        colored = cf_red("Unknown2")
+        colored = lang
     return colored
 
 
