@@ -3,11 +3,14 @@ import textwrap
 
 from src.log_config_loader import log
 
+tabwidth = "    "
+
 
 def fold_text(text: str) -> str:
     # Replace multiple whitespaces with a single space and trim leading/trailing whitespaces
     folded = ' '.join(text.split())
     folded = ' '.join(folded.split("\n"))
+    log.debug(f"Folded text {folded}")
     return folded
 
 
@@ -16,6 +19,7 @@ def replace_n_sym_with_newline(text: str):
     folded = fold_text(text)
     replaced, count = folded.replace("\\n", "\n"), folded.count("\\n")
     log.debug(f'Number of "\\n" replaced with newline: {count}')
+    log.debug(f"Replaced text {replaced}")
     return replaced
 
 
@@ -53,52 +57,29 @@ def format_text_entry(text, indent_level):
 
 
 def guard_colors(text):
-    # Define the color mapping
-    color_mapping = {
-        '%c[ui_gray_2]': '<gray>',
-        '%c[ui_gray_1]': '<gray_light>',
-        '%c[d_cyan]': '<blue>',
-        '%c[d_orange]': '<orange>',
-        '%c[d_red]': '<red>',
-        '%c[d_purple]': '<purple>',
-        '%c[d_green]': '<green>',
-        '%c[0,250,250,0]': '<yellow>',
-        '%c[0,255,255,255]': '<white>',
-    }
+    # Replace named colors e.g. %c[d_green] -> <d_green_color>
+    text = re.sub(r'%c\[([a-zA-Z_0-9]+)]', r'<\1_color>', text)
 
-    # Replace special symbols/phrases with colors
-    for key, value in color_mapping.items():
-        if key + ' •' in text:
-            text = text.replace(key + ' •', value + '_dot>')
-        else:
-            text = text.replace(key, value)
+    # Replace numeric colors e.g. %c[0,255,255,255] -> <0_255_255_255_color_num>
+    text = re.sub(r'%c\[(\d+,\d+,\d+,\d+)]', lambda m: '<' + m.group(1).replace(',', '_') + '_color_num>', text)
+
+    # Handle the dot pattern
+    text = re.sub(r'(<[^>]+_color(?:_num)?)> •', r'\1_dot>', text)
 
     return text
 
 
 def unguard_colors(text):
-    # Define the color mapping
-    color_mapping = {
-        '<gray>': '%c[ui_gray_2]',
-        '<gray_light>': '%c[ui_gray_1]',
-        '<blue>': '%c[d_cyan]',
-        '<orange>': '%c[d_orange]',
-        '<red>': '%c[d_red]',
-        '<purple>': '%c[d_purple]',
-        '<green>': '%c[d_green]',
-        '<yellow>': '%c[0,250,250,0]',
-        '<white>': '%c[0,255,255,255]',
-    }
+    # Handle the dot pattern first
+    text = re.sub(r'(<[^>]+_color(?:_num)?)_dot>', r'\1> •', text)
 
-    # Replace colors with special symbols/phrases
-    for key, value in color_mapping.items():
-        if key + '_dot>' in text:
-            text = text.replace(key + '_dot>', value + ' •')
-        else:
-            text = text.replace(key, value)
+    # Convert back named colors
+    text = re.sub(r'<([a-zA-Z_]+)_color>', r'%c[\1]', text)
+
+    # Convert back numeric colors
+    text = re.sub(r'<(\d+_\d+_\d+_\d+)_color_num>', lambda m: '%c[' + m.group(1).replace('_', ',') + ']', text)
 
     return text
-
 
 def guard_placeholders(text):
     # Guard actions
