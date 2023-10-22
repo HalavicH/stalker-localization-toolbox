@@ -1,3 +1,4 @@
+import re
 import textwrap
 
 from src.log_config_loader import log
@@ -50,3 +51,82 @@ def format_text_entry(text, indent_level):
 
     return '\n' + '\n'.join(indented_lines) + '\n' + (" " * 8)
 
+
+def guard_colors(text):
+    # Define the color mapping
+    color_mapping = {
+        '%c[ui_gray_2]': '<gray>',
+        '%c[ui_gray_1]': '<gray_light>',
+        '%c[d_cyan]': '<blue>',
+        '%c[d_orange]': '<orange>',
+        '%c[d_red]': '<red>',
+        '%c[d_purple]': '<purple>',
+        '%c[d_green]': '<green>',
+        '%c[0,250,250,0]': '<yellow>',
+        '%c[0,255,255,255]': '<white>',
+    }
+
+    # Replace special symbols/phrases with colors
+    for key, value in color_mapping.items():
+        if key + ' •' in text:
+            text = text.replace(key + ' •', value + '_dot>')
+        else:
+            text = text.replace(key, value)
+
+    return text
+
+
+def unguard_colors(text):
+    # Define the color mapping
+    color_mapping = {
+        '<gray>': '%c[ui_gray_2]',
+        '<gray_light>': '%c[ui_gray_1]',
+        '<blue>': '%c[d_cyan]',
+        '<orange>': '%c[d_orange]',
+        '<red>': '%c[d_red]',
+        '<purple>': '%c[d_purple]',
+        '<green>': '%c[d_green]',
+        '<yellow>': '%c[0,250,250,0]',
+        '<white>': '%c[0,255,255,255]',
+    }
+
+    # Replace colors with special symbols/phrases
+    for key, value in color_mapping.items():
+        if key + '_dot>' in text:
+            text = text.replace(key + '_dot>', value + ' •')
+        else:
+            text = text.replace(key, value)
+
+    return text
+
+
+def guard_placeholders(text):
+    # Guard actions
+    text = re.sub(r'\$\$([A-Z_]+)\$\$', r'<\1_action>', text)
+
+    # Guard variables
+    text = re.sub(r'\$([a-z_]+)', r'<\1_var>', text)
+
+    # Guard '%s'
+    text = text.replace('%s', '<s_placeholder>')
+
+    # Special case for '%c' that are not followed by '['
+    text = re.sub(r'%c(?! ?\[)', '<c_placeholder>', text)
+
+    return text
+
+
+def unguard_placeholders(text):
+    # Unguard actions
+    text = re.sub(r'<([A-Z_]+)_action>', r'$$\1$$', text)
+
+    # Unguard variables
+    text = re.sub(r'<([a-z_]+)_var>', r'$\1', text)
+
+    # Unguard '%s'
+    text = text.replace('<s_placeholder>', '%s')
+
+    # Unguard '%c'
+    text = text.replace('<c_placeholder>', '%c')
+
+    return text

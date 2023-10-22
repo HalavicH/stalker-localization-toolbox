@@ -1,6 +1,6 @@
 from langdetect import detect_langs
 
-from .xml_utils import fold_text
+from src.utils.plain_text_utils import fold_text
 
 
 def detect_language(text, possible_languages=["uk", "en", "ru", "fr", "es"]):
