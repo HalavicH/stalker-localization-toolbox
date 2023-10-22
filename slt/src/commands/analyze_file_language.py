@@ -5,7 +5,7 @@ from src.log_config_loader import log
 from src.utils.colorize import *
 from src.utils.file_utils import read_xml
 from src.utils.lang_utils import detect_language
-from src.utils.misc import create_pretty_table
+from src.utils.misc import create_pretty_table, color_lang
 from src.utils.xml_utils import parse_xml_root, extract_text_from_xml
 
 
@@ -40,23 +40,6 @@ def process_file(file_path, results: list, detailed=False):
         main_lang = "Unknown"
 
     results.append((file_path, stats, main_lang))
-
-
-def color_lang(lang):
-    lang_to_colored = {
-        "uk": cf_green("uk"),
-        "ru": cf_red("ru"),
-        "en": cf_blue("en"),
-        "pl": cf_cyan("pl"),
-        "fr": cf_yellow("fr"),
-        "sp": cf_magenta("sp"),
-        "Unknown": cf_red("Unknown"),
-    }
-
-    colored = lang_to_colored.get(lang)
-    if colored is None:
-        colored = cf_red("Unknown2")
-    return colored
 
 
 def check_primary_lang(args):

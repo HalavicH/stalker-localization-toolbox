@@ -21,7 +21,7 @@ def get_max_file_width_for_display():
 
 
 # 3. Process each file with progress indication
-def process_files_with_progress(files, process_func, results):
+def process_files_with_progress(files, process_func, results, args):
     max_file_width = get_max_file_width_for_display()
     with Progress() as progress:
         task = progress.add_task("", total=len(files))
@@ -30,7 +30,7 @@ def process_files_with_progress(files, process_func, results):
             progress_description = f"Processing file [green]#{i:03}[/] with name [green]{formatted_file}[/]"
             progress.update(task, completed=i, description=progress_description)
             log.debug(f"Processing file #{i} name: {file_path}")
-            process_func(file_path, results)
+            process_func(file_path, results, args)
 
 
 def format_filename_for_display(file, max_file_width):

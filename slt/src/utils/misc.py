@@ -2,8 +2,9 @@ import os
 import threading
 import traceback
 
-from colorama import Fore, init
 from prettytable import PrettyTable
+
+from src.utils.colorize import *
 
 init(autoreset=True)
 
@@ -52,6 +53,23 @@ def create_pretty_table(columns, title=None):
     table.left_junction_char = u'\u251C'  # T-junction facing right
     table.right_junction_char = u'\u2524'  # T-junction facing left
     return table
+
+
+def color_lang(lang):
+    lang_to_colored = {
+        "uk": cf_green("uk"),
+        "ru": cf_red("ru"),
+        "en": cf_blue("en"),
+        "pl": cf_cyan("pl"),
+        "fr": cf_yellow("fr"),
+        "sp": cf_magenta("sp"),
+        "Unknown": cf_red("Unknown"),
+    }
+
+    colored = lang_to_colored.get(lang)
+    if colored is None:
+        colored = cf_red("Unknown2")
+    return colored
 
 
 def exception_originates_from(func_name, exception):
