@@ -94,6 +94,8 @@ def parse_args():
     parser_ap = subparsers.add_parser(ANALYZE_PATTERNS, aliases=CMD_TO_ALIASES[ANALYZE_PATTERNS],
                                       formatter_class=parser.formatter_class,
                                       help='Analyze patterns in a file or directory')
+    parser_ap.add_argument('--compare', dest='compare_to_path',
+                            help='Compare freshly-generated analysis with one provided in file')
     parser_ap.add_argument('paths', nargs='*', help='Paths to files or directories')
 
     # fix-known-broken-patterns | fbp

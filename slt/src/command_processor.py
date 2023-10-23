@@ -3,6 +3,7 @@ import sys
 from argparse import Namespace
 
 from src.commands.analyze_file_language import check_primary_lang
+from src.commands.analyze_patterns import analyze_patterns
 from src.commands.format_xml import format_xml
 from src.commands.fix_encoding import fix_encoding
 from src.commands.translate import translate
@@ -12,10 +13,6 @@ from src.config import *
 from src.commands.validate_encoding import validate_encoding
 from src.utils.colorize import cf_green
 from src.log_config_loader import log
-
-
-def analyze_patterns(args):
-    log.info(f"Running {args.command} with path: {args.paths}")
 
 
 def fix_known_broken_patterns(args):

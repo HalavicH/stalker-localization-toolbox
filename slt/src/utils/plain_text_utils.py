@@ -1,7 +1,10 @@
 import re
 import textwrap
 
+from colorama import Fore
+
 from src.log_config_loader import log
+from collections import Counter
 
 tabwidth = "    "
 
@@ -148,6 +151,7 @@ def purify_text(text):
     text = remove_colors(text)
     return remove_placeholders(text)
 
+
 # Detect broken placeholders
 # Constants for error types
 EXTRA_WHITESPACE_BEFORE_BRACKET = 'Extra whitespace before "["'
@@ -189,10 +193,33 @@ ERROR_CONFIG = {
         'fix': fix_whitespace_inside_brackets
     },
     HYPHEN_IN_NAME: {
-        'pattern': r'(\%c\[[a-z0-9_\-]+\])',
+        'pattern': r'(%c\[[a-z0-9_]*-(?=[a-z0-9_]*\])\])',
         'fix': fix_hyphen_in_name
     }
 }
+
+EVERYTHING_NAME = 'Invalid pattern'
+EVERYTHING = {
+    'pattern': r'(\%c\[[a-z0-9_\-]+\])',
+    'fix': fix_hyphen_in_name
+}
+
+
+def color_the_error(snippet, pattern, rich_style=False):
+    if rich_style:
+        reset = "[/]"
+        apply = "[red]"
+    else:
+        reset = Fore.RESET
+        apply = Fore.RED
+
+    for match in re.finditer(pattern, snippet):
+        start, end = match.span()
+        result = snippet[:end] + reset + snippet[end:]
+        result = result[:start] + apply + result[start:]
+
+        # TODO: handle several patterns
+        return result
 
 
 def check_placeholders(text):
@@ -208,9 +235,14 @@ def check_placeholders(text):
             line_end = text.find('\n', end) if text.find('\n', end) != -1 else len(text)
             snippet = text[line_start:line_end]
 
+            snippet = color_the_error(snippet, pattern)
+
             # Compute row and column
             row = text.count('\n', 0, start) + 1
             col = start - line_start + 1
+
+            if error_type == EXTRA_WHITESPACE_BEFORE_BRACKET:
+                print("")
 
             # Build error object
             error = {
@@ -224,12 +256,32 @@ def check_placeholders(text):
     return errors
 
 
-def fix_errors(text, errors):
-    # Apply refined fix function
-    return refined_fix(text)
+COLOR = "color"
+COLOR_NUM = "color_num"
+ACTION = "action"
+VARIABLE = "variable"
+PERCENT_S = "percent_s"
+LONELY_PERCENT_C = "lonely_percent_c"
+
+COMMON_PATERNS = {
+    COLOR: r'%c\[([a-zA-Z_0-9]+)]',
+    COLOR_NUM: r'%c\[(\d+,\d+,\d+,\d+)]',
+    ACTION: r'\$\$([A-Z_]+)\$\$',
+    VARIABLE: r'\$([a-z_]+)',
+    PERCENT_S: '%s',
+    LONELY_PERCENT_C: r'%c(?! ?\[)',
+}
 
 
-def refined_fix(text):
-    # Replace placeholders with unwanted spaces using regex
-    corrected_text = re.sub(r'%c\s*\[\s*(.*?)\s*\]', r'%c[\1]', text)
-    return corrected_text
+def analyze_patterns_in_text(text):
+    report = {}
+    for pattern_name in COMMON_PATERNS:
+        pattern = COMMON_PATERNS[pattern_name]
+        all = re.findall(pattern, text)
+        log.debug(all)
+
+        count_dict = dict(Counter(all))
+        if len(count_dict) > 0:
+            report[pattern_name] = count_dict
+
+    return report
