@@ -1,13 +1,14 @@
 from setuptools import setup, find_packages
 
 setup(
-    name='slt',
+    name='sltools',
     version='0.1.0',
     packages=find_packages(),
     entry_points={
         'console_scripts': [
-            'slt = src.slt:main',
+            'sltools = sltools.slt:main',
         ],
     },
+    package_data={'sltools': ['./resources/logger-config.ini']},
     install_requires=["colorlog"],
 )

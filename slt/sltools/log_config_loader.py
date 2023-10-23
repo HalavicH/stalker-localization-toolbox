@@ -2,11 +2,17 @@ import logging.config
 import os
 
 import colorlog
+import pkg_resources
 
 # Define a custom logging level
 ALWAYS_LEVEL = 55
 ALWAYS_NAME = '\u27A4'
 logging.addLevelName(ALWAYS_LEVEL, ALWAYS_NAME)
+
+file_path = pkg_resources.resource_filename('sltools', 'resources/logger-config.ini')
+
+
+# file_path = os.path.abspath(os.path.join(curr_dir, 'resources/logger_config.ini'))
 
 
 # Define custom logger class for autocompletion
@@ -35,7 +41,6 @@ class CustomFormatter(logging.Formatter):
 
 def configure_logging():
     curr_dir = os.path.dirname(__file__)
-    file_path = os.path.abspath(os.path.join(curr_dir, '../resources/logger_config.ini'))
     colors = colorlog.default_log_colors
     colors['INFO'] = "reset"
     # colors[ALWAYS_NAME] = "green"
