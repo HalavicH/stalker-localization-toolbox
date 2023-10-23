@@ -5,7 +5,7 @@ from src.utils.encoding_utils import detect_encoding, is_file_content_win1251_co
 from src.utils.misc import create_pretty_table
 
 
-def process_file(file, results: list):
+def process_file(file, results: list, args):
     with open(file, 'rb') as f:
         binary_text = f.read()
 
@@ -22,10 +22,11 @@ def validate_encoding(args):
     files = get_xml_files_and_log(args.paths, "Validating encoding for")
 
     results = []
-    process_files_with_progress(files, process_file, results)  # Assuming process_file_validate_encoding exists
+    process_files_with_progress(files, process_file, results, args)  # Assuming process_file_validate_encoding exists
 
     log.info(f"Total processed files: {len(files)}")
     display_report(results)
+    return results
 
 
 def display_report(report):

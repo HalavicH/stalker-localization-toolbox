@@ -1,7 +1,8 @@
 from src.config import PRIMARY_ENCODING
 from src.commands.validate_encoding import validate_encoding
 from src.log_config_loader import log
-from src.utils.colorize import cf_yellow, cf_green
+from src.utils.colorize import cf_yellow, cf_green, cf_red, cf_cyan
+from src.utils.error_utils import log_and_save_error
 
 
 def change_file_encoding(file_name, e_from, e_to):
@@ -33,13 +34,13 @@ def fix_encoding(args):
 
     for file_name, encoding, comment in results:
         if encoding.lower() == "utf-8":
-            log.always(f"Try to change encoding from {encoding} to Windows-1251 for file {file_name}")
+            windows_ = 'Windows-1251'
+            log.always(f"Try to change encoding from {cf_red(encoding)} to {cf_green(windows_)} for file {cf_cyan(file_name)}")
             try:
                 change_file_encoding(file_name, e_from=encoding, e_to=PRIMARY_ENCODING)
-                log.info(cf_green("Success!"))
+                log.always(cf_green("Success!"))
             except (UnicodeEncodeError, UnicodeDecodeError) as e:
-                pass
-                # log_and_save_error(file_name,
-                #                    f"Can't encode from {cf_yellow(encoding)} to {cf_yellow(windows_1251)}.\n\tError: {e}")
+                log_and_save_error(file_name,
+                                   f"Can't encode from {cf_yellow(encoding)} to {cf_yellow(windows_)}.\n\tError: {e}")
         else:
             log.debug(f"File {file_name} possibly has {encoding} encoding. But maybe no, so won't do anything")

@@ -77,7 +77,8 @@ def parse_args():
                                        help='Check primary language of a file or directory')
     parser_cpl.add_argument('paths', nargs='*', help='Paths to files or directories')
     parser_cpl.add_argument('--exclude', dest='exclude',
-                            help='Language to exclude from the report separated with "+". E.g: ' + cf_cyan("--exclude uk+en"))
+                            help='Language to exclude from the report separated with "+". E.g: ' + cf_cyan(
+                                "--exclude uk+en"))
     parser_cpl.add_argument('--detailed', action='store_true',
                             help='Show detailed report with language occurrences per file')
 
@@ -95,21 +96,14 @@ def parse_args():
                                       formatter_class=parser.formatter_class,
                                       help='Analyze patterns in a file or directory')
     parser_ap.add_argument('--compare', dest='compare_to_path',
-                            help='Compare freshly-generated analysis with one provided in file')
+                           help='Compare freshly-generated analysis with one provided in file')
     parser_ap.add_argument('paths', nargs='*', help='Paths to files or directories')
 
-    # fix-known-broken-patterns | fbp
-    parser_fbp = subparsers.add_parser(FIX_KNOWN_BROKEN_PATTERNS, aliases=CMD_TO_ALIASES[FIX_KNOWN_BROKEN_PATTERNS],
-                                       formatter_class=parser.formatter_class,
-                                       help='Fix known broken patterns in a file or directory')
-    parser_fbp.add_argument('paths', nargs='*', help='Paths to files or directories')
-
-    # TODO: Change log level with env variable
-    # # Global logging level settings
-    # log_group = parser.add_mutually_exclusive_group()
-    # log_group.add_argument('--log-level', choices=['DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL'],
-    #                        help='Set log level')
-    # log_group.add_argument('--verbose', action='store_true', help='Set log level to DEBUG')
+    # # fix-known-broken-patterns | fbp
+    # parser_fbp = subparsers.add_parser(FIX_KNOWN_BROKEN_PATTERNS, aliases=CMD_TO_ALIASES[FIX_KNOWN_BROKEN_PATTERNS],
+    #                                    formatter_class=parser.formatter_class,
+    #                                    help='Fix known broken patterns in a file or directory')
+    # parser_fbp.add_argument('paths', nargs='*', help='Paths to files or directories')
 
     args = parser.parse_args()
     log.debug(f"Args: {args}")

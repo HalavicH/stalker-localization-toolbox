@@ -22,8 +22,9 @@ Text:
     [Example here](examples/text-entry-formatting.md)
 - [x] Analysis for not translated files/text blocks
 - [x] Automatic text translation using DeepL.
+- [x] Analyze broken patterns/placeholders/colors
+    - [x] Fix broken patterns/placeholders/colors
 - [ ] Search for duplicate keys
-- [x] Fix broken patterns/placeholders/colors
 - [ ] Grammar and typos checkup
 - [ ] Capitalization of the text blocks
 - [ ] Automatic scraping for files you need to translate (if you just start) with
