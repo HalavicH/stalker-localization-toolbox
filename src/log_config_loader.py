@@ -1,5 +1,6 @@
 import logging.config
 import os
+import sys
 
 import colorlog
 import pkg_resources
@@ -40,12 +41,63 @@ class CustomFormatter(logging.Formatter):
 
 
 def configure_logging():
-    curr_dir = os.path.dirname(__file__)
     colors = colorlog.default_log_colors
     colors['INFO'] = "reset"
-    # colors[ALWAYS_NAME] = "green"
-    print(file_path)
-    logging.config.fileConfig(fname=file_path, disable_existing_loggers=False, defaults={'log_color': colors}, )
+
+    loggers = {
+        '': {
+            'level': 'WARNING',
+            'handlers': ['consoleHandler'],
+        },
+        'main': {
+            'level': 'WARNING',
+            'handlers': ['consoleHandler', 'fileHandler'],
+            'propagate': False,
+        },
+    }
+
+    handlers = {
+        'consoleHandler': {
+            'class': 'logging.StreamHandler',
+            'level': 'DEBUG',
+            'formatter': 'colorConsoleFormatter',
+            'stream': sys.stdout,
+        },
+        'fileHandler': {
+            'class': 'logging.FileHandler',
+            'level': 'INFO',
+            'formatter': 'fileFormatter',
+            'filename': 'app.log',
+            'mode': 'a',
+        },
+    }
+
+    formatters = {
+        'fileFormatter': {
+            'format': '%(asctime)s - %(levelname)s - %(filename)s:%(lineno)d - %(message)s',
+            'datefmt': '%Y-%m-%d %H:%M:%S',
+        },
+        'colorConsoleFormatter': {
+            '()': 'colorlog.ColoredFormatter',
+            'format': '%(log_color)s%(levelname)s - %(message)s %(reset)s',
+        },
+    }
+
+    logging.config.dictConfig({
+        'version': 1,
+        'loggers': loggers,
+        'handlers': handlers,
+        'formatters': formatters,
+    })
+
+
+# def configure_logging():
+#     curr_dir = os.path.dirname(__file__)
+#     colors = colorlog.default_log_colors
+#     colors['INFO'] = "reset"
+#     # colors[ALWAYS_NAME] = "green"
+#     print(file_path)
+#     logging.config.fileConfig(fname=file_path, disable_existing_loggers=False, defaults={'log_color': colors}, )
 
 
 def update_log_level(_log):

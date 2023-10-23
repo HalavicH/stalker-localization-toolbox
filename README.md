@@ -47,15 +47,16 @@ breaking changes like missing/broken placeholder, etc, so it's hardly
 recommended to make rig repository out of your mod, and commit changes before
 each script use (or at least commit often)
 
-## Module Testing
-```commandline
-pip uninstall slt
+## Module Installation
+```shell
+# Uninstall previous if present
+pip uninstall sltools
+# Install in dev mode
 pip install -e .
 ```
 ## Module Testing
-```commandline
-slt
-python3 -m slt
-python3 slt.py
-python3 slt/slt.py
+```shell
+sltools
+python3 -m sltools
+python3 sltools.py
 ```
