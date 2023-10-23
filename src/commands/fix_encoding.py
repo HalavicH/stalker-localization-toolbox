@@ -3,6 +3,7 @@ from src.commands.validate_encoding import validate_encoding
 from src.log_config_loader import log
 from src.utils.colorize import cf_yellow, cf_green, cf_red, cf_cyan
 from src.utils.error_utils import log_and_save_error
+from src.utils.git_utils import is_allowed_to_continue
 
 
 def change_file_encoding(file_name, e_from, e_to):
@@ -22,7 +23,7 @@ def change_file_encoding(file_name, e_from, e_to):
 
 
 def fix_encoding(args, is_read_only):
-    results = validate_encoding(args)
+    results = validate_encoding(args, is_read_only)
     log.always("")
     log.always(cf_green("All files analyzed! Fixing encodings..."))
 
@@ -34,6 +35,9 @@ def fix_encoding(args, is_read_only):
 
     for file_name, encoding, comment in results:
         if encoding.lower() == "utf-8":
+            if not is_read_only:
+                if not is_allowed_to_continue(file_name, args.allow_no_repo, args.allow_dirty, args.allow_not_tracked):
+                    continue
             windows_ = 'Windows-1251'
             log.always(f"Try to change encoding from {cf_red(encoding)} to {cf_green(windows_)} for file {cf_cyan(file_name)}")
             try:

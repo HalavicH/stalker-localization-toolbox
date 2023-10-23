@@ -3,41 +3,48 @@ import os
 import sys
 
 import colorlog
-import pkg_resources
+import rich
 
 # Define a custom logging level
 ALWAYS_LEVEL = 55
 ALWAYS_NAME = '\u27A4'
 logging.addLevelName(ALWAYS_LEVEL, ALWAYS_NAME)
 
-file_path = pkg_resources.resource_filename('src', 'resources/logger-config.ini')
-
-
-# file_path = os.path.abspath(os.path.join(curr_dir, 'resources/logger_config.ini'))
-
 
 # Define custom logger class for autocompletion
 class ExtendedLogger(logging.Logger):
+    def __init__(self, name, level=logging.NOTSET):
+        super().__init__(name, level)
+        self.console = rich.get_console()
+
+    def _log(self, level, msg, args,
+             exc_info=None, extra=None,
+             stack_info=False, stacklevel=1):
+        # For console logging, use Rich
+        if level >= self.level:
+            self.console.print(f"{logging.getLevelName(level)} - {msg % args}")
+
+        # For file logging, use the standard logging mechanism
+        super()._log(level, msg, args, exc_info=exc_info,
+                     extra=extra, stack_info=stack_info,
+                     stacklevel=stacklevel)
+
     def always(self, message="", *args, **kws):
-        pass
+        self._log(ALWAYS_LEVEL, message, args, **kws)
 
 
-def always(self, message="", *args, **kws):
-    self.log(ALWAYS_LEVEL, message, *args, **kws)
+logging.setLoggerClass(ExtendedLogger)
 
 
-logging.Logger.always = always
-
-
-class CustomFormatter(logging.Formatter):
-    def format(self, record):
-        if record.levelno == ALWAYS_LEVEL:
-            # Use a different format for ALWAYS level messages
-            self._fmt = '%(asctime)s - ALWAYS - %(message)s'
-        else:
-            # Use the default format for all other log levels
-            self._fmt = '%(asctime)s - %(levelname)s - %(message)s'
-        return super().format(record)
+# class CustomFormatter(logging.Formatter):
+#     def format(self, record):
+#         if record.levelno == ALWAYS_LEVEL:
+#             # Use a different format for ALWAYS level messages
+#             self._fmt = '%(asctime)s - ALWAYS - %(message)s'
+#         else:
+#             # Use the default format for all other log levels
+#             self._fmt = '%(asctime)s - %(levelname)s - %(message)s'
+#         return super().format(record)
 
 
 def configure_logging():

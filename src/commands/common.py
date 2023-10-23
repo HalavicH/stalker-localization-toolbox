@@ -1,4 +1,5 @@
 # Given the common patterns observed, let's extract some helper functions:
+from rich import get_console
 from rich.progress import Progress
 
 from src.log_config_loader import log
@@ -26,7 +27,7 @@ def get_max_file_width_for_display():
 # 3. Process each file with progress indication
 def process_files_with_progress(files, process_func, results, args, is_read_only):
     max_file_width = get_max_file_width_for_display()
-    with Progress() as progress:
+    with Progress(console=get_console()) as progress:
         task = progress.add_task("", total=len(files))
         for i, file_path in enumerate(files):
             if not is_read_only:
