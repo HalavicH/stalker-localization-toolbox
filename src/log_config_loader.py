@@ -9,7 +9,7 @@ ALWAYS_LEVEL = 55
 ALWAYS_NAME = '\u27A4'
 logging.addLevelName(ALWAYS_LEVEL, ALWAYS_NAME)
 
-file_path = pkg_resources.resource_filename('sltools', 'resources/logger-config.ini')
+file_path = pkg_resources.resource_filename('src', 'resources/logger-config.ini')
 
 
 # file_path = os.path.abspath(os.path.join(curr_dir, 'resources/logger_config.ini'))
@@ -44,6 +44,7 @@ def configure_logging():
     colors = colorlog.default_log_colors
     colors['INFO'] = "reset"
     # colors[ALWAYS_NAME] = "green"
+    print(file_path)
     logging.config.fileConfig(fname=file_path, disable_existing_loggers=False, defaults={'log_color': colors}, )
 
 

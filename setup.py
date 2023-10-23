@@ -6,9 +6,9 @@ setup(
     packages=find_packages(),
     entry_points={
         'console_scripts': [
-            'sltools = sltools.slt:main',
+            'sltools = src.slt:main',
         ],
     },
-    package_data={'sltools': ['./resources/logger-config.ini']},
+    package_data={'src': ['./resources/logger-config.ini']},
     install_requires=["colorlog"],
 )
