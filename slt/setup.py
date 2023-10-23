@@ -6,7 +6,7 @@ setup(
     packages=find_packages(),
     entry_points={
         'console_scripts': [
-            'slt = slt:main',
+            'slt = src.slt:main',
         ],
     },
     install_requires=["colorlog"],
