@@ -1,80 +1,159 @@
-from colorama import Fore, Back, init
+# from colorama import Fore, Back, init
+from rich import get_console
+# init(autoreset=False)
+#
+#
+# # Generic methods
+# def colorize_fore(obj, color: Fore) -> str:
+#     return color + str(obj) + Fore.RESET
+#
+#
+# def colorize_background(obj, color: Back) -> str:
+#     return color + str(obj) + Back.RESET
+#
+#
+# # Front methods
+# def cf_black(obj):
+#     return colorize_fore(obj, Fore.BLACK)
+#
+#
+# def cf_red(obj):
+#     return colorize_fore(obj, Fore.RED)
+#
+#
+# def cf_green(obj):
+#     return colorize_fore(obj, Fore.GREEN)
+#
+#
+# def cf_yellow(obj):
+#     return colorize_fore(obj, Fore.YELLOW)
+#
+#
+# def cf_blue(obj):
+#     return colorize_fore(obj, Fore.BLUE)
+#
+#
+# def cf_magenta(obj):
+#     return colorize_fore(obj, Fore.MAGENTA)
+#
+#
+# def cf_cyan(obj):
+#     return colorize_fore(obj, Fore.CYAN)
+#
+#
+# def cf_white(obj):
+#     return colorize_fore(obj, Fore.WHITE)
+#
+#
+# """ Back methods """
+#
+#
+# def cb_black(obj):
+#     return colorize_fore(obj, Back.BLACK)
+#
+#
+# def cb_red(obj):
+#     return colorize_fore(obj, Back.RED)
+#
+#
+# def cb_green(obj):
+#     return colorize_fore(obj, Back.GREEN)
+#
+#
+# def cb_yellow(obj):
+#     return colorize_fore(obj, Back.YELLOW)
+#
+#
+# def cb_blue(obj):
+#     return colorize_fore(obj, Back.BLUE)
+#
+#
+# def cb_magenta(obj):
+#     return colorize_fore(obj, Back.MAGENTA)
+#
+#
+# def cb_cyan(obj):
+#     return colorize_fore(obj, Back.CYAN)
+#
+#
+# def cb_white(obj):
+#     return colorize_fore(obj, Back.WHITE)
 
-init(autoreset=False)
+from rich.console import Console
+
+console = get_console()
 
 
 # Generic methods
-def colorize_fore(obj, color: Fore) -> str:
-    return color + str(obj) + Fore.RESET
+def cf(obj, color: str) -> str:
+    return f"[{color}]{obj}[/{color}]"
 
 
-def colorize_background(obj, color: Back) -> str:
-    return color + str(obj) + Back.RESET
+def cb(obj, color: str) -> str:
+    return f"[on {color}]{obj}[/on {color}]"
 
 
 # Front methods
 def cf_black(obj):
-    return colorize_fore(obj, Fore.BLACK)
+    return cf(obj, "black")
 
 
 def cf_red(obj):
-    return colorize_fore(obj, Fore.RED)
+    return cf(obj, "red")
 
 
 def cf_green(obj):
-    return colorize_fore(obj, Fore.GREEN)
+    return cf(obj, "green")
 
 
 def cf_yellow(obj):
-    return colorize_fore(obj, Fore.YELLOW)
+    return cf(obj, "yellow")
 
 
 def cf_blue(obj):
-    return colorize_fore(obj, Fore.BLUE)
+    return cf(obj, "blue")
 
 
 def cf_magenta(obj):
-    return colorize_fore(obj, Fore.MAGENTA)
+    return cf(obj, "magenta")
 
 
 def cf_cyan(obj):
-    return colorize_fore(obj, Fore.CYAN)
+    return cf(obj, "cyan")
 
 
 def cf_white(obj):
-    return colorize_fore(obj, Fore.WHITE)
+    return cf(obj, "white")
 
 
-""" Back methods """
-
-
+# Back methods
 def cb_black(obj):
-    return colorize_fore(obj, Back.BLACK)
+    return cb(obj, "black")
 
 
 def cb_red(obj):
-    return colorize_fore(obj, Back.RED)
+    return cb(obj, "red")
 
 
 def cb_green(obj):
-    return colorize_fore(obj, Back.GREEN)
+    return cb(obj, "green")
 
 
 def cb_yellow(obj):
-    return colorize_fore(obj, Back.YELLOW)
+    return cb(obj, "yellow")
 
 
 def cb_blue(obj):
-    return colorize_fore(obj, Back.BLUE)
+    return cb(obj, "blue")
 
 
 def cb_magenta(obj):
-    return colorize_fore(obj, Back.MAGENTA)
+    return cb(obj, "magenta")
 
 
 def cb_cyan(obj):
-    return colorize_fore(obj, Back.CYAN)
+    return cb(obj, "cyan")
 
 
 def cb_white(obj):
-    return colorize_fore(obj, Back.WHITE)
+    return cb(obj, "white")

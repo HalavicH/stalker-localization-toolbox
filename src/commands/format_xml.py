@@ -1,7 +1,9 @@
+from rich import get_console
+
 from src.commands.common import get_xml_files_and_log, process_files_with_progress
 from src.utils.colorize import cf_cyan, cf_green
 from src.utils.file_utils import read_xml, save_xml
-from src.utils.misc import create_pretty_table, exception_originates_from
+from src.utils.misc import create_table, exception_originates_from
 from src.utils.plain_text_utils import format_text_entry, tabwidth
 from src.utils.xml_utils import *
 
@@ -134,14 +136,15 @@ def print_report(results, apply_fix, format_text_entries):
     failed_files = []
     table_title = cf_cyan(f"Files which were requiring some fixes/formatting (total: {len(results)})")
     column_names = ["Filename", "Fixed", "Formatted <text>", "Formatted"]
-    table = create_pretty_table(column_names)
+    table = create_table(column_names)
 
     for filename, fix, text_form, form in results:
-        table.add_row([filename, fix, text_form, form])
+        table.add_row(filename, fix, text_form, form)
         if fix == error_str or text_form == error_str or form == error_str:
             failed_files.append(filename)
 
-    log.always(table_title + "\n" + str(table))  # PrettyTable objects can be converted to string using str()
+    log.always(table_title)
+    get_console().print(table)
 
     if len(failed_files) > 0:
         log.always(cf_cyan("These files has syntax/other errors in them, so they wasn't formatted."))

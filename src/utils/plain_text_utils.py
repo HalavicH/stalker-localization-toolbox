@@ -235,14 +235,11 @@ def check_placeholders(text):
             line_end = text.find('\n', end) if text.find('\n', end) != -1 else len(text)
             snippet = text[line_start:line_end]
 
-            snippet = color_the_error(snippet, pattern)
+            snippet = color_the_error(snippet, pattern, rich_style=True)
 
             # Compute row and column
             row = text.count('\n', 0, start) + 1
             col = start - line_start + 1
-
-            if error_type == EXTRA_WHITESPACE_BEFORE_BRACKET:
-                print("")
 
             # Build error object
             error = {
@@ -277,10 +274,11 @@ def analyze_patterns_in_text(text):
     report = {}
     for pattern_name in COMMON_PATERNS:
         pattern = COMMON_PATERNS[pattern_name]
-        all = re.findall(pattern, text)
-        log.debug(all)
+        all_patterns = re.findall(pattern, text)
+        if all_patterns:
+            log.debug(all_patterns)
 
-        count_dict = dict(Counter(all))
+        count_dict = dict(Counter(all_patterns))
         if len(count_dict) > 0:
             report[pattern_name] = count_dict
 

@@ -22,6 +22,13 @@ from src.log_config_loader import log
 
 from rich_argparse import RichHelpFormatter
 
+app_description = """
+This app is All-in-one solution for working with stalker localization
+\nDebug options (env variables):
+\n[cyan]PY_ST=true[/cyan] - enables stacktrace of the unhandled error
+\n[cyan]PLOG_LEVEL=\\[debug,info,warning,error,critical][/cyan] - sets log level for the whole app
+"""
+
 
 def map_alias_to_command(args):
     for cmd in CMD_TO_ALIASES:
@@ -48,7 +55,7 @@ def add_git_override_arguments(parser):
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(description='My App Description', formatter_class=CustomHelpFormatter)
+    parser = argparse.ArgumentParser(description=app_description, formatter_class=CustomHelpFormatter)
 
     subparsers = parser.add_subparsers(dest='command', help='Sub-commands available:')
 
@@ -155,6 +162,7 @@ def testing(args):
     log.info(f"Args: {args}")
     log.warning(f"Args: {args}")
     log.error(f"Args: {args}")
+    log.critical(f"Args: {args}")
     log.info(
         cf_black("black") +
         cf_red("red") +

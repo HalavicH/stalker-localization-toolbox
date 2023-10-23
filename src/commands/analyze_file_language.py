@@ -8,7 +8,7 @@ from src.log_config_loader import log
 from src.utils.colorize import *
 from src.utils.file_utils import read_xml
 from src.utils.lang_utils import detect_language
-from src.utils.misc import create_pretty_table, color_lang
+from src.utils.misc import create_table, color_lang
 from src.utils.plain_text_utils import *
 from src.utils.xml_utils import parse_xml_root, extract_text_from_xml
 
@@ -85,16 +85,17 @@ def display_report(report, detailed):
 
     table_title = cf_yellow(f"Short report on language (total: {len(report)})")
     column_names = ["Filename", "Main Lang"]
-    table = create_pretty_table(column_names)
+    table = create_table(column_names)
 
     for filename, _, lang in report:
         if lang is None:
             continue
 
         lang = color_lang(lang)
-        table.add_row([filename, lang])
+        table.add_row(filename, lang)
 
-    log.always(table_title + "\n" + str(table))  # PrettyTable objects can be converted to string using str()
+    log.always(table_title)  # PrettyTable objects can be converted to string using str()
+    get_console().print(table)
 
     if detailed:
         display_detailed_report(report)
@@ -103,7 +104,7 @@ def display_report(report, detailed):
 def display_detailed_report(report):
     table_title = cf_red(f"Detailed report on language (total: {len(report)})")
     column_names = ["Filename", "Language", "Count"]
-    table = create_pretty_table(column_names)
+    table = create_table(column_names)
     longest = 0
     for filename, stats, _ in report:
         if len(filename) > longest:

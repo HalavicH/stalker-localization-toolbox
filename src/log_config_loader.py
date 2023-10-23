@@ -5,13 +5,28 @@ import sys
 import colorlog
 import rich
 
+from src.utils.colorize import cf
+
 # Define a custom logging level
 ALWAYS_LEVEL = 55
-ALWAYS_NAME = '\u27A4'
+ALWAYS_NAME = '>'
 logging.addLevelName(ALWAYS_LEVEL, ALWAYS_NAME)
 
 
 # Define custom logger class for autocompletion
+def color_log(level, msg):
+    if level == logging.CRITICAL:
+        return cf(msg, "bright_red")
+    elif level == logging.ERROR:
+        return cf(msg, "red")
+    elif level == logging.WARNING:
+        return cf(msg, "yellow")
+    elif level == logging.DEBUG:
+        return cf(msg, "grey69")
+    else:
+        return msg
+
+
 class ExtendedLogger(logging.Logger):
     def __init__(self, name, level=logging.NOTSET):
         super().__init__(name, level)
@@ -22,7 +37,12 @@ class ExtendedLogger(logging.Logger):
              stack_info=False, stacklevel=1):
         # For console logging, use Rich
         if level >= self.level:
-            self.console.print(f"{logging.getLevelName(level)} - {msg % args}")
+            msg = str(msg)  # Ensure msg is a string
+            if args:
+                msg = msg % args  # Only apply formatting if args is non-empty
+
+            res = color_log(level, f"{logging.getLevelName(level)} - {msg}")
+            self.console.print(res)
 
         # For file logging, use the standard logging mechanism
         super()._log(level, msg, args, exc_info=exc_info,
@@ -58,7 +78,7 @@ def configure_logging():
         },
         'main': {
             'level': 'WARNING',
-            'handlers': ['consoleHandler', 'fileHandler'],
+            'handlers': ['fileHandler'],
             'propagate': False,
         },
     }

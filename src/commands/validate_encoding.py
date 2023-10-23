@@ -1,8 +1,10 @@
+from rich import get_console
+
 from src.commands.common import get_xml_files_and_log, process_files_with_progress
 from src.log_config_loader import log
 from src.utils.colorize import cf_green, cf_red
 from src.utils.encoding_utils import detect_encoding, is_file_content_win1251_compatible
-from src.utils.misc import create_pretty_table
+from src.utils.misc import create_table
 
 
 def process_file(file, results: list, args):
@@ -38,9 +40,10 @@ def display_report(report):
 
     table_title = cf_red(f"Files with possibly incompatible/broken encoding (total: {len(report)})")
     column_names = ["Filename", "Encoding", "Comment"]
-    table = create_pretty_table(column_names)
+    table = create_table(column_names)
 
     for filename, encoding, comment in report:
-        table.add_row([filename, encoding, comment])
+        table.add_row(filename, encoding, comment)
 
-    log.always(table_title + "\n" + str(table))  # PrettyTable objects can be converted to string using str()
+    log.always(table_title)
+    get_console().print(table)
