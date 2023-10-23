@@ -65,12 +65,12 @@ def process_file(file_path, results: list, args):
     results.append((file_path, stats, main_lang))
 
 
-def check_primary_lang(args):
+def check_primary_lang(args, is_read_only):
     exclude_langs = (args.exclude or "").split("+")
     args.exclude_langs = exclude_langs
     files = get_xml_files_and_log(args.paths, "Analyzing primary language for")
     results = []
-    process_files_with_progress(files, process_file, results, args)
+    process_files_with_progress(files, process_file, results, args, is_read_only)
     log.info(f"Total processed files: {len(files)}")
     display_report(results, args.detailed)
 

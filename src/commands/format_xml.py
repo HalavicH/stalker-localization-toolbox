@@ -102,7 +102,7 @@ def to_yes_no(b: bool) -> str:
     return cf_green("Yes") if b else "No"
 
 
-def format_xml(args):
+def format_xml(args, is_read_only):
     apply_fix = args.fix
     format_text_entries = args.format_text_entries
 
@@ -120,7 +120,7 @@ def format_xml(args):
     files = get_xml_files_and_log(args.paths, "Formatting XML-schema for")
 
     results = []
-    process_files_with_progress(files, process_file, results, args)  # Assuming process_file_format_xml exists
+    process_files_with_progress(files, process_file, results, args, is_read_only)
 
     log.info(f"Total processed files: {len(files)}")
     if len(results) > 0:

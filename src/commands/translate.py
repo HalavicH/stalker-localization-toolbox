@@ -96,12 +96,12 @@ def process_file(file_path, results: list, args):
     results.append((file_path, translated_text_block_cnt, issues))
 
 
-def translate(args):
+def translate(args, is_read_only):
     action_msg = f"Translating from '{color_lang(args.from_lang)}' to '{color_lang(args.to_lang)}'"
     files = get_xml_files_and_log(args.paths, action_msg)
     results = []
     try:
-        process_files_with_progress(files, process_file, results, args)
+        process_files_with_progress(files, process_file, results, args, is_read_only)
     except AccessDeniedException:
         log.error("Access forbidden. It seems that the token is invalid or expired")
         return

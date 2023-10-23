@@ -38,6 +38,15 @@ class CustomHelpFormatter(RichHelpFormatter):
         return super()._format_action(action)
 
 
+def add_git_override_arguments(parser):
+    parser.add_argument('--allow-no-repo', action='store_true', default=False,
+                        help='Allow operations without Git repository')
+    parser.add_argument('--allow-dirty', action='store_true', default=False,
+                        help='Allow operations on dirty Git repositories')
+    parser.add_argument('--allow-not-tracked', action='store_true', default=False,
+                        help='Allow operations on untracked by Git files')
+
+
 def parse_args():
     parser = argparse.ArgumentParser(description='My App Description', formatter_class=CustomHelpFormatter)
 
@@ -54,6 +63,7 @@ def parse_args():
                                       formatter_class=parser.formatter_class,
                                       help='Fix UTF-8 encoding of a file or directory (Warning: may break encoding if detected wrongly)')
     parser_fe.add_argument('paths', nargs='*', help='Paths to files or directories')
+    add_git_override_arguments(parser_fe)
 
     # validate-xml | vx
     parser_vx = subparsers.add_parser(VALIDATE_XML, aliases=CMD_TO_ALIASES[VALIDATE_XML],
@@ -65,11 +75,11 @@ def parse_args():
     parser_fx = subparsers.add_parser(FORMAT_XML, aliases=CMD_TO_ALIASES[FORMAT_XML],
                                       formatter_class=parser.formatter_class,
                                       help='Format XML of a file or directory')
+    parser_fx.add_argument('paths', nargs='*', help='Paths to files or directories')
     parser_fx.add_argument('--fix', action='store_true', help='Fix XML issues if possible instead of skipping the file')
     parser_fx.add_argument('--format-text-entries', action='store_true',
                            help='Format <text> tag contents to resemble in-game appearance')
-
-    parser_fx.add_argument('paths', nargs='*', help='Paths to files or directories')
+    add_git_override_arguments(parser_fx)
 
     # check-primary-lang | cpl
     parser_cpl = subparsers.add_parser(CHECK_PRIMARY_LANG, aliases=CMD_TO_ALIASES[CHECK_PRIMARY_LANG],
@@ -90,20 +100,22 @@ def parse_args():
     parser_tr.add_argument('--from', dest='from_lang', help='Source language (auto-detect if missing)')
     parser_tr.add_argument('--to', dest='to_lang', required=True, help='Target language')
     parser_tr.add_argument('--api-key', required=True, help='API key for translation service')
+    add_git_override_arguments(parser_tr)
 
     # analyze-patterns | ap
     parser_ap = subparsers.add_parser(ANALYZE_PATTERNS, aliases=CMD_TO_ALIASES[ANALYZE_PATTERNS],
                                       formatter_class=parser.formatter_class,
                                       help='Analyze patterns in a file or directory')
+    parser_ap.add_argument('paths', nargs='*', help='Paths to files or directories')
     parser_ap.add_argument('--compare', dest='compare_to_path',
                            help='Compare freshly-generated analysis with one provided in file')
-    parser_ap.add_argument('paths', nargs='*', help='Paths to files or directories')
 
     # # fix-known-broken-patterns | fbp
     # parser_fbp = subparsers.add_parser(FIX_KNOWN_BROKEN_PATTERNS, aliases=CMD_TO_ALIASES[FIX_KNOWN_BROKEN_PATTERNS],
     #                                    formatter_class=parser.formatter_class,
     #                                    help='Fix known broken patterns in a file or directory')
     # parser_fbp.add_argument('paths', nargs='*', help='Paths to files or directories')
+    # add_git_override_arguments(parser_fbp)
 
     args = parser.parse_args()
     log.debug(f"Args: {args}")

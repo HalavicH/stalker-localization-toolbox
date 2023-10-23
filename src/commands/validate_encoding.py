@@ -18,11 +18,11 @@ def process_file(file, results: list, args):
     results.append((file, encoding, comment))
 
 
-def validate_encoding(args):
+def validate_encoding(args, is_read_only):
     files = get_xml_files_and_log(args.paths, "Validating encoding for")
 
     results = []
-    process_files_with_progress(files, process_file, results, args)  # Assuming process_file_validate_encoding exists
+    process_files_with_progress(files, process_file, results, args, is_read_only)
 
     log.info(f"Total processed files: {len(files)}")
     display_report(results)

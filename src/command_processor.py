@@ -1,3 +1,4 @@
+import git
 
 import sys
 from argparse import Namespace
@@ -13,36 +14,47 @@ from src.config import *
 from src.commands.validate_encoding import validate_encoding
 from src.utils.colorize import cf_green
 from src.log_config_loader import log
+from src.utils.git_utils import is_git_available
 
 
-def fix_known_broken_patterns(args):
+def fix_known_broken_patterns(args, is_read_only):
     log.info(f"Running {args.command} with path: {args.paths}")
 
 
 # Command Registry
 COMMAND_REGISTRY = {
-    VALIDATE_ENCODING: validate_encoding,
-    FIX_ENCODING: fix_encoding,
-    VALIDATE_XML: validate_xml,
-    FORMAT_XML: format_xml,
-    CHECK_PRIMARY_LANG: check_primary_lang,
-    TRANSLATE: translate,
-    ANALYZE_PATTERNS: analyze_patterns,
-    FIX_KNOWN_BROKEN_PATTERNS: fix_known_broken_patterns,
+    VALIDATE_ENCODING: {"callback": validate_encoding, "read_only": True},
+    FIX_ENCODING: {"callback": fix_encoding, "read_only": False},
+    VALIDATE_XML: {"callback": validate_xml, "read_only": True},
+    FORMAT_XML: {"callback": format_xml, "read_only": False},
+    CHECK_PRIMARY_LANG: {"callback": check_primary_lang, "read_only": True},
+    TRANSLATE: {"callback": translate, "read_only": False},
+    ANALYZE_PATTERNS: {"callback": analyze_patterns, "read_only": True},
+    FIX_KNOWN_BROKEN_PATTERNS: {"callback": fix_known_broken_patterns, "read_only": False},
 }
 
 
 def process_command(args: Namespace):
     log.info(f"Processing command: {args.command}")
-    callback = COMMAND_REGISTRY.get(args.command)
+    callback_data = COMMAND_REGISTRY.get(args.command)
+
+    callback = callback_data["callback"]
+    read_only = callback_data["read_only"]
 
     if callback is None:
         log.error(f"Command {args.command} is not implemented")
         sys.exit(1)
 
+    if not read_only:
+        if not args.allow_no_repo:
+            if not is_git_available():
+                log.always(
+                    "Git is not available on this system. It's vital to have files in a git repo to prevent potential file damage. Please install Git.")
+                return False
+
     # Do actual work
     log.always(f"Running command '{args.command}' on paths: {args.paths}")
-    callback(args)
+    callback(args, read_only)
 
     log.info(cf_green("Done"))
 

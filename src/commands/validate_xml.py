@@ -71,11 +71,11 @@ def process_file(file_path, results, args):
         results.append((file_path, issues))
 
 
-def validate_xml(args):
+def validate_xml(args, is_read_only):
     files = get_xml_files_and_log(args.paths, "Validating XML-schema for")
 
     results = []
-    process_files_with_progress(files, process_file, results, args)  # Assuming process_file_validate_xml exists
+    process_files_with_progress(files, process_file, results, args, is_read_only)
 
     log.info(f"Total processed files: {len(files)}")
     display_report(results)

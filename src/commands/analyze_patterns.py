@@ -164,7 +164,7 @@ def add_meta_data(current_analysis):
     return current_analysis
 
 
-def analyze_patterns(args):
+def analyze_patterns(args, is_read_only):
     files = get_xml_files_and_log(args.paths, "Analyzing patterns for")
 
     results = {}
@@ -172,7 +172,7 @@ def analyze_patterns(args):
     per_file_results = {}
     results[PER_FILE_KEY] = per_file_results
 
-    process_files_with_progress(files, process_file, per_file_results, args)
+    process_files_with_progress(files, process_file, per_file_results, args, is_read_only)
     results = add_summary(results)
 
     log.info(f"Total processed files: {len(files)}")

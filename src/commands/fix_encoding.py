@@ -21,7 +21,7 @@ def change_file_encoding(file_name, e_from, e_to):
         raise e
 
 
-def fix_encoding(args):
+def fix_encoding(args, is_read_only):
     results = validate_encoding(args)
     log.always("")
     log.always(cf_green("All files analyzed! Fixing encodings..."))
