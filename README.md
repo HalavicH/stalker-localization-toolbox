@@ -9,6 +9,11 @@ Create All-in-one app which will help to produce clean, maintainable, correct
 mod localizations with ease, both text and audio.
 
 ### Planned features
+Infra:
+- [ ] Add version check and prompt use to update
+- [ ] Add multilang support
+  - [ ] Add ukrainian language support
+
 Text:
 - [x] Git integration (check for dirty environment)
   - [ ] Add modified files saving into mirrored directory for non-tracked files
@@ -24,7 +29,7 @@ Text:
 - [x] Analysis for not translated files/text blocks
 - [x] Automatic text translation using DeepL.
 - [x] Analyze broken patterns/placeholders/colors
-  - [ ] Save repot only with --save option
+  - [ ] Save report only with --save option
   - [ ] Compare 2 file reports
   - [ ] Fix broken patterns/placeholders/colors
 - [ ] Search for duplicate keys
