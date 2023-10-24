@@ -19,17 +19,14 @@ from sltools.command_processor import process_command
 from sltools.config import *
 from sltools.utils.colorize import *
 from sltools.log_config_loader import log
+from src.utils.lang_utils import t
 
 from rich_argparse import RichHelpFormatter
 
 from sltools.utils.misc import check_for_update
 
-app_description = """
-This app is All-in-one solution for working with stalker localization
-\nDebug options (env variables):
-\n[cyan]PY_ST=true[/cyan] - enables stacktrace of the unhandled error
-\n[cyan]PLOG_LEVEL=\\[debug,info,warning,error,critical][/cyan] - sets log level for the whole app
-"""
+# From locale
+app_description = "app_description"
 
 
 def map_alias_to_command(args):
@@ -72,67 +69,67 @@ class ExtendedHelpParser(argparse.ArgumentParser):
 
 def add_git_override_arguments(parser):
     parser.add_argument('--allow-no-repo', action='store_true', default=False,
-                        help='Allow operations without Git repository')
+                        help=t('Allow operations without Git repository'))
     parser.add_argument('--allow-dirty', action='store_true', default=False,
-                        help='Allow operations on dirty Git repositories')
+                        help=t('Allow operations on dirty Git repositories'))
     parser.add_argument('--allow-not-tracked', action='store_true', default=False,
-                        help='Allow operations on untracked by Git files')
+                        help=t('Allow operations on untracked by Git files'))
 
 
 def parse_args():
-    parser = ExtendedHelpParser(description=app_description, formatter_class=CustomHelpFormatter)
+    parser = ExtendedHelpParser(description=t(app_description), formatter_class=CustomHelpFormatter)
     parser.add_argument('--version', action='version', version='%(prog)s 0.1.2')
 
-    subparsers = parser.add_subparsers(dest='command', help='Sub-commands available:')
+    subparsers = parser.add_subparsers(dest='command', help=t('Sub-commands available:'))
 
     # validate-encoding | ve
     parser_ve = subparsers.add_parser(VALIDATE_ENCODING, aliases=CMD_TO_ALIASES[VALIDATE_ENCODING],
                                       formatter_class=parser.formatter_class,
-                                      help='Validate encoding of a file or directory')
-    parser_ve.add_argument('paths', nargs='*', help='Paths to files or directories')
+                                      help=t('Validate encoding of a file or directory'))
+    parser_ve.add_argument('paths', nargs='*', help=t('Paths to files or directories'))
 
     # fix-encoding | fe
     parser_fe = subparsers.add_parser(FIX_ENCODING, aliases=CMD_TO_ALIASES[FIX_ENCODING],
                                       formatter_class=parser.formatter_class,
-                                      help='Fix UTF-8 encoding of a file or directory (Warning: may break encoding if detected wrongly)')
-    parser_fe.add_argument('paths', nargs='*', help='Paths to files or directories')
+                                      help=t('Fix UTF-8 encoding of a file or directory (Warning: may break encoding if detected wrongly)'))
+    parser_fe.add_argument('paths', nargs='*', help=t('Paths to files or directories'))
     add_git_override_arguments(parser_fe)
 
     # validate-xml | vx
     parser_vx = subparsers.add_parser(VALIDATE_XML, aliases=CMD_TO_ALIASES[VALIDATE_XML],
                                       formatter_class=parser.formatter_class,
-                                      help='Validate XML of a file or directory')
-    parser_vx.add_argument('paths', nargs='*', help='Paths to files or directories')
+                                      help=t('Validate XML of a file or directory'))
+    parser_vx.add_argument('paths', nargs='*', help=t('Paths to files or directories'))
 
     # format-xml | fx
     parser_fx = subparsers.add_parser(FORMAT_XML, aliases=CMD_TO_ALIASES[FORMAT_XML],
                                       formatter_class=parser.formatter_class,
-                                      help='Format XML of a file or directory')
-    parser_fx.add_argument('paths', nargs='*', help='Paths to files or directories')
-    parser_fx.add_argument('--fix', action='store_true', help='Fix XML issues if possible instead of skipping the file')
+                                      help=t('Format XML of a file or directory'))
+    parser_fx.add_argument('paths', nargs='*', help=t('Paths to files or directories'))
+    parser_fx.add_argument('--fix', action='store_true', help=t('Fix XML issues if possible instead of skipping the file'))
     parser_fx.add_argument('--format-text-entries', action='store_true',
-                           help='Format <text> tag contents to resemble in-game appearance')
+                           help=t('Format <text> tag contents to resemble in-game appearance'))
     add_git_override_arguments(parser_fx)
 
     # check-primary-lang | cpl
     parser_cpl = subparsers.add_parser(CHECK_PRIMARY_LANG, aliases=CMD_TO_ALIASES[CHECK_PRIMARY_LANG],
                                        formatter_class=parser.formatter_class,
-                                       help='Check primary language of a file or directory')
-    parser_cpl.add_argument('paths', nargs='*', help='Paths to files or directories')
+                                       help=t('Check primary language of a file or directory'))
+    parser_cpl.add_argument('paths', nargs='*', help=t('Paths to files or directories'))
     parser_cpl.add_argument('--exclude', dest='exclude',
-                            help='Language to exclude from the report separated with "+". E.g: ' + cf_cyan(
-                                "--exclude uk+en"))
+                            help=t('Language to exclude from the report separated with "+". E.g: ' + cf_cyan(
+                                "--exclude uk+en")))
     parser_cpl.add_argument('--detailed', action='store_true',
-                            help='Show detailed report with language occurrences per file')
+                            help=t('Show detailed report with language occurrences per file'))
 
     # translate | tr
     parser_tr = subparsers.add_parser(TRANSLATE, aliases=CMD_TO_ALIASES[TRANSLATE],
                                       formatter_class=parser.formatter_class,
-                                      help='Translate text in a file or directory')
-    parser_tr.add_argument('paths', nargs='*', help='Paths to files or directories')
-    parser_tr.add_argument('--from', dest='from_lang', help='Source language (auto-detect if missing)')
-    parser_tr.add_argument('--to', dest='to_lang', required=True, help='Target language')
-    parser_tr.add_argument('--api-key', required=True, help='API key for translation service')
+                                      help=t('Translate text in a file or directory'))
+    parser_tr.add_argument('paths', nargs='*', help=t('Paths to files or directories'))
+    parser_tr.add_argument('--from', dest='from_lang', help=t('Source language (auto-detect if missing)'))
+    parser_tr.add_argument('--to', dest='to_lang', required=True, help=t('Target language'))
+    parser_tr.add_argument('--api-key', required=True, help=t('API key for translation service'))
     add_git_override_arguments(parser_tr)
 
     # analyze-patterns | ap
@@ -149,7 +146,7 @@ def parse_args():
     # parser_fbp = subparsers.add_parser(FIX_KNOWN_BROKEN_PATTERNS, aliases=CMD_TO_ALIASES[FIX_KNOWN_BROKEN_PATTERNS],
     #                                    formatter_class=parser.formatter_class,
     #                                    help='Fix known broken patterns in a file or directory')
-    # parser_fbp.add_argument('paths', nargs='*', help='Paths to files or directories')
+    # parser_fbp.add_argument('paths', nargs='*', help=t('Paths to files or directories'))
     # add_git_override_arguments(parser_fbp)
 
     # capitalize-text | ct
@@ -188,7 +185,7 @@ def parse_args():
 
     if args.command is None:
         cmd_name = sys.argv[0].split("/")[-1] + " -h"
-        log.always(f"Please provide args. Use {cf_green(cmd_name)} for help")
+        log.always(t(f"Please provide args. Use {cf_green(cmd_name)} for help"))
         sys.exit()
 
     return args

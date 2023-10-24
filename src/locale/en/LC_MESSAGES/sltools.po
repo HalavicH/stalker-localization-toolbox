@@ -1,0 +1,18 @@
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+"Language: uk\n"
+
+msgid "Allow operations without Git repository"
+msgstr "Allow operations without Git repository"
+
+msgid "Allow operations on dirty Git repositories"
+msgstr "Allow operations on dirty Git repositories"
+
+msgid "Allow operations on untracked by Git files"
+msgstr "Allow operations on untracked by Git files"
+
+msgid "app_description"
+msgstr "This app is All-in-one solution for working with stalker localization\nDebug options (env variables):\n[cyan]PY_ST=true[/cyan] - enables stacktrace of the unhandled error\n[cyan]PLOG_LEVEL=\\[debug,info,warning,error,critical][/cyan] - sets log level for the whole app"
+
+# ... and so on for all other strings

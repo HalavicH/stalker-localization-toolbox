@@ -1,0 +1,70 @@
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+"Language: uk\n"
+
+msgid "Allow operations without Git repository"
+msgstr "Дозволити операції без репозиторію Git"
+
+msgid "Allow operations on dirty Git repositories"
+msgstr "Дозволити операції у нечистих репозиторіях Git"
+
+msgid "Allow operations on untracked by Git files"
+msgstr "Дозволити операції з файлами, які не відстежуються Git"
+
+msgid "app_description"
+msgstr "Цей додаток є універсальним рішенням для роботи з локалізацією сталкера\nПараметри налагодження (змінні середовища):\n[cyan]PY_ST=true[/cyan] - вмикає стек-трейс необроблених помилок\n[cyan]PLOG_LEVEL=\\[debug,info,warning,error,critical][/cyan] - встановлює рівень журналу для всього додатку"
+
+msgid "Sub-commands available:"
+msgstr "Доступні підкоманди:"
+
+msgid "Validate encoding of a file or directory"
+msgstr "Перевірити кодування файлу або каталогу"
+
+msgid "Paths to files or directories"
+msgstr "Шляхи до файлів або каталогів"
+
+msgid "Fix UTF-8 encoding of a file or directory (Warning: may break encoding if detected wrongly)"
+msgstr "Виправити кодування UTF-8 файлу або каталогу (Увага: може зламати кодування, якщо воно визначено неправильно)"
+
+msgid "Validate XML of a file or directory"
+msgstr "Перевірити XML файлу або каталогу"
+
+msgid "Format XML of a file or directory"
+msgstr "Форматувати XML файлу або каталогу"
+
+msgid "Fix XML issues if possible instead of skipping the file"
+msgstr "Виправити проблеми XML, якщо це можливо, замість пропуску файлу"
+
+msgid "Format <text> tag contents to resemble in-game appearance"
+msgstr "Форматувати вміст тегу <text>, щоб він відповідав зовнішньому вигляду у грі"
+
+msgid "Check primary language of a file or directory"
+msgstr "Перевірити основну мову файлу або каталогу"
+
+msgid "Language to exclude from the report separated with \"+\". E.g: "
+msgstr "Мова для виключення з звіту, розділена \"+\". Наприклад: "
+
+msgid "Show detailed report with language occurrences per file"
+msgstr "Показати детальний звіт з входженнями мови на файл"
+
+msgid "Translate text in a file or directory"
+msgstr "Перекласти текст у файлі або каталозі"
+
+msgid "Source language (auto-detect if missing)"
+msgstr "Мова джерела (автоматичне виявлення, якщо відсутнє)"
+
+msgid "Target language"
+msgstr "Мова призначення"
+
+msgid "API key for translation service"
+msgstr "API-ключ для сервісу перекладу"
+
+msgid "Analyze patterns in a file or directory"
+msgstr "Аналізувати шаблони у файлі або каталозі"
+
+msgid "Compare freshly-generated analysis with one provided in file"
+msgstr "Порівняйте свіжосформований аналіз із наданим у файлі"
+
+msgid "Please provide args. Use %s for help"
+msgstr "Будь ласка, надайте аргументи. Використовуйте %s для довідки"
