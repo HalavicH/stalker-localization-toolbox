@@ -24,13 +24,18 @@ def change_file_encoding(file_name, e_from, e_to):
 
 def fix_encoding(args, is_read_only):
     results = validate_encoding(args, is_read_only)
+
     log.always("")
-    log.always(cf_green("All files analyzed! Fixing encodings..."))
+    log.always("All files analyzed! Fixing encodings...")
 
     log.always(cf_yellow("NOTE! Currently, reliable detection is only available for UTF-8 encoding."))
     log.always("For other suspicious files, manual review and encoding correction may be necessary.")
 
     results = list(filter(lambda t: t[1].lower() == 'utf-8', results))
+    if len(results) == 0:
+        log.always("Nothing to fix")
+        return
+
     log.always(cf_green(f"There is/are {len(results)} file(s) to fix"))
 
     for file_name, encoding, comment in results:

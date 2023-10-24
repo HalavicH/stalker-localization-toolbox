@@ -14,7 +14,7 @@ from src.config import *
 from src.commands.validate_encoding import validate_encoding
 from src.utils.colorize import cf_green
 from src.log_config_loader import log
-from src.utils.git_utils import is_git_available
+from src.utils.git_utils import is_git_available, log_ignore_option, log_skipped_files
 
 
 def fix_known_broken_patterns(args, is_read_only):
@@ -48,8 +48,9 @@ def process_command(args: Namespace):
     if not read_only:
         if not args.allow_no_repo:
             if not is_git_available():
-                log.always(
+                log.error(
                     "Git is not available on this system. It's vital to have files in a git repo to prevent potential file damage. Please install Git.")
+                log_ignore_option("--allow-no-repo")
                 return False
 
     # Do actual work
@@ -58,4 +59,5 @@ def process_command(args: Namespace):
 
     log.info(cf_green("Done"))
 
+    log_skipped_files()
     log_saved_errors()
