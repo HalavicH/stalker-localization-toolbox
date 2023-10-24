@@ -216,10 +216,10 @@ def display_report(results):
                 cause = error['type']
                 snippet = error['snippet']
 
-                log.always(cf_red(f"\t\tError:"))
-                log.always(f"\t\t\tCause: {cf_cyan(cause)}\n")
-                log.always(f"\t\t\t'{snippet}'")
-                log.always(f"\t\t\tRow: {cf_green(row)}, column {cf_green(col)}:")
+                log.always(cf_red(f"    Error: {cf_cyan(cause)}"))
+                # log.always(f"\t\t\tCause: {}")
+                log.always(f"        '{snippet}'")
+                log.always(f"        Row: {cf_green(row)}, column {cf_green(col)}\n")
 
     # rich.print(errors)
     log.always("Meta-data:")
