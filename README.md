@@ -10,7 +10,8 @@ mod localizations with ease, both text and audio.
 
 ### Planned features
 Text:
-- [ ] Git integration (check for dirty environment / autocommit)
+- [x] Git integration (check for dirty environment)
+  - [ ] Add modified files saving into mirrored directory for non-tracked files
 - [x] Bad encoding detection and fixes
 - [x] Resolve XML C-style includes [Example here](examples/c-style-xml-includes.md)
 - [x] XML formatting and fix. S.T.A.L.K.E.R's XML parser has loose XML validation,
@@ -23,17 +24,20 @@ Text:
 - [x] Analysis for not translated files/text blocks
 - [x] Automatic text translation using DeepL.
 - [x] Analyze broken patterns/placeholders/colors
-    - [x] Fix broken patterns/placeholders/colors
+  - [ ] Save repot only with --save option
+  - [ ] Compare 2 file reports
+  - [ ] Fix broken patterns/placeholders/colors
 - [ ] Search for duplicate keys
 - [ ] Grammar and typos checkup
 - [ ] Capitalization of the text blocks
-- [ ] Automatic scraping for files you need to translate (if you just start) with
+- [ ] Automatic scraping for files you need to translate (if you just start translating) with
     integration with **Mod Organizer 2** mod priority (if you want to translate
     a modpack with all at once)
 
 Audio:
 - [ ] Handy operations with audio (using ffmpeg):
     - [ ] Convert to-ogg/to-mp3
+    - [ ] Convert to mono
     - [ ] Trim/split audio by second
     - [ ] Trim silence from audio (with user defined margin)
     - [ ] Normalize audio level
@@ -45,7 +49,7 @@ Audio:
 IDE/text editor, git to this encoding by default 
 2. A lot of functionality here (like autotranslation) may sometimes introduce
 breaking changes like missing/broken placeholder, etc, so it's hardly
-recommended to make rig repository out of your mod, and commit changes before
+recommended to make git repository out of your mod, and commit changes before
 each script use (or at least commit often)
 
 ## Module Installation

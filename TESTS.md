@@ -23,11 +23,11 @@ Positional Arguments:
 
 ## Command examples
 ```shell
-sltools validate-encoding gamedata
-sltools fix-encoding gamedata
-sltools validate-xml gamedata
-sltools format-xml --fix --format-text-entries gamedata
-sltools check-primary-lang gamedata
-sltools translate --to uk --api-key c31842ed-cffb-38de-6e505-468770f60f2d:fx gamedata
-sltools analyze-patterns gamedata
+sltools validate-encoding ./gamedata
+sltools fix-encoding ./gamedata
+sltools validate-xml ./gamedata
+sltools format-xml --fix --format-text-entries ./gamedata
+sltools check-primary-lang ./gamedata
+sltools translate --to uk --api-key c31842ed-cffb-38de-6e505-468770f60f2d:fx ./gamedata
+sltools analyze-patterns ./gamedata
 ```
