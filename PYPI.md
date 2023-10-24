@@ -10,7 +10,7 @@ mod localizations with ease, both text and audio.
 
 ### Planned features
 Infra:
-- [ ] Add version check and prompt use to update
+- [x] Add version tracking from PyPI
 - [ ] Add multilang support
   - [ ] Add ukrainian language support
 

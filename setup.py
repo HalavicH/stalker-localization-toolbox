@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='sltools',
-    version='0.1.0',
+    version='0.1.1',
     description='S.T.A.L.K.E.R Localization Toolbox',
     long_description=open('README.md').read(),
     long_description_content_type='text/markdown',

@@ -22,6 +22,8 @@ from src.log_config_loader import log
 
 from rich_argparse import RichHelpFormatter
 
+from src.utils.misc import check_for_update
+
 app_description = """
 This app is All-in-one solution for working with stalker localization
 \nDebug options (env variables):
@@ -40,9 +42,32 @@ class CustomHelpFormatter(RichHelpFormatter):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs, max_help_position=40, width=120)
 
-    def _format_action(self, action):
-        # Customize the formatting of action here if needed
-        return super()._format_action(action)
+
+class ExtendedHelpParser(argparse.ArgumentParser):
+    def format_help(self):
+        formatter = self._get_formatter()
+
+        # usage
+        formatter.add_usage(self.usage, self._actions,
+                            self._mutually_exclusive_groups)
+
+        # description
+        formatter.add_text(self.description)
+
+        # positionals, optionals and user-defined groups
+        for action_group in self._action_groups:
+            formatter.start_section(action_group.title)
+            formatter.add_text(action_group.description)
+            formatter.add_arguments(action_group._group_actions)
+            formatter.end_section()
+
+        # epilog
+        formatter.add_text(self.epilog)
+
+        # Add version check
+        formatter.add_text(check_for_update())
+        # determine help from format above
+        return formatter.format_help()
 
 
 def add_git_override_arguments(parser):
@@ -55,7 +80,7 @@ def add_git_override_arguments(parser):
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(description=app_description, formatter_class=CustomHelpFormatter)
+    parser = ExtendedHelpParser(description=app_description, formatter_class=CustomHelpFormatter)
 
     subparsers = parser.add_subparsers(dest='command', help='Sub-commands available:')
 
@@ -155,6 +180,7 @@ def main():
     end_time = time.process_time()
     elapsed_time = end_time - start_time
     log.always("Done! Total time: %s" % cf_green("%.3fs" % elapsed_time))
+    get_console().print(check_for_update())
 
 
 def testing(args):

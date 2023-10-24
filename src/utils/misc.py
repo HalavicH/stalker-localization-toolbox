@@ -1,6 +1,8 @@
 import os
 import traceback
+import pkg_resources
 
+import requests
 from rich.table import Table
 
 from src.utils.colorize import *
@@ -55,3 +57,18 @@ def exception_originates_from(func_name, exception):
         if frame.name == func_name:
             return True
     return False
+
+
+def check_for_update():
+    current_version = pkg_resources.get_distribution('sltools').version
+    response = requests.get(f'https://pypi.org/pypi/sltools/json')
+    if response.ok:
+        latest_version = response.json()['info']['version']
+        if current_version < latest_version:
+            return (f'\n☢️\\[[blue]notice[/blue]] A new release of [cyan]sltools[/cyan] is available: '
+                    f'[red]{current_version}[/red] -> [green]{latest_version}[/green]. '
+                    f'To upgrade run [green]pip install sltools --upgrade[/green]')
+        else:
+            return '[bright_black]You are using the latest version of sltools.[/bright_black]'
+    else:
+        return f'Failed to check for updates: {response.text}'
