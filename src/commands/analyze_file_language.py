@@ -83,7 +83,7 @@ def display_report(report, detailed):
     report = filter(lambda tup: tup[2] is not None, report)
     report = sorted(report, key=lambda tup: tup[2])
 
-    table_title = cf_yellow(f"Short report on language (total: {len(report)})")
+    table_title = cf_cyan(f"Short report on language. Total: {len(report)} files")
     column_names = ["Filename", "Main Lang"]
     table = create_table(column_names)
 
@@ -102,7 +102,7 @@ def display_report(report, detailed):
 
 
 def display_detailed_report(report):
-    table_title = cf_red(f"Detailed report on language (total: {len(report)})")
+    table_title = cf_cyan(f"Detailed report (per each string). Total: {len(report)} files")
     column_names = ["Filename", "Language", "Count"]
     table = create_table(column_names)
     longest = 0
@@ -110,8 +110,8 @@ def display_detailed_report(report):
         if len(filename) > longest:
             longest = len(filename)
     for filename, stats, _ in report:
-        table.add_row(["─" * longest, "─" * len("Language"), "─" * len("Count")])
-        table.add_row([cf_cyan(filename), cf_cyan("Language"), cf_cyan("Count")])
+        table.add_row("─" * longest, "─" * len("Too little data"), "─" * len("Count"))
+        table.add_row(cf_cyan(filename), cf_cyan("Language"), cf_cyan("Count"))
         sorted_keys = sorted(stats.keys())
 
         for lang in sorted_keys:
@@ -121,5 +121,6 @@ def display_detailed_report(report):
             if lang == "Unknown":
                 lang = cf_red(lang)
 
-            table.add_row(["", color_lang(lang), stats_num])
-    log.always(table_title + "\n" + str(table))  # PrettyTable objects can be converted to string using str()
+            table.add_row("", color_lang(lang), str(stats_num))
+    log.always(table_title)
+    get_console().print(table)
