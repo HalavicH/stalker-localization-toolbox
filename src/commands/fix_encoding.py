@@ -2,7 +2,8 @@ from src.config import PRIMARY_ENCODING
 from src.commands.validate_encoding import validate_encoding
 from src.log_config_loader import log
 from src.utils.colorize import cf_yellow, cf_green, cf_red, cf_cyan
-from src.utils.error_utils import log_and_save_error
+from src.utils.error_utils import log_and_save_error, display_encoding_error_details
+from src.utils.file_utils import read_xml
 from src.utils.git_utils import is_allowed_to_continue
 
 
@@ -50,6 +51,7 @@ def fix_encoding(args, is_read_only):
                 log.always(cf_green("Success!"))
             except (UnicodeEncodeError, UnicodeDecodeError) as e:
                 log_and_save_error(file_name,
-                                   f"Can't encode from {cf_yellow(encoding)} to {cf_yellow(windows_)}.\n\tError: {e}")
+                                   f"Can't encode from {cf_yellow(encoding)} to {cf_yellow(windows_)}")
+                display_encoding_error_details(read_xml(file_name, encoding), str(e))
         else:
             log.debug(f"File {file_name} possibly has {encoding} encoding. But maybe no, so won't do anything")
