@@ -3,6 +3,7 @@ import textwrap
 
 from colorama import Fore
 
+from src.config import text_wrap_width
 from src.log_config_loader import log
 from collections import Counter
 
@@ -40,11 +41,10 @@ def format_text_entry(text, indent_level):
     # Step 2: Place line breaks before \n
     text = text.replace('\\n', '\n\\n')
 
-    # Step 4: Wrap lines by word if longer than 85 char without inserting \n symbol
     lines = text.split('\n')
     wrapped_lines = []
     for line in lines:
-        wrapped_line = textwrap.fill(line, width=85, expand_tabs=False, replace_whitespace=False)
+        wrapped_line = textwrap.fill(line, width=text_wrap_width, expand_tabs=False, replace_whitespace=False)
         for sub_line in wrapped_line.split("\n"):
             wrapped_lines.append(sub_line)
 

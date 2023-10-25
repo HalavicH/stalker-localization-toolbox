@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='sltools',
-    version='0.1.1',
+    version='0.1.2',
     description='S.T.A.L.K.E.R Localization Toolbox',
     long_description=open('README.md').read(),
     long_description_content_type='text/markdown',
@@ -38,7 +38,8 @@ setup(
         "prettytable~=3.9.0",
         "rich~=13.5.3",
         "rich_argparse~=1.4.0",
-        "GitPython~=3.1.40"
+        "GitPython~=3.1.40",
+        "setuptools~=68.2.2"
     ],
     python_requires='>=3.6',
     project_urls={

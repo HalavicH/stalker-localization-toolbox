@@ -5,6 +5,7 @@ from argparse import Namespace
 
 from src.commands.analyze_file_language import check_primary_lang
 from src.commands.analyze_patterns import analyze_patterns
+from src.commands.capitalize_all_text import capitalize_all_text
 from src.commands.format_xml import format_xml
 from src.commands.fix_encoding import fix_encoding
 from src.commands.translate import translate
@@ -30,7 +31,8 @@ COMMAND_REGISTRY = {
     CHECK_PRIMARY_LANG: {"callback": check_primary_lang, "read_only": True},
     TRANSLATE: {"callback": translate, "read_only": False},
     ANALYZE_PATTERNS: {"callback": analyze_patterns, "read_only": True},
-    FIX_KNOWN_BROKEN_PATTERNS: {"callback": fix_known_broken_patterns, "read_only": False},
+    # FIX_KNOWN_BROKEN_PATTERNS: {"callback": fix_known_broken_patterns, "read_only": False},
+    CAPITALIZE_TEXT: {"callback": capitalize_all_text, "read_only": False},
 }
 
 

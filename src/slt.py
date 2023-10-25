@@ -81,6 +81,7 @@ def add_git_override_arguments(parser):
 
 def parse_args():
     parser = ExtendedHelpParser(description=app_description, formatter_class=CustomHelpFormatter)
+    parser.add_argument('--version', action='version', version='%(prog)s 0.1.2')
 
     subparsers = parser.add_subparsers(dest='command', help='Sub-commands available:')
 
@@ -148,6 +149,13 @@ def parse_args():
     #                                    help='Fix known broken patterns in a file or directory')
     # parser_fbp.add_argument('paths', nargs='*', help='Paths to files or directories')
     # add_git_override_arguments(parser_fbp)
+
+    # capitalize-text | ct
+    parser_ct = subparsers.add_parser(CAPITALIZE_TEXT, aliases=CMD_TO_ALIASES[CAPITALIZE_TEXT],
+                                      formatter_class=parser.formatter_class,
+                                      help='Capitalize first letter in all text entries in a file or directory')
+    parser_ct.add_argument('paths', nargs='*', help='Paths to files or directories')
+    add_git_override_arguments(parser_ct)
 
     args = parser.parse_args()
     log.debug(f"Args: {args}")

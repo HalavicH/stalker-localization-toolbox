@@ -34,7 +34,7 @@ Text:
   - [ ] Fix broken patterns/placeholders/colors
 - [ ] Search for duplicate keys
 - [ ] Grammar and typos checkup
-- [ ] Capitalization of the text blocks
+- [x] Capitalization of the text blocks
 - [ ] Automatic scraping for files you need to translate (if you just start translating) with
     integration with **Mod Organizer 2** mod priority (if you want to translate
     a modpack with all at once)
