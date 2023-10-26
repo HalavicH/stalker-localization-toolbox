@@ -73,11 +73,11 @@ def configure_logging():
 
     loggers = {
         '': {
-            'level': 'WARNING',
+            'level': 'INFO',
             'handlers': ['consoleHandler'],
         },
         'main': {
-            'level': 'WARNING',
+            'level': 'INFO',
             'handlers': ['fileHandler'],
             'propagate': False,
         },

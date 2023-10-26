@@ -29,6 +29,7 @@ def translate_deepl(text, target_language, api_key, src_language=None):
         data['source_lang'] = src_language.upper()
 
     # TODO: handle errors
+    log.debug(data)
     response = requests.post(url, headers=headers, data=data)
 
     if response.status_code == 403:
@@ -49,6 +50,7 @@ def translate_deepl(text, target_language, api_key, src_language=None):
 
 def process_file(file_path, results: list, args):
     lang_to = args.to_lang
+    lang_from = args.from_lang
 
     translated_text_block_cnt = []
     issues = []
@@ -56,9 +58,13 @@ def process_file(file_path, results: list, args):
     xml_string = read_xml(file_path)
 
     root = parse_xml_root(xml_string)
-    for elem in root.xpath('//text'):
+    for string_tag in root.findall('.//string'):
+        string_id = string_tag.get('id')
+        text_tag = string_tag.find('text')
+
+        elem = text_tag
         if not elem.text or not elem.text.strip():
-            log.debug("Empty text block")
+            log.info(f"Empty text block for string '{string_id}'")
             continue
 
         orig_text = elem.text
@@ -66,7 +72,7 @@ def process_file(file_path, results: list, args):
         plain_text = purify_text(orig_text)
         lang, _ = detect_language(plain_text)
         if lang == lang_to:
-            log.debug(f"Text {orig_text} is already translated")
+            log.info(f"Text with id '{string_id}' is already translated")
             continue
 
         # prepare text for translation
@@ -76,8 +82,9 @@ def process_file(file_path, results: list, args):
         prepared_text = color_and_pattern_guarded_text
         log.debug("Text prepared for translation")
 
+        log.always(f"Translating text with id '{string_id}'")
         # Translated the text fragment
-        translated = translate_deepl(prepared_text, lang_to, args.api_key)
+        translated = translate_deepl(prepared_text, lang_to, args.api_key, lang_from)
 
         # Restore translated text
         color_guarded_and_pattern_unguarded_text = unguard_placeholders(translated)
