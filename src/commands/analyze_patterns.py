@@ -180,14 +180,18 @@ def display_report(results):
         for pattern, cnt in patterns.items():
             log.always(f"\t\t{cf_green(pattern)}: {cf_cyan(cnt)}")
 
+    if len(errors) == 0:
+        log.always(cf_green(f"No pattern syntax errors detected"))
+        return
+
     log.always(cf_red("#" * 80))
     log.always(cf_red(f"Errors:"))
     log.always(cf_red("#" * 80))
     for filename, file_report in errors.items():
-        log.always(f"In file: {cf_yellow(filename)}:")
+        log.always(f"[cyan]In file:[/cyan] {cf_yellow(filename)}:")
 
         for string, string_report in file_report.items():
-            log.always(f"\tIn string with id: '{cf_green(string)}'")
+            log.always(f"[cyan]In string with id:[/cyan] '{cf_green(string)}'")
 
             for error in string_report:
                 row = error['position']['row']
@@ -195,11 +199,11 @@ def display_report(results):
                 cause = error['type']
                 snippet_lines = error['snippet'].split("\n")
 
-                log.always(cf_red(f"    Error: {cf_cyan(cause)}"))
+                log.always(cf_red(f"Error: {cause}") + f". Row: {row}, column {col}")
                 # log.always(f"\t\t\tCause: {}")
                 for line in snippet_lines:
-                    log.always(f"        '{line}'")
-                log.always(f"        Row: {cf_green(row)}, column {cf_green(col)}\n")
+                    log.always(f"[grey53]{line}")
+                log.always(f"")
 
     # rich.print(errors)
     log.always("Meta-data:")

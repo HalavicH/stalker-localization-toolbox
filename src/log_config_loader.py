@@ -9,7 +9,7 @@ from src.utils.colorize import cf
 
 # Define a custom logging level
 ALWAYS_LEVEL = 55
-ALWAYS_NAME = '>'
+ALWAYS_NAME = ''
 logging.addLevelName(ALWAYS_LEVEL, ALWAYS_NAME)
 
 
@@ -41,7 +41,7 @@ class ExtendedLogger(logging.Logger):
             if args:
                 msg = msg % args  # Only apply formatting if args is non-empty
 
-            res = color_log(level, f"{logging.getLevelName(level)} - {msg}")
+            res = color_log(level, f"{logging.getLevelName(level)} {msg}")
             self.console.print(res)
 
         # For file logging, use the standard logging mechanism

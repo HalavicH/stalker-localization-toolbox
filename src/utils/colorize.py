@@ -84,6 +84,10 @@ from rich.console import Console
 console = get_console()
 
 
+def rich_guard(match):
+    return match.replace("[", "\\[")
+
+
 # Generic methods
 def cf(obj, color: str) -> str:
     return f"[{color}]{obj}[/{color}]"

@@ -7,6 +7,8 @@ from src.config import text_wrap_width
 from src.log_config_loader import log
 from collections import Counter
 
+from src.utils.colorize import rich_guard
+
 tabwidth = "    "
 
 
@@ -217,8 +219,12 @@ def color_the_error(snippet, pattern, rich_style=False):
 
     for match in re.finditer(pattern, snippet):
         start, end = match.span()
-        result = snippet[:end] + reset + snippet[end:]
-        result = result[:start] + apply + result[start:]
+        before_start = rich_guard(snippet[:start])
+        after_start = snippet[start:]
+        after_start_before_end = rich_guard(after_start[:(end - start)])
+        after_start_after_end = rich_guard(after_start[(end - start):])
+
+        result = before_start + apply + after_start_before_end + reset + after_start_after_end
 
         # TODO: handle several patterns
         return result
@@ -241,10 +247,11 @@ def check_placeholders(text, xml_string):
             line_end_global = xml_string.find('\n', global_end) if xml_string.find('\n', global_end) != -1 else len(
                 xml_string)
             snippet = xml_string[line_start_global:line_end_global]
+            snippet = color_the_error(snippet, pattern, True)
 
             # Compute row and column
             row = xml_string.count('\n', 0, global_start) + 1
-            col = global_start - line_start_global + 1
+            col = global_start - line_start_global + int(len(error_content) / 2)
 
             # Enhance snippet to show a few lines before and after the error and point out the exact error position
             prev_line_start = xml_string.rfind('\n', 0, line_start_global - 1) + 1
@@ -254,10 +261,10 @@ def check_placeholders(text, xml_string):
             else:
                 next_line_end = len(xml_string)
 
-            prev_line = xml_string[prev_line_start:line_start_global].strip()
-            next_line = xml_string[line_end_global + 1:next_line_end].strip()
+            prev_line = rich_guard(xml_string[prev_line_start:line_start_global].rstrip())
+            next_line = rich_guard(xml_string[line_end_global + 1:next_line_end].rstrip())
 
-            arrow_line = ' ' * (col - 1) + '-^-'
+            arrow_line = len(str(row)) * ' ' + ' ' * (col - 1) + '-^-'
             enhanced_snippet = f"{row - 1}: {prev_line}\n{row}: {snippet}\n{arrow_line}\n{row + 1}: {next_line}"
 
             # Build error object
@@ -295,7 +302,7 @@ def analyze_patterns_in_text(text):
         pattern = COMMON_PATERNS[pattern_name]
         all_matches = re.findall(pattern, text)
         for i, match in enumerate(all_matches):
-            all_matches[i] = match.replace("[", "\\[")
+            all_matches[i] = rich_guard(match)
 
         if all_matches:
             log.debug(all_matches)
