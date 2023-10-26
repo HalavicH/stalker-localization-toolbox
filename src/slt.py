@@ -140,8 +140,10 @@ def parse_args():
                                       formatter_class=parser.formatter_class,
                                       help='Analyze patterns in a file or directory')
     parser_ap.add_argument('paths', nargs='*', help='Paths to files or directories')
-    parser_ap.add_argument('--compare', dest='compare_to_path',
-                           help='Compare freshly-generated analysis with one provided in file')
+    parser_ap.add_argument('--save', action='store_true', default=False,
+                           help='Save detailed report as JSON file (for future comparison)')
+    # parser_ap.add_argument('--compare', dest='compare_to_path',
+    #                        help='Compare freshly-generated analysis with one provided in file')
 
     # # fix-known-broken-patterns | fbp
     # parser_fbp = subparsers.add_parser(FIX_KNOWN_BROKEN_PATTERNS, aliases=CMD_TO_ALIASES[FIX_KNOWN_BROKEN_PATTERNS],

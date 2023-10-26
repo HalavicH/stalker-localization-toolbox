@@ -156,10 +156,13 @@ def analyze_patterns(args, is_read_only):
 
     log.info(f"Total processed files: {len(files)}")
 
-    # Serialize the current analysis to a file
-    serialize_analysis(results, build_file_name())
-
     display_report(results)
+
+    # Serialize the current analysis to a file
+    if args.save:
+        filename = build_file_name()
+        log.always(f"Saving the report at [cyan]{rich_guard(filename)}[/cyan]")
+        serialize_analysis(results, filename)
 
     # if args.compare_to_path is not None:
     # log.always(cf_cyan("Comparing previous analysis to freshly-generated"))
