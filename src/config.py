@@ -9,6 +9,7 @@ CHECK_PRIMARY_LANG = 'check-primary-lang'
 TRANSLATE = 'translate'
 ANALYZE_PATTERNS = 'analyze-patterns'
 CAPITALIZE_TEXT = 'capitalize-text'
+FIND_STRING_DUPLICATES = 'find-string-duplicates'
 FIX_KNOWN_BROKEN_PATTERNS = 'fix-known-broken-patterns'
 
 CMD_TO_ALIASES = {
@@ -21,6 +22,7 @@ CMD_TO_ALIASES = {
     ANALYZE_PATTERNS: ['ap'],
     FIX_KNOWN_BROKEN_PATTERNS: ['fbp'],
     CAPITALIZE_TEXT: ['ct'],
+    FIND_STRING_DUPLICATES: ['fsd'],
 }
 
 min_recognizable_text_length = 30

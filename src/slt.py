@@ -155,10 +155,17 @@ def parse_args():
     # capitalize-text | ct
     parser_ct = subparsers.add_parser(CAPITALIZE_TEXT, aliases=CMD_TO_ALIASES[CAPITALIZE_TEXT],
                                       formatter_class=parser.formatter_class,
-                                      help='Capitalize first letter in all text entries in a file or directory')
+                                      help='Capitalize first letter [cyan](a->A)[/cyan] in all text entries in a file or directory')
     parser_ct.add_argument('paths', nargs='*', help='Paths to files or directories')
     add_git_override_arguments(parser_ct)
 
+    # find-string-dups | fsd
+    parser_fsd = subparsers.add_parser(FIND_STRING_DUPLICATES, aliases=CMD_TO_ALIASES[FIND_STRING_DUPLICATES],
+                                       formatter_class=parser.formatter_class,
+                                       help="Looks for duplicates of [green]'<string id=\"...\">'[/green] to eliminate unwanted conflicts/overrides")
+    parser_fsd.add_argument('paths', nargs='*', help='Paths to files or directories')
+
+    ###### Parse ######
     args = parser.parse_args()
     log.debug(f"Args: {args}")
 
