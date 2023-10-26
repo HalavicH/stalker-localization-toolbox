@@ -27,7 +27,6 @@ NEWLINE_PATTERN = "\\n"
 STRING_PATTERNS = "patterns"
 PATTERN_ERRORS_KEY = "errors"
 
-
 failed_files = {}
 CURRENT_FILE_ISSUES = []
 
@@ -72,7 +71,7 @@ def process_file(file_path, per_file_results, args):
         if text_tag is not None:
             text_content = text_tag.text if text_tag.text else ''
             string_analysis[STRING_PATTERNS] = analyze_patterns_in_text(text_content)
-            string_analysis[PATTERN_ERRORS_KEY] = check_placeholders(text_content)
+            string_analysis[PATTERN_ERRORS_KEY] = check_placeholders(text_content, xml_string)
             per_string_analysis[string_id] = string_analysis
 
     # file_patterns_summary, file_patterns_errors = sum_strings_to_file_analysis(per_string_analysis)
@@ -86,39 +85,19 @@ def process_file(file_path, per_file_results, args):
     }
 
 
-def sum_strings_to_file_analysis(per_string_analysis):
-    file_patterns_dict = {}
-    file_patterns_errors = {}
-    for string_name, string_report in per_string_analysis.items():
-        for pattern_type, patterns_stats in string_report[PATTERNS_KEY].items():
-            file_patterns_dict[pattern_type] = {}
-            for pattern, cnt in patterns_stats.items():
-                if file_patterns_dict[pattern_type][pattern] is not None:
-                    file_patterns_dict[pattern_type][pattern] += cnt
-                else:
-                    file_patterns_dict[pattern_type][pattern] = cnt
-
-        string_errors = string_report[PATTERN_ERRORS_KEY]
-        if len(string_errors) > 0:
-            file_patterns_errors[string_name] = string_errors
-
-    return file_patterns_dict, file_patterns_errors
-
-
 def aggregate_data(detailed_analysis):
     sum_pattens = {}
     sum_errors = {}
-    for name, report in detailed_analysis.items():
-        for pattern_type, patterns_stats in report[PATTERNS_KEY].items():
-            sum_pattens[pattern_type] = {}
+    for name, string_report in detailed_analysis.items():
+        for pattern_type, patterns_stats in string_report[PATTERNS_KEY].items():
+            sum_pattens[pattern_type] = sum_pattens.get(pattern_type) or {}
             for pattern, cnt in patterns_stats.items():
                 if sum_pattens[pattern_type].get(pattern) is not None:
                     sum_pattens[pattern_type][pattern] += cnt
                 else:
                     sum_pattens[pattern_type][pattern] = cnt
 
-
-        string_errors = report[PATTERN_ERRORS_KEY]
+        string_errors = string_report[PATTERN_ERRORS_KEY]
         if len(string_errors) > 0:
             sum_errors[name] = string_errors
 
@@ -183,9 +162,9 @@ def analyze_patterns(args, is_read_only):
     display_report(results)
 
     # if args.compare_to_path is not None:
-        # log.always(cf_cyan("Comparing previous analysis to freshly-generated"))
-        # previous_analysis = deserialize_analysis(args.compare_to_path)
-        # compare_analyses(previous_analysis, results)
+    # log.always(cf_cyan("Comparing previous analysis to freshly-generated"))
+    # previous_analysis = deserialize_analysis(args.compare_to_path)
+    # compare_analyses(previous_analysis, results)
 
 
 # TODO: Add broken pattern analysis
@@ -214,11 +193,12 @@ def display_report(results):
                 row = error['position']['row']
                 col = error['position']['column']
                 cause = error['type']
-                snippet = error['snippet']
+                snippet_lines = error['snippet'].split("\n")
 
                 log.always(cf_red(f"    Error: {cf_cyan(cause)}"))
                 # log.always(f"\t\t\tCause: {}")
-                log.always(f"        '{snippet}'")
+                for line in snippet_lines:
+                    log.always(f"        '{line}'")
                 log.always(f"        Row: {cf_green(row)}, column {cf_green(col)}\n")
 
     # rich.print(errors)

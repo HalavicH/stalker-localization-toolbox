@@ -152,13 +152,6 @@ def purify_text(text):
     return remove_placeholders(text)
 
 
-# Detect broken placeholders
-# Constants for error types
-EXTRA_WHITESPACE_BEFORE_BRACKET = 'Extra whitespace before "["'
-EXTRA_WHITESPACE_INSIDE_BRACKETS = 'Extra whitespace inside "[]"'
-HYPHEN_IN_NAME = 'Hyphen in the name'
-
-
 # Error fixing functions
 def fix_whitespace_before_bracket(text_list, start, end):
     while text_list[start] != '%':
@@ -180,21 +173,30 @@ def fix_hyphen_in_name(text_list, start, end):
         if text_list[i] == '-':
             text_list[i] = '_'
 
-        # Configuration block: error types, patterns, and fixing functions
 
-
+# Detect broken placeholders
+# Constants for error types
+EXTRA_WHITESPACE_BEFORE_BRACKET = 'Extra whitespace before "["'
+EXTRA_WHITESPACE_INSIDE_BRACKETS = 'Extra whitespace inside "[]"'
+HYPHEN_IN_NAME = 'Hyphen in the name'
+NAME_STARTS_WITH_NUMBER = 'Placeholder name starts with number'
+# Configuration block: error types, patterns, and fixing functions
 ERROR_CONFIG = {
     EXTRA_WHITESPACE_BEFORE_BRACKET: {
-        'pattern': r'(\%c\s+\[)',
-        'fix': fix_whitespace_before_bracket
+        'pattern': r'(\%c\s+\[[a-z0-9_\-]+\])',
+        'fix': 'fix_whitespace_before_bracket'  # Placeholder function name
     },
     EXTRA_WHITESPACE_INSIDE_BRACKETS: {
-        'pattern': r'(\%c\[\s+|\s+\])',
-        'fix': fix_whitespace_inside_brackets
+        'pattern': r'(\%c\[\s+[a-z0-9_\-]+\]|\%c\[[a-z0-9_\-]+\s+\])',
+        'fix': 'fix_whitespace_inside_brackets'  # Placeholder function name
     },
     HYPHEN_IN_NAME: {
-        'pattern': r'(%c\[[a-z0-9_]*-(?=[a-z0-9_]*\])\])',
-        'fix': fix_hyphen_in_name
+        'pattern': r'(%c\[[a-z0-9_]+-(?=[a-z0-9_]*\]))',
+        'fix': 'fix_hyphen_in_name'  # Placeholder function name
+    },
+    NAME_STARTS_WITH_NUMBER: {
+        'pattern': r'(%c\[\d+[a-z0-9_\-]*\])',
+        'fix': 'fix_name_starts_with_number'  # Placeholder function name
     }
 }
 
@@ -222,7 +224,7 @@ def color_the_error(snippet, pattern, rich_style=False):
         return result
 
 
-def check_placeholders(text):
+def check_placeholders(text, xml_string):
     errors = []
     for error_type, config in ERROR_CONFIG.items():
         pattern = config['pattern']
@@ -230,22 +232,39 @@ def check_placeholders(text):
             start, end = match.span()
             error_content = match.group(1)
 
-            # Extract snippet for the same line
-            line_start = text.rfind('\n', 0, start) + 1
-            line_end = text.find('\n', end) if text.find('\n', end) != -1 else len(text)
-            snippet = text[line_start:line_end]
+            # Compute global position in xml_string
+            global_start = xml_string.find(text) + start
+            global_end = xml_string.find(text) + end
 
-            snippet = color_the_error(snippet, pattern, rich_style=True)
+            # Extract snippet for the same line
+            line_start_global = xml_string.rfind('\n', 0, global_start) + 1
+            line_end_global = xml_string.find('\n', global_end) if xml_string.find('\n', global_end) != -1 else len(
+                xml_string)
+            snippet = xml_string[line_start_global:line_end_global]
 
             # Compute row and column
-            row = text.count('\n', 0, start) + 1
-            col = start - line_start + 1
+            row = xml_string.count('\n', 0, global_start) + 1
+            col = global_start - line_start_global + 1
+
+            # Enhance snippet to show a few lines before and after the error and point out the exact error position
+            prev_line_start = xml_string.rfind('\n', 0, line_start_global - 1) + 1
+
+            if xml_string.find('\n', line_end_global + 1) != -1:
+                next_line_end = xml_string.find('\n', line_end_global + 1)
+            else:
+                next_line_end = len(xml_string)
+
+            prev_line = xml_string[prev_line_start:line_start_global].strip()
+            next_line = xml_string[line_end_global + 1:next_line_end].strip()
+
+            arrow_line = ' ' * (col - 1) + '-^-'
+            enhanced_snippet = f"{row - 1}: {prev_line}\n{row}: {snippet}\n{arrow_line}\n{row + 1}: {next_line}"
 
             # Build error object
             error = {
                 'position': {'row': row, 'column': col},
                 'type': error_type,
-                'snippet': snippet,
+                'snippet': enhanced_snippet,
                 'content': error_content
             }
             errors.append(error)
