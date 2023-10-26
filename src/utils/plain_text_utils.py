@@ -280,12 +280,12 @@ PERCENT_S = "percent_s"
 LONELY_PERCENT_C = "lonely_percent_c"
 
 COMMON_PATERNS = {
-    COLOR: r'%c\[([a-zA-Z_0-9]+)]',
-    COLOR_NUM: r'%c\[(\d+,\d+,\d+,\d+)]',
-    ACTION: r'\$\$([A-Z_]+)\$\$',
-    VARIABLE: r'\$([a-z_]+)',
+    COLOR: r'(%c\[[a-zA-Z_0-9]+\])',
+    COLOR_NUM: r'(%c\[\d+,\d+,\d+,\d+\])',
+    ACTION: r'(\$\$[A-Z_0-9]+\$\$)',
+    VARIABLE: r'(\$[a-z_0-9]+)',
     PERCENT_S: '%s',
-    LONELY_PERCENT_C: r'%c(?! ?\[)',
+    LONELY_PERCENT_C: r'(%c?! ?\[)',
 }
 
 
@@ -293,11 +293,14 @@ def analyze_patterns_in_text(text):
     report = {}
     for pattern_name in COMMON_PATERNS:
         pattern = COMMON_PATERNS[pattern_name]
-        all_patterns = re.findall(pattern, text)
-        if all_patterns:
-            log.debug(all_patterns)
+        all_matches = re.findall(pattern, text)
+        for i, match in enumerate(all_matches):
+            all_matches[i] = match.replace("[", "\\[")
 
-        count_dict = dict(Counter(all_patterns))
+        if all_matches:
+            log.debug(all_matches)
+
+        count_dict = dict(Counter(all_matches))
         if len(count_dict) > 0:
             report[pattern_name] = count_dict
 
