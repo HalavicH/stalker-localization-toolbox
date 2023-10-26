@@ -35,17 +35,9 @@ def process_file(file_path, results, args):
             results[string_id] = [data_obj]
 
 
-def display_report(results):
+def display_per_string(results):
     if len(results) == 0:
         log.always("No duplicates found! Great news")
-
-    # table = create_table(["String", "Cnt"])
-    #
-    # for file, cnt in results:
-    #     table.add_row(file, str(cnt))
-    #
-    # log.always(f"Following duplicated strings were found: {len(results)}")
-    # get_console().print(table)
 
     # Print duplicate counts and details
     for string_id, data_list in results.items():
@@ -62,9 +54,6 @@ def display_report(results):
                 log.always(f"File: '{file_path}', line: {line}")
                 log.always(f"Text: '{cf_yellow(text)}'\n")
 
-    overlaps = analyze_file_overlaps(results)
-    print_file_overlaps(overlaps)
-
     # Print memory footprint
     memory_size = sys.getsizeof(results)
     for data_list in results.values():
@@ -72,42 +61,86 @@ def display_report(results):
     print(f"\nMemory footprint of the dictionary: {memory_size / 1024:.2f} KB")
 
 
+def init_file_overlaps_dict():
+    return defaultdict(lambda:
+                       {
+                           "overlaps": defaultdict(lambda: defaultdict(
+                               lambda: {'match_count': 0, 'overlapping_ids': set(), 'total_id_cnt': 0})),
+                           "total_id_cnt": 0
+                       })
+
+
+def sort_overlaps(data_dict: defaultdict) -> dict:
+    # Sort the inner overlaps by match_count
+    for file, data in data_dict.items():
+        data["overlaps"] = dict(sorted(data["overlaps"].items(), key=lambda x: x[1]["match_count"], reverse=True))
+
+    # Sort the main dictionary by the total match_count of its overlaps
+    sorted_data_dict = dict(
+        sorted(data_dict.items(), key=lambda x: sum([y["match_count"] for y in x[1]["overlaps"].values()]),
+               reverse=True))
+
+    return sorted_data_dict
+
+
+def filter_sorted_data(sorted_data_dict: dict) -> dict:
+    # Filter out main entries with empty overlaps
+    filtered_data_dict = {k: v for k, v in sorted_data_dict.items() if v['overlaps']}
+    return filtered_data_dict
+
+
 def analyze_file_overlaps(indexed_data):
     # Create a dictionary to hold unique string IDs for each file
     file_string_ids = defaultdict(set)
 
-    for data_list in indexed_data.values():
+    for string_id, data_list in indexed_data.items():
         for entry in data_list:
-            file_string_ids[entry['file_path']].add(entry['text'])
+            file_string_ids[entry['file_path']].add(string_id)
 
     # Compare each file's string IDs with every other file's string IDs
-    overlaps = defaultdict(lambda: defaultdict(int))
+    overlaps_data = init_file_overlaps_dict()
     files = list(file_string_ids.keys())
     for i, file1 in enumerate(files):
+        overlaps_data[file1]["total_id_cnt"] = len(file_string_ids[file1])
+
         for j, file2 in enumerate(files):
             if i != j:
-                overlap_count = len(file_string_ids[file1].intersection(file_string_ids[file2]))
+                overlapping_ids = file_string_ids[file1].intersection(file_string_ids[file2])
+                overlap_count = len(overlapping_ids)
                 if overlap_count > 0:
-                    overlaps[file1][file2] = overlap_count
+                    overlaps_data[file1]["overlaps"][file2]["total_id_cnt"] = len(file_string_ids[file2])
+                    overlaps_data[file1]["overlaps"][file2]['match_count'] = overlap_count
+                    overlaps_data[file1]["overlaps"][file2]['overlapping_ids'] = overlapping_ids
 
     # Sort the overlaps
-    sorted_overlaps = {file: dict(sorted(overlaps[file].items(), key=lambda item: item[1], reverse=True)) for file in
-                       overlaps}
-
-    return sorted_overlaps
+    sorted_overlaps = sort_overlaps(overlaps_data)
+    return filter_sorted_data(sorted_overlaps)
 
 
-def print_file_overlaps(overlaps):
+def display_per_file_overlaps(overlaps, show_unique=False):
     # Print the analysis
     for i, (file, matched_files) in enumerate(overlaps.items()):
-        total_ids_in_file = sum(overlaps[file].values()) + len(overlaps[file])  # Total IDs in primary file
+        main_file_ids_cnt = matched_files["total_id_cnt"]
+
         log.always(f"Duplicates in files:")
-        log.always(f"file #{i + 1}: {file} matches with:")
-        for matched_file, count in matched_files.items():
-            percentage_match = (count / total_ids_in_file) * 100
+        log.always(f"file #{i + 1}: {file} (Total IDs: {main_file_ids_cnt}):")
+
+        for matched_file, data in matched_files["overlaps"].items():
+            file_ids_cnt = data['total_id_cnt']
+            percentage_match = (data['match_count'] / file_ids_cnt) * 100
             log.always(
-                f"file: '{matched_file}', overlapping IDs: {cf_yellow(count)}/[cyan]{total_ids_in_file} [bright_black]({percentage_match:.2f}%)[/bright_black]")
+                f"file: '{matched_file}', overlapping IDs: {cf_yellow(data['match_count'])}/[cyan]{file_ids_cnt} [bright_black]({percentage_match:.2f}%)[/bright_black]")
+
+            overlapping_ids = "\n\t".join(list(data['overlapping_ids']))
+            log.always(f"Overlapping ids:\n\t{cf_yellow(overlapping_ids)}")
+
+            if show_unique:
+                unique_ids = set(data['overlapping_ids']) - set(overlaps[matched_file].keys())
+                unique_ids_str = "\n\t".join(list(unique_ids))
+                log.always(f"Unique ids in {file} (not in {matched_file}):\n\t{cf_yellow(unique_ids_str)}")
+
         log.always()
+
 
 def find_string_duplicates(args, is_read_only):
     files = get_xml_files_and_log(args.paths, "Analyzing patterns for")
@@ -117,4 +150,9 @@ def find_string_duplicates(args, is_read_only):
     process_files_with_progress(files, process_file, results, args, is_read_only)
     log.info(f"Total processed files: {len(files)}")
 
-    display_report(results)
+    if args.per_string_report:
+        display_per_string(results)
+    else:
+        overlaps = analyze_file_overlaps(results)
+        display_per_file_overlaps(overlaps)
+
