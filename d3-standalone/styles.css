@@ -27,9 +27,3 @@ body, html, svg {
     color: #abb2bf;
     visibility: hidden; /* By default, hide the text */
 }
-
-.node:hover .labels  {
-    fill: #ffffff;
-
-    visibility: visible; /* Show text on hover */
-}

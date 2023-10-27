@@ -98,6 +98,7 @@ function renderGraph(graph) {
         .enter().append("circle")
         .attr("class", "node")
         .attr("r", 10)
+        .attr("data-node-id", d => d.id)
         .style("fill", d => {
             let folder = d.id.split("/").slice(-2, -1)[0];
             return color(folder);
@@ -106,13 +107,30 @@ function renderGraph(graph) {
             .on("start", d => dragStarted(d, force))
             .on("drag", dragged)
             .on("end", d => dragEnded(d, force))
-        );
+        )
+        .on("mouseover", function(d) {
+            // Get the node's unique identifier
+            let nodeId = d3.select(this).attr("data-node-id");
+
+            // Select the corresponding label and make it visible
+            d3.select(`text[data-label-for='${nodeId}']`)
+                .style("visibility", "visible");
+        })
+        .on("mouseout", function(d) {
+            // Get the node's unique identifier
+            let nodeId = d3.select(this).attr("data-node-id");
+
+            // Select the corresponding label and hide it
+            d3.select(`text[data-label-for='${nodeId}']`)
+                .style("visibility", "hidden");
+        });
 
     // Render labels
     svg.selectAll(".labels")
         .data(nodes)
         .enter().append("text")
         .attr("class", "labels")
+        .attr("data-label-for", d => d.id)
         .text(d => d.id.split('/').pop());  // Only the file name
 
     // Update positions on simulation "tick"
