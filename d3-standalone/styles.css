@@ -12,18 +12,25 @@ body, html, svg {
     stroke-opacity: 0.6;
 }
 
-.node {
+.circle {
     stroke: #ffffff;
     stroke-width: 1.5px;
 }
 
-.node:hover {
+.circle:hover {
     stroke: #ffffff;
     stroke-width: 2.5px;
 }
 
-.labels {
-    fill: #abb2bf; /* Lighter text color */
-    color: #abb2bf;
-    visibility: hidden; /* By default, hide the text */
+.label-group {
+    visibility: hidden;
+    opacity: 0;
+    transition: visibility 0s, opacity 0.2s ease-in-out;
 }
+
+/*.label-text {*/
+/*    fill: #abb2bf; !* Lighter text color *!*/
+/*    color: #abb2bf;*/
+/*    !*visibility: hidden; !* By default, hide the text *!*!*/
+/*}*/
+

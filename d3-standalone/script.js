@@ -31,7 +31,7 @@ function extractData(graph) {
             });
         }
     }
-    return { nodes, links };
+    return {nodes, links};
 }
 
 /**
@@ -67,38 +67,58 @@ function dragEnded(d, force) {
 }
 
 // ---------------------- MAIN RENDER FUNCTION ----------------------
-
 function renderGraph(graph) {
     const { nodes, links } = extractData(graph);
 
-    const width = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
-    const height = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
+    // Set the initial width and height
+    const initialWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+    const initialHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
 
-    const svg = d3.select("body").append("svg")
-        .attr("width", width)
-        .attr("height", height);
+    // Create a container for scrolling and zooming
+    const container = d3.select("body").append("div")
+        .style("width", "100%")
+        .style("height", "100%")
+        .style("overflow", "auto");
+
+    const svg = container.append("svg")
+        .attr("width", initialWidth)
+        .attr("height", initialHeight)
+        .append("g"); // Append a 'g' element for zooming
+
+    const zoom = d3.zoom()
+        .scaleExtent([0.1, 10]) // Adjust the zoom scale extent as needed
+        .on("zoom", () => {
+            svg.attr("transform", d3.event.transform);
+        });
+
+    container.call(zoom);
 
     const force = d3.forceSimulation(nodes)
         .force("link", d3.forceLink(links).distance(100))
         .force("charge", d3.forceManyBody())
-        .force("center", d3.forceCenter(width / 2, height / 2));
+        .force("center", d3.forceCenter(initialWidth / 2, initialHeight / 2));
 
     const color = d3.scaleOrdinal(d3.schemeCategory10);
 
-    // Render links
+    // Render links within the SVG
     svg.selectAll(".link")
         .data(links)
         .enter().append("line")
         .attr("class", "link")
         .attr("stroke-width", d => Math.sqrt(d.value));
 
-    // Render nodes
-    svg.selectAll(".node")
+    // Render nodes with labels within the SVG
+    const nodesWithLabels = svg.selectAll(".node")
         .data(nodes)
-        .enter().append("circle")
-        .attr("class", "node")
-        .attr("r", 10)
+        .enter()
+        .append("g")
+        .attr("class", "node");
+
+    // Append a circle for each node
+    nodesWithLabels.append("circle")
+        .attr("r", 10) // Increase the radius to give more space for labels
         .attr("data-node-id", d => d.id)
+        .attr("class", "circle")
         .style("fill", d => {
             let folder = d.id.split("/").slice(-2, -1)[0];
             return color(folder);
@@ -108,30 +128,63 @@ function renderGraph(graph) {
             .on("drag", dragged)
             .on("end", d => dragEnded(d, force))
         )
-        .on("mouseover", function(d) {
-            // Get the node's unique identifier
-            let nodeId = d3.select(this).attr("data-node-id");
+        // Modify the mouseover and mouseout event handlers to show/hide the label group
+        .on("mouseover", function (d) {
+            let id = `#label-group-${d.index}`;
+            console.log("Mouse in " + id);
 
-            // Select the corresponding label and make it visible
-            d3.select(`text[data-label-for='${nodeId}']`)
-                .style("visibility", "visible");
+            // Select the corresponding label group and make it visible
+            let element1 = document.querySelector(id);
+            element1.style.opacity = "1";
+            element1.style.visibility = "visible"
         })
-        .on("mouseout", function(d) {
-            // Get the node's unique identifier
-            let nodeId = d3.select(this).attr("data-node-id");
-
-            // Select the corresponding label and hide it
-            d3.select(`text[data-label-for='${nodeId}']`)
-                .style("visibility", "hidden");
+        .on("mouseout", function (d) {
+            let id = `#label-group-${d.index}`;
+            console.log("Mouse out " + id);
+            // Select the corresponding label group and hide it with a smooth fade-out effect
+            let element = document.querySelector(id);
+            element.style.opacity = "0";
+            element.style.visibility = "hidden";
         });
 
-    // Render labels
-    svg.selectAll(".labels")
-        .data(nodes)
-        .enter().append("text")
-        .attr("class", "labels")
-        .attr("data-label-for", d => d.id)
-        .text(d => d.id.split('/').pop());  // Only the file name
+    // Append text labels on top of the nodes with background rectangles
+    nodesWithLabels.each(function (d, i) { // Pass the index 'i' as the second parameter
+        const nodeGroup = d3.select(this);
+
+        // Create a unique label group ID based on the node's index
+        const labelGroupId = `label-group-${i}`;
+
+        // Append a group for the label
+        const labelGroup = nodeGroup.append("g")
+            .attr("class", "label-group")
+            .attr("id", labelGroupId)
+            .attr("transform", "translate(0, -20)");
+
+        // Calculate the width of the label based on its content
+        const labelWidth = (d.id.split('/').pop().length * 8) + 6; // 8px per character plus 6px padding
+
+        // Append a background rectangle for each label
+        labelGroup.append("rect")
+            .attr("class", "label-bg")
+            .attr("rx", 5) // Optional: Adds rounded corners to the background rectangle
+            .attr("ry", 5) // Optional: Adds rounded corners to the background rectangle
+            .style("fill", "white")
+            .attr("width", labelWidth) // Set the width based on label content and padding
+            .attr("height", 20) // Adjust the height of the background rectangle as needed
+            .attr("x", -labelWidth / 2) // Adjust the x-coordinate to center the rectangle behind the label
+            .attr("y", -10); // Adjust the y-coordinate to center the rectangle behind the label
+
+        // Append the text label inside the label group
+        labelGroup.append("text")
+            .attr("class", "label-text")
+            .attr("data-label-for", d => d.id)
+            .text(d => d.id.split('/').pop())  // Only the file name
+            .attr("dy", 5) // Adjust the vertical position to place the label inside the background rectangle
+            .attr("text-anchor", "middle");
+
+        // Initially hide the label group
+        labelGroup.style("visibility", "hidden");
+    });
 
     // Update positions on simulation "tick"
     force.on("tick", () => {
@@ -141,13 +194,8 @@ function renderGraph(graph) {
             .attr("x2", d => d.target.x)
             .attr("y2", d => d.target.y);
 
-        svg.selectAll(".node")
-            .attr("cx", d => d.x)
-            .attr("cy", d => d.y);
-
-        svg.selectAll(".labels")
-            .attr("x", d => d.x)
-            .attr("y", d => d.y);
+        // Update node and label positions
+        nodesWithLabels.attr("transform", d => `translate(${d.x},${d.y})`);
     });
 }
 
