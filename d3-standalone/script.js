@@ -74,6 +74,35 @@ function renderGraph(graph) {
     const initialWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
     const initialHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
 
+    // Create the SVG container and apply zoom/pan functionality
+    const { container, svg, zoom } = createZoomableSVG(initialWidth, initialHeight);
+
+    // Create the force simulation
+    const force = createForceSimulation(nodes, links, initialWidth, initialHeight);
+
+    // Create color scale
+    const color = d3.scaleOrdinal(d3.schemeCategory10);
+
+    // Render links within the SVG
+    renderLinks(svg, links);
+
+    // Render nodes with labels within the SVG
+    const nodesWithLabels = renderNodesWithLabels(svg, nodes, color, force);
+
+    // Update positions on simulation "tick"
+    force.on("tick", () => {
+        svg.selectAll(".link")
+            .attr("x1", d => d.source.x)
+            .attr("y1", d => d.source.y)
+            .attr("x2", d => d.target.x)
+            .attr("y2", d => d.target.y);
+
+        // Update node and label positions
+        nodesWithLabels.attr("transform", d => `translate(${d.x},${d.y})`);
+    });
+}
+
+function createZoomableSVG(width, height) {
     // Create a container for scrolling and zooming
     const container = d3.select("body").append("div")
         .style("width", "100%")
@@ -81,8 +110,8 @@ function renderGraph(graph) {
         .style("overflow", "auto");
 
     const svg = container.append("svg")
-        .attr("width", initialWidth)
-        .attr("height", initialHeight)
+        .attr("width", width)
+        .attr("height", height)
         .append("g"); // Append a 'g' element for zooming
 
     const zoom = d3.zoom()
@@ -93,21 +122,25 @@ function renderGraph(graph) {
 
     container.call(zoom);
 
-    const force = d3.forceSimulation(nodes)
+    return { container, svg, zoom };
+}
+
+function createForceSimulation(nodes, links, width, height) {
+    return d3.forceSimulation(nodes)
         .force("link", d3.forceLink(links).distance(100))
         .force("charge", d3.forceManyBody())
-        .force("center", d3.forceCenter(initialWidth / 2, initialHeight / 2));
+        .force("center", d3.forceCenter(width / 2, height / 2));
+}
 
-    const color = d3.scaleOrdinal(d3.schemeCategory10);
-
-    // Render links within the SVG
+function renderLinks(svg, links) {
     svg.selectAll(".link")
         .data(links)
         .enter().append("line")
         .attr("class", "link")
         .attr("stroke-width", d => Math.sqrt(d.value));
+}
 
-    // Render nodes with labels within the SVG
+function renderNodesWithLabels(svg, nodes, color, force) {
     const nodesWithLabels = svg.selectAll(".node")
         .data(nodes)
         .enter()
@@ -178,7 +211,7 @@ function renderGraph(graph) {
         labelGroup.append("text")
             .attr("class", "label-text")
             .attr("data-label-for", d => d.id)
-            .text(d => d.id.split('/').pop())  // Only the file name
+            .text(d => d.id.split('/').pop()) // Only the file name
             .attr("dy", 5) // Adjust the vertical position to place the label inside the background rectangle
             .attr("text-anchor", "middle");
 
@@ -186,17 +219,7 @@ function renderGraph(graph) {
         labelGroup.style("visibility", "hidden");
     });
 
-    // Update positions on simulation "tick"
-    force.on("tick", () => {
-        svg.selectAll(".link")
-            .attr("x1", d => d.source.x)
-            .attr("y1", d => d.source.y)
-            .attr("x2", d => d.target.x)
-            .attr("y2", d => d.target.y);
-
-        // Update node and label positions
-        nodesWithLabels.attr("transform", d => `translate(${d.x},${d.y})`);
-    });
+    return nodesWithLabels;
 }
 
 // ---------------------- INITIALIZE GRAPH ----------------------
