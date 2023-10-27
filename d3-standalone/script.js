@@ -87,7 +87,7 @@ function renderGraph(graph) {
     renderLinks(svg, links);
 
     // Render nodes with labels within the SVG
-    const nodesWithLabels = renderNodesWithLabels(svg, nodes, color, force);
+    const nodesWithLabels = renderNodesWithLabels(svg, nodes, color, force, graph);
 
     // Update positions on simulation "tick"
     force.on("tick", () => {
@@ -140,16 +140,24 @@ function renderLinks(svg, links) {
         .attr("stroke-width", d => Math.sqrt(d.value));
 }
 
-function renderNodesWithLabels(svg, nodes, color, force) {
+function renderNodesWithLabels(svg, nodes, color, force, graph) {
+    // Determine the maximum total_id_cnt to scale the node size
+    const maxTotalIdCount = d3.max(nodes, d => graph[d.id].total_id_cnt);
+
+    // Create a scale function to map total_id_cnt to node size
+    const nodeSizeScale = d3.scaleLinear()
+        .domain([0, maxTotalIdCount])
+        .range([5, 20]); // Adjust the range to your desired minimum and maximum node sizes
+
     const nodesWithLabels = svg.selectAll(".node")
         .data(nodes)
         .enter()
         .append("g")
         .attr("class", "node");
 
-    // Append a circle for each node
+    // Append a circle for each node with dynamic radius
     nodesWithLabels.append("circle")
-        .attr("r", 10) // Increase the radius to give more space for labels
+        .attr("r", d => nodeSizeScale(graph[d.id].total_id_cnt))
         .attr("data-node-id", d => d.id)
         .attr("class", "circle")
         .style("fill", d => {
@@ -161,7 +169,6 @@ function renderNodesWithLabels(svg, nodes, color, force) {
             .on("drag", dragged)
             .on("end", d => dragEnded(d, force))
         )
-        // Modify the mouseover and mouseout event handlers to show/hide the label group
         .on("mouseover", function (d) {
             let id = `#label-group-${d.index}`;
             console.log("Mouse in " + id);
