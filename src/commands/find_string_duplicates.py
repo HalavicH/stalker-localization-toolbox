@@ -1,3 +1,4 @@
+import json
 import sys
 from collections import defaultdict
 
@@ -142,6 +143,11 @@ def display_per_file_overlaps(overlaps, show_unique=False):
         log.always()
 
 
+def set_default(obj):
+    if isinstance(obj, set):
+        return list(obj)
+    raise TypeError
+
 def find_string_duplicates(args, is_read_only):
     files = get_xml_files_and_log(args.paths, "Analyzing patterns for")
 
@@ -154,5 +160,8 @@ def find_string_duplicates(args, is_read_only):
         display_per_string(results)
     else:
         overlaps = analyze_file_overlaps(results)
+        with open("duplicates-report.json", 'w', encoding='utf-8') as f:
+            json.dump(overlaps, f, default=set_default, ensure_ascii=False, indent=4)
+
         display_per_file_overlaps(overlaps)
 

@@ -1,0 +1,35 @@
+body, html, svg {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: #282c34; /* Obsidian background color */
+}
+
+.link {
+    stroke: #abb2bf; /* Lighter link color */
+    stroke-opacity: 0.6;
+}
+
+.node {
+    stroke: #ffffff;
+    stroke-width: 1.5px;
+}
+
+.node:hover {
+    stroke: #ffffff;
+    stroke-width: 2.5px;
+}
+
+.labels {
+    fill: #abb2bf; /* Lighter text color */
+    color: #abb2bf;
+    visibility: hidden; /* By default, hide the text */
+}
+
+.node:hover .labels  {
+    fill: #ffffff;
+
+    visibility: visible; /* Show text on hover */
+}
