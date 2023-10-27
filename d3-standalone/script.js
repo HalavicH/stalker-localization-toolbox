@@ -24,10 +24,13 @@ function extractData(graph) {
                 nodes.push({id: overlapFile});
                 index++;
             }
+            const overlapInfo = graph[file].overlaps[overlapFile];
             links.push({
                 source: nodeMap[file],
                 target: nodeMap[overlapFile],
-                value: graph[file].overlaps[overlapFile].match_count
+                value: overlapInfo.match_count,
+                duplicateKeysCnt: overlapInfo.overlapping_ids.length, // Number of duplicate keys
+                duplicateKeys: overlapInfo.overlapping_ids, // Number of duplicate keys
             });
         }
     }
@@ -68,14 +71,14 @@ function dragEnded(d, force) {
 
 // ---------------------- MAIN RENDER FUNCTION ----------------------
 function renderGraph(graph) {
-    const { nodes, links } = extractData(graph);
+    const {nodes, links} = extractData(graph);
 
     // Set the initial width and height
     const initialWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
     const initialHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
 
     // Create the SVG container and apply zoom/pan functionality
-    const { container, svg, zoom } = createZoomableSVG(initialWidth, initialHeight);
+    const {container, svg, zoom} = createZoomableSVG(initialWidth, initialHeight);
 
     // Create the force simulation
     const force = createForceSimulation(nodes, links, initialWidth, initialHeight);
@@ -122,7 +125,7 @@ function createZoomableSVG(width, height) {
 
     container.call(zoom);
 
-    return { container, svg, zoom };
+    return {container, svg, zoom};
 }
 
 function createForceSimulation(nodes, links, width, height) {
@@ -133,11 +136,30 @@ function createForceSimulation(nodes, links, width, height) {
 }
 
 function renderLinks(svg, links) {
-    svg.selectAll(".link")
+    // Render links within the SVG
+    const linkElements = svg.selectAll(".link")
         .data(links)
         .enter().append("line")
         .attr("class", "link")
         .attr("stroke-width", d => Math.sqrt(d.value));
+
+    // Add a tooltip to show the number of duplicate keys when hovering over the link
+    linkElements.on("mouseover", function (d) {
+        const tooltip = d3.select("#tooltip");
+        let header = `Duplicate Keys: (Total: ${d.duplicateKeysCnt})<br>`;
+        ids = d.duplicateKeys.join("<br>")
+        tooltip.html(header + ids);
+        tooltip.style("visibility", "visible");
+    })
+        .on("mousemove", function () {
+            const tooltip = d3.select("#tooltip");
+            tooltip.style("top", (d3.event.pageY - 10) + "px")
+                .style("left", (d3.event.pageX + 10) + "px");
+        })
+        .on("mouseout", function () {
+            const tooltip = d3.select("#tooltip");
+            tooltip.style("visibility", "hidden");
+        });
 }
 
 function renderNodesWithLabels(svg, nodes, color, force, graph) {
@@ -157,7 +179,10 @@ function renderNodesWithLabels(svg, nodes, color, force, graph) {
 
     // Append a circle for each node with dynamic radius
     nodesWithLabels.append("circle")
-        .attr("r", d => nodeSizeScale(graph[d.id].total_id_cnt))
+        .attr("r", d => {
+            let totalIdCnt = graph[d.id].total_id_cnt;
+            return nodeSizeScale(totalIdCnt);
+        })
         .attr("data-node-id", d => d.id)
         .attr("class", "circle")
         .style("fill", d => {
@@ -201,7 +226,8 @@ function renderNodesWithLabels(svg, nodes, color, force, graph) {
             .attr("transform", "translate(0, -20)");
 
         // Calculate the width of the label based on its content
-        const labelWidth = (d.id.split('/').pop().length * 8) + 6; // 8px per character plus 6px padding
+        let fileName = d.id.split('/').pop() + " " + graph[d.id].total_id_cnt + " ids";
+        const labelWidth = (fileName.length * 8) + 3; // 8px per character plus 6px padding
 
         // Append a background rectangle for each label
         labelGroup.append("rect")
@@ -218,7 +244,7 @@ function renderNodesWithLabels(svg, nodes, color, force, graph) {
         labelGroup.append("text")
             .attr("class", "label-text")
             .attr("data-label-for", d => d.id)
-            .text(d => d.id.split('/').pop()) // Only the file name
+            .text(fileName) // Only the file name
             .attr("dy", 5) // Adjust the vertical position to place the label inside the background rectangle
             .attr("text-anchor", "middle");
 

@@ -22,6 +22,12 @@ body, html, svg {
     stroke-width: 2.5px;
 }
 
+.circle:focus {
+    color: red;
+    stroke: #ffffff;
+    stroke-width: 2.5px;
+}
+
 .label-group {
     visibility: hidden;
     opacity: 0;
