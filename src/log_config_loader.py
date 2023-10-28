@@ -27,6 +27,14 @@ def color_log(level, msg):
         return msg
 
 
+# Init Flask logger
+flask_logger = logging.getLogger('werkzeug')
+ch = logging.StreamHandler()
+ch.setLevel(logging.INFO)
+flask_logger.addHandler(ch)
+flask_logger.setLevel(logging.INFO)
+
+
 class ExtendedLogger(logging.Logger):
     def __init__(self, name, level=logging.NOTSET):
         super().__init__(name, level)
@@ -36,7 +44,8 @@ class ExtendedLogger(logging.Logger):
              exc_info=None, extra=None,
              stack_info=False, stacklevel=1):
         # For console logging, use Rich
-        if level >= self.level:
+        # Except Flask
+        if level >= self.level and not self.name.startswith('werkzeug'):
             msg = str(msg)  # Ensure msg is a string
             if args:
                 msg = msg % args  # Only apply formatting if args is non-empty
@@ -45,9 +54,12 @@ class ExtendedLogger(logging.Logger):
             self.console.print(res)
 
         # For file logging, use the standard logging mechanism
-        super()._log(level, msg, args, exc_info=exc_info,
-                     extra=extra, stack_info=stack_info,
-                     stacklevel=stacklevel)
+        try:
+            super()._log(level, msg, args, exc_info=exc_info,
+                         extra=extra, stack_info=stack_info,
+                         stacklevel=stacklevel)
+        except Exception as e:
+            print("Can't log error due to fucking rich formatter. Fixme.")
 
     def always(self, message="", *args, **kws):
         self._log(ALWAYS_LEVEL, message, args, **kws)

@@ -43,10 +43,18 @@ export function displayLinkDetails(link) {
             <div class="overlay-data">${link.duplicateKeysCnt}</div>
         </div>
         <div class="scrollable-list">
-            <div class="path">${link.duplicateKeys.join("</div><div class='path' onclick='copySelfToClipboard(this)'>")}</div>
+            <div class="path">${link.duplicateKeys.join("</div><div class='path'>")}</div>
         </div>
     `;
+
     detailsOverlay.querySelector(".stalker-button").addEventListener("click", handleDiffButton);
+
+    detailsOverlay.addEventListener("click", evt => {
+        if (evt.target.classList.contains("path")) {
+            copySelfToClipboard(evt.target);
+        }
+    });
+
     detailsOverlay.style.visibility = "visible";
 }
 

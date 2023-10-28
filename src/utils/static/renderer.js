@@ -45,11 +45,11 @@ export function renderLinks(svg, links) {
                 <div class="path">${d.target.id}</div>
             `;
 
-            statusContent.addEventListener("click", evt => {
-                if (evt.target.classList.contains("path")) {
-                    copySelfToClipboard(evt.target);
-                }
-            });
+                statusContent.addEventListener("click", evt => {
+                    if (evt.target.classList.contains("path")) {
+                        copySelfToClipboard(evt.target);
+                    }
+                });
 
             displayLinkDetails(d);
         });

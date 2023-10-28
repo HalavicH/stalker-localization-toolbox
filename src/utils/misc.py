@@ -78,3 +78,11 @@ def set_default(obj):
     if isinstance(obj, set):
         return list(obj)
     raise TypeError(f"{obj} is not instance of set. Don't know how to default it")
+
+
+def check_paths_exist(paths):
+    return all(os.path.exists(path) for path in paths)
+
+
+def remove_invalid_paths(paths):
+    return [path for path in paths if os.path.exists(path)]

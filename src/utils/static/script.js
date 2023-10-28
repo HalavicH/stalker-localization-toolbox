@@ -6,13 +6,13 @@
  * @returns {Object} An object containing nodes and links
  */
 
-import {getFileName, prepareDivsWithIds, handleDiffButton} from "/static/utils.js";
+import {getFileName, prepareDivsWithIds, handleDiffButton, getReportData, hasReportUpdates} from "/static/utils.js";
 import {nodeIsNeighbor, hashCode, dragStarted, dragged, dragEnded} from "/static/misc.js";
 import {displayNodeDetails, displayLinkDetails, displayStatistics, copySelfToClipboard, showNotification} from "/static/infoProvider.js"
 import {renderLinks, renderNodesWithLabels} from "/static/renderer.js"
 
 let show_all_files = false;
-let current_graph_data = JSON.parse(globalData);
+let lastReport = undefined;
 
 // Create nodes array from graph.file_to_string_mapping
 function createNodesArray(graph) {
@@ -164,8 +164,16 @@ function calculateStats(links, nodes) {
     const numDups = d3.set(links.flatMap(d => [d.source.id, d.target.id])).size();
     const numNoDups = numNodes - numDups;
     const numLinks = links.length;
-    const totalDuplicates = links.reduce((total, link) => total + link.duplicateKeysCnt, 0);
 
+    const uniqueDuplicates = new Set();
+
+    links.forEach(link => {
+        link.duplicateKeys.forEach(key => {
+            uniqueDuplicates.add(key);
+        });
+    });
+
+    const totalDuplicates = uniqueDuplicates.size;
     return {numNoDups, numDups, numNodes, numLinks, totalDuplicates};
 }
 
@@ -173,7 +181,10 @@ function calculateStats(links, nodes) {
 
 //d3.json("visualization_data.json").then(renderGraph);
 //data = {{ data_json|safe }}
-renderGraph(current_graph_data)
+getReportData().then((report) => {
+    lastReport = report;
+    renderGraph(report);
+});
 
 // Add an event handler to hide the "Details" overlay when clicking outside of nodes/links
 document.addEventListener("click", function (event) {
@@ -199,5 +210,20 @@ document.querySelector("#show-all-files").addEventListener("change", (evt) => {
         document.querySelector("#legend-grey-files").style.opacity = "0";
     }
 
-    renderGraph(current_graph_data)
+    renderGraph(lastReport)
 })
+
+// Setup
+setInterval(async () => {
+    let hasNew = await hasReportUpdates();
+    if (hasNew === false) {
+        console.info("Nothing changed so far");
+        return;
+    }
+
+    let newReport = await getReportData();
+    console.info("New data! Let's re-render it");
+    showNotification(`<div>Detected changes in files! Refreshing the graph!</div>`);
+    lastReport = newReport;
+    renderGraph(lastReport);
+}, 2000);

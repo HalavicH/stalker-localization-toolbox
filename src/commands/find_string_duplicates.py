@@ -2,44 +2,48 @@ import json
 import sys
 from collections import defaultdict
 
-from rich import get_console
-
 from src.commands.common import get_xml_files_and_log, process_files_with_progress
 from src.log_config_loader import log
 from src.utils.colorize import cf_yellow, cf_cyan
 from src.utils.file_utils import read_xml
 from src.utils.flask_server import run_flask_server
-from src.utils.misc import create_table
 from src.utils.xml_utils import parse_xml_root
 
 
 def process_file(file_path, results, args):
-    strings_element_list, xml_string = list_strings(file_path)
-    for string_elem in strings_element_list:
-        string_id = string_elem.get("id")
-        text_elem = string_elem.find("text")
-        text_content = text_elem.text.strip() if text_elem is not None else ""
+    try:
+        strings_element_list, xml_string = list_strings(file_path)
+        for string_elem in strings_element_list:
+            string_id = string_elem.get("id")
+            text_elem = string_elem.find("text")
+            text_content = text_elem.text.strip() if text_elem is not None else ""
 
-        line_num = xml_string.count('\n', 0, xml_string.find(string_id)) + 1
+            line_num = xml_string.count('\n', 0, xml_string.find(string_id)) + 1
 
-        data_obj = {
-            "file_path": file_path,
-            "text": text_content,
-            "line": line_num
-        }
+            data_obj = {
+                "file_path": file_path,
+                "text": text_content,
+                "line": line_num
+            }
 
-        if string_id in results:
-            log.warning(f"Found duplicate of '{string_id}' in '{file_path}'")
-            results[string_id].append(data_obj)
-        else:
-            results[string_id] = [data_obj]
+            if string_id in results:
+                log.warning(f"Found duplicate of '{string_id}' in '{file_path}'")
+                results[string_id].append(data_obj)
+            else:
+                results[string_id] = [data_obj]
+    except Exception as e:
+        log.error(f"Can't process strings for file: '{file_path}'. Error: {e}");
 
 
 def list_strings_from_all_files(files):
     results = {}
 
     for file in files:
-        xml_string_tags, _ = list_strings(file)
+        try:
+            xml_string_tags, _ = list_strings(file)
+        except Exception as e:
+            log.error(f"Can't get strings for file: '{file}'. Error: {e}")
+
         strings = []
         for string_tag in xml_string_tags:
             strings.append(string_tag.get("id"))
@@ -165,24 +169,27 @@ def display_per_file_overlaps(overlaps, show_unique=False):
 def find_string_duplicates(args, is_read_only):
     files = get_xml_files_and_log(args.paths, "Analyzing patterns for")
 
-    results = {}
+    if args.web_visualizer:
+        run_flask_server(args, files, find_and_prepare_duplicates_report)
 
-    process_files_with_progress(files, process_file, results, args, is_read_only)
-    log.info(f"Total processed files: {len(files)}")
+    results, visualization_data = find_and_prepare_duplicates_report(args, files, is_read_only)
 
     if args.per_string_report:
         display_per_string(results)
     else:
-        overlaps = analyze_file_overlaps(results)
-        visualization_data = {
-            "overlaps_report": overlaps,
-            "file_to_string_mapping": list_strings_from_all_files(files)
-        }
-
         # with open("visualization_data.json", 'w', encoding='utf-8') as f:
         #     json.dump(visualization_data, f, default=set_default, ensure_ascii=False, indent=4)
 
-        if args.web_visualizer:
-            run_flask_server(visualization_data)
+        display_per_file_overlaps(visualization_data["overlaps_report"])
 
-        display_per_file_overlaps(overlaps)
+
+def find_and_prepare_duplicates_report(args, files, is_read_only):
+    results = {}
+    process_files_with_progress(files, process_file, results, args, is_read_only)
+    log.info(f"Total processed files: {len(files)}")
+    overlaps = analyze_file_overlaps(results)
+    visualization_data = {
+        "overlaps_report": overlaps,
+        "file_to_string_mapping": list_strings_from_all_files(files)
+    }
+    return results, visualization_data

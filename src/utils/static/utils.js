@@ -1,3 +1,5 @@
+import {showNotification} from "/static/infoProvider.js";
+
 export function getFileName(filePath) {
     const parts = filePath.split("/");
     return parts[parts.length - 1];
@@ -50,6 +52,60 @@ export async function callDiffEndpoint(file1, file2) {
         } else {
             console.error(data.error);
         }
+    } catch (error) {
+        console.error("Error calling the endpoint:", error);
+    }
+}
+
+export async function getReportData() {
+    const url = "http://127.0.0.1:5000/report";
+
+    try {
+        const response = await fetch(url, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+            console.log(data.message);
+        } else {
+            console.error(data.error);
+            showNotification(`<div>Can't get fresh data</div>`);
+            return ;
+        }
+
+        return data;
+    } catch (error) {
+        console.error("Error calling the endpoint:", error);
+    }
+}
+
+export async function hasReportUpdates() {
+    const url = "http://127.0.0.1:5000/new-report-available";
+
+    try {
+        const response = await fetch(url, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+            console.log(data.message);
+        } else {
+            console.error(data.error);
+            showNotification(`<div>Can't check for fresh data</div>`);
+            return;
+        }
+
+        return data;
     } catch (error) {
         console.error("Error calling the endpoint:", error);
     }
