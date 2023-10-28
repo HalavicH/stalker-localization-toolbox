@@ -7,47 +7,73 @@
  */
 
 multiplier = 1.5
+show_all_files = true;
 
-function extractData(graph) {
+// Create nodes array from graph.file_to_string_mapping
+function createNodesArray(graph) {
     const nodes = [];
-    const links = [];
-    const nodeMap = {};
+    const nodeMap = {}; // Use a map to keep track of nodes
     let index = 0;
 
-    for (let file in graph) {
-        if (!nodeMap.hasOwnProperty(file)) {
-            nodeMap[file] = index;
-            nodes.push({id: file});
-            index++;
+    for (const file in graph.file_to_string_mapping) {
+        const hasDuplicates = !!graph.overlaps_report[file]; // Check if the file has duplicates
+        if (!show_all_files && !hasDuplicates) {
+            continue;
         }
 
-        for (let overlapFile in graph[file].overlaps) {
-            if (!nodeMap.hasOwnProperty(overlapFile)) {
-                nodeMap[overlapFile] = index;
-                nodes.push({id: overlapFile});
-                index++;
-            }
-            const overlapInfo = graph[file].overlaps[overlapFile];
+        nodes.push({
+            id: file,
+            strings: graph.file_to_string_mapping[file],
+            index: index,
+            totalKeysCnt: graph.file_to_string_mapping[file].length,
+            hasDuplicates: hasDuplicates // Set hasDuplicates based on whether the file has duplicates
+        });
+
+        nodeMap[file] = index; // Add the node to the map
+        index++;
+    }
+
+    return {nodes, nodeMap}; // Return both the nodes array and the node map
+}
+
+// Modify the extractData function to include all nodes
+function extractData(graph) {
+    const {nodes, nodeMap} = createNodesArray(graph); // Use the modified function
+    const links = [];
+    let index = nodes.length; // Start the index for links after adding all nodes
+
+    for (const file in graph.overlaps_report) {
+        console.log("Source file: " + file);
+        const sourceIndex = nodeMap[file]; // Get the index of the source node
+        console.log("Source index: " + sourceIndex);
+
+        for (const overlapFile in graph.overlaps_report[file].overlaps) {
+            console.log("Target file: " + overlapFile);
+            const targetIndex = nodeMap[overlapFile]; // Get the index of the target node
+            console.log("Target index: " + targetIndex);
+
+            const overlapInfo = graph.overlaps_report[file].overlaps[overlapFile];
 
             // Calculate a hash based on the sorted list of duplicated strings
             const hash = Math.abs(hashCode(overlapInfo.overlapping_ids.sort().join("")));
             msg = hash + " " + overlapInfo.overlapping_ids.sort().join("");
-            console.log(msg);
 
             links.push({
-                source: nodeMap[file],
-                target: nodeMap[overlapFile],
-                value: overlapInfo.match_count,
-                duplicateKeysCnt: overlapInfo.overlapping_ids.length,
+                source: sourceIndex,
+                target: targetIndex,
+                duplicateKeysCnt: overlapInfo.match_count,
+
                 duplicateKeys: overlapInfo.overlapping_ids,
                 color: d3.schemeCategory10[hash % 10], // Use a color from the scheme based on the hash
             });
+
+            index++;
         }
     }
 
-    console.log(links)
     return {nodes, links};
 }
+
 
 /**
  * Determines whether two nodes are neighbors
@@ -83,9 +109,6 @@ function copySelfToClipboard(element) {
     document.execCommand("copy");
 
     document.body.removeChild(textArea);
-
-    // // Optionally, you can provide user feedback here
-    // alert(`'${textToCopy}' copied to clipboard!`);
 
     // Show a tooltip or feedback to indicate successful copying (optional)
     showNotification(`
@@ -133,7 +156,7 @@ function dragEnded(d, force) {
 
 // ---------------------- MAIN RENDER FUNCTION ----------------------
 function renderGraph(graph) {
-    graph = graph.overlaps_report;
+    // graph = graph.overlaps_report;
     const {nodes, links} = extractData(graph);
 
     // Set the initial width and height
@@ -223,8 +246,8 @@ function calculateDistance(link) {
 function createForceSimulation(nodes, links, width, height) {
     return d3.forceSimulation(nodes)
         .force("link", d3.forceLink(links)
-            .distance(d => (1 / d.value) * 100 + 100)
-            .strength(d => 1 / (d.value + 1)) // Adjust the strength based on duplicate count
+            .distance(d => (1 / d.duplicateKeysCnt) * 100 + 100)
+            .strength(d => 1 / (d.duplicateKeysCnt + 1)) // Adjust the strength based on duplicate count
         )
         .force("charge", d3.forceManyBody())
         .force("center", d3.forceCenter(width / 2, height / 2));
@@ -247,7 +270,7 @@ function renderLinks(svg, links) {
         .enter().append("line")
         .attr("class", "link")
         .style("stroke", d => d.color) // Use the color defined in the link
-        .attr("stroke-width", d => Math.sqrt(d.value) * multiplier + 1);
+        .attr("stroke-width", d => Math.sqrt(d.duplicateKeysCnt) * multiplier + 1);
 
     // Add a tooltip to show the number of duplicate keys when hovering over the link
     linkElements
@@ -288,7 +311,7 @@ function renderLinks(svg, links) {
 
 function renderNodesWithLabels(svg, nodes, color, force, graph) {
     // Determine the maximum total_id_cnt to scale the node size
-    const maxTotalIdCount = d3.max(nodes, d => graph[d.id].total_id_cnt);
+    const maxTotalIdCount = d3.max(nodes, d => d.totalKeysCnt);
 
     // Create a scale function to map total_id_cnt to node size
     const nodeSizeScale = d3.scaleLinear()
@@ -305,14 +328,18 @@ function renderNodesWithLabels(svg, nodes, color, force, graph) {
     // Append a circle for each node with dynamic radius
     nodesWithLabels.append("circle")
         .attr("r", d => {
-            let totalIdCnt = graph[d.id].total_id_cnt;
+            let totalIdCnt = d.totalKeysCnt;
             return nodeSizeScale(totalIdCnt);
         })
         .attr("data-node-id", d => d.id)
         .attr("class", "circle")
         .style("fill", d => {
             let folder = d.id.split("/").slice(-2, -1)[0];
-            return color(folder);
+            if (d.hasDuplicates) {
+                return color(folder);
+            } else {
+                return "#00000040";
+            }
         })
         .call(d3.drag()
             .on("start", d => dragStarted(d, force))
@@ -321,7 +348,6 @@ function renderNodesWithLabels(svg, nodes, color, force, graph) {
         )
         .on("mouseover", function (d) {
             let id = `#label-group-${d.index}`;
-            console.log("Mouse in " + id);
 
             // Select the corresponding label group and make it visible
             let element1 = document.querySelector(id);
@@ -330,7 +356,7 @@ function renderNodesWithLabels(svg, nodes, color, force, graph) {
         })
         .on("mouseout", function (d) {
             let id = `#label-group-${d.index}`;
-            console.log("Mouse out " + id);
+
             // Select the corresponding label group and hide it with a smooth fade-out effect
             let element = document.querySelector(id);
             element.style.opacity = "0";
@@ -346,7 +372,7 @@ function renderNodesWithLabels(svg, nodes, color, force, graph) {
                 <div class="status-label status-bar-label">File name: </div>
                 <div class="path" onclick="copySelfToClipboard(this)">${d.id}</div>
                 <div class="status-label status-bar-label">Total ids: </div>
-                <div class="path" onclick="copySelfToClipboard(this)">${graph[d.id].total_id_cnt}</div>
+                <div class="path" onclick="copySelfToClipboard(this)">${d.totalKeysCnt}</div>
             `;
             displayNodeDetails(d, graph);
         });
@@ -365,7 +391,7 @@ function renderNodesWithLabels(svg, nodes, color, force, graph) {
             .attr("transform", "translate(0, -20)");
 
         // Calculate the width of the label based on its content
-        let fileName = d.id.split('/').pop() + " " + graph[d.id].total_id_cnt + " ids";
+        let fileName = d.id.split('/').pop() + " " + d.totalKeysCnt + " ids";
         const labelWidth = (fileName.length * 8) + 3; // 8px per character plus 6px padding
 
         // Append a background rectangle for each label
@@ -404,10 +430,12 @@ function displayNodeDetails(node, graph) {
         </div>
             <div class="legend-item">
             <div class="status-label">Total IDs:</div>
-            <div class="overlay-data">${graph[node.id].total_id_cnt}</div>
+            <div class="overlay-data">${node.totalKeysCnt}</div>
         </div>
-<!--        <div class="status-label">Total Duplicated IDs:</div>-->
-<!--        <div class="scrollable-list">${getDuplicatedIdsList(node.id, graph)}</div>-->
+        <div class="status-label">ID list:</div>
+        <div class="scrollable-list">
+            ${prepareDivsWithIds(node)}
+        </div>
     `;
     detailsOverlay.style.visibility = "visible";
 }
@@ -434,12 +462,12 @@ function getFileName(filePath) {
     return parts[parts.length - 1];
 }
 
-function getDuplicatedIdsList(nodeId, graph) {
-    const duplicatedIds = graph[nodeId].duplicated_ids;
-    if (duplicatedIds && duplicatedIds.length > 0) {
-        return duplicatedIds.join("<br>");
+function prepareDivsWithIds(node) {
+    const fileStringIds = node.strings;
+    if (fileStringIds && fileStringIds.length > 0) {
+        return `<div class="path">${fileStringIds.join("</div><div class='path' onclick='copySelfToClipboard(this)'>")}</div>`;
     } else {
-        return "No duplicated IDs found.";
+        return "No IDs found. Empty file";
     }
 }
 
