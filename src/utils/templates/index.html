@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>D3.js File Overlaps Visualization</title>
-<!--    <link rel="stylesheet" href="styles.css">-->
+    <!--    <link rel="stylesheet" href="styles.css">-->
     <script src="https://d3js.org/d3.v5.min.js"></script>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
@@ -56,6 +56,21 @@
     <div class="legend-item">
         <div class="legend-label">Link color - uniq set of duplicates</div>
     </div>
+    <div class="legend-item">
+        <!--        <input type="c">Link color - uniq set of duplicates</input>-->
+        <label>
+            <input type="checkbox" id="show-all-files"/>
+            Show all files (even without dups)
+        </label>
+    </div>
+    <div class="legend-item" id="legend-grey-files" style="opacity: 0">
+        <svg id="svg-legend">
+            <g class="node" transform="translate(12.5,10)">
+                <circle r="7" class="circle" style="fill: rgba(0,0,0,0.35);"></circle>
+            </g>
+        </svg>
+        <div class="legend-label">&nbsp;- No-dup files</div>
+    </div>
 </div>
 
 <div id="details" class="overlay">
@@ -66,7 +81,7 @@
 <div id="tooltip" class="tooltip"></div>
 <!--<script src="script.js"></script>-->
 <script>
-    var globalData = {{ data_json | tojson | safe }};
+    var globalData = {{data_json | tojson | safe}};
 </script>
 <script type="module" src="/static/utils.js"></script>
 <script type="module" src="/static/script.js"></script>

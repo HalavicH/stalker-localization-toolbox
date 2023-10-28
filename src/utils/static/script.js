@@ -12,6 +12,7 @@ import {displayNodeDetails, displayLinkDetails, displayStatistics, copySelfToCli
 import {renderLinks, renderNodesWithLabels} from "/static/renderer.js"
 
 let show_all_files = false;
+let current_graph_data = JSON.parse(globalData);
 
 // Create nodes array from graph.file_to_string_mapping
 function createNodesArray(graph) {
@@ -172,7 +173,7 @@ function calculateStats(links, nodes) {
 
 //d3.json("visualization_data.json").then(renderGraph);
 //data = {{ data_json|safe }}
-renderGraph(JSON.parse(globalData))
+renderGraph(current_graph_data)
 
 // Add an event handler to hide the "Details" overlay when clicking outside of nodes/links
 document.addEventListener("click", function (event) {
@@ -187,3 +188,16 @@ document.addEventListener("click", function (event) {
         detailsOverlay.style.visibility = "hidden";
     }
 });
+
+document.querySelector("#show-all-files").addEventListener("change", (evt) => {
+    let checkbox = evt.target;
+    if (checkbox.checked) {
+        show_all_files = true;
+        document.querySelector("#legend-grey-files").style.opacity = "1";
+    } else {
+        show_all_files = false;
+        document.querySelector("#legend-grey-files").style.opacity = "0";
+    }
+
+    renderGraph(current_graph_data)
+})
