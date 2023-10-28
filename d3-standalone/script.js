@@ -25,15 +25,24 @@ function extractData(graph) {
                 index++;
             }
             const overlapInfo = graph[file].overlaps[overlapFile];
+
+            // Calculate a hash based on the sorted list of duplicated strings
+            const hash = Math.abs(hashCode(overlapInfo.overlapping_ids.sort().join("")));
+            msg = hash + " " + overlapInfo.overlapping_ids.sort().join("");
+            console.log(msg);
+
             links.push({
                 source: nodeMap[file],
                 target: nodeMap[overlapFile],
                 value: overlapInfo.match_count,
-                duplicateKeysCnt: overlapInfo.overlapping_ids.length, // Number of duplicate keys
-                duplicateKeys: overlapInfo.overlapping_ids, // Number of duplicate keys
+                duplicateKeysCnt: overlapInfo.overlapping_ids.length,
+                duplicateKeys: overlapInfo.overlapping_ids,
+                color: d3.schemeCategory10[hash % 10], // Use a color from the scheme based on the hash
             });
         }
     }
+
+    console.log(links)
     return {nodes, links};
 }
 
@@ -48,6 +57,16 @@ function nodeIsNeighbor(nodeA, nodeB, links) {
         (link.source === nodeA && link.target === nodeB) ||
         (link.source === nodeB && link.target === nodeA)
     );
+}
+
+// Function to calculate a hash code for a string
+function hashCode(str) {
+    let hash = 0;
+    for (let i = 0; i < str.length; i++) {
+        const char = str.charCodeAt(i);
+        hash = ((hash << 5) - hash) + char;
+    }
+    return hash;
 }
 
 // ---------------------- DRAG HANDLERS ----------------------
@@ -141,6 +160,7 @@ function renderLinks(svg, links) {
         .data(links)
         .enter().append("line")
         .attr("class", "link")
+        .style("stroke", d => d.color) // Use the color defined in the link
         .attr("stroke-width", d => Math.sqrt(d.value));
 
     // Add a tooltip to show the number of duplicate keys when hovering over the link
