@@ -5,6 +5,9 @@
  * @param {Object} graph
  * @returns {Object} An object containing nodes and links
  */
+
+multiplier = 1.5
+
 function extractData(graph) {
     const nodes = [];
     const links = [];
@@ -234,7 +237,7 @@ function renderLinks(svg, links) {
         .enter().append("line")
         .attr("class", "link")
         .style("stroke", d => d.color) // Use the color defined in the link
-        .attr("stroke-width", d => Math.sqrt(d.value));
+        .attr("stroke-width", d => Math.sqrt(d.value) * multiplier + 1);
 
     // Add a tooltip to show the number of duplicate keys when hovering over the link
     linkElements
@@ -277,7 +280,7 @@ function renderNodesWithLabels(svg, nodes, color, force, graph) {
     // Create a scale function to map total_id_cnt to node size
     const nodeSizeScale = d3.scaleLinear()
         .domain([0, maxTotalIdCount])
-        .range([5, 20]); // Adjust the range to your desired minimum and maximum node sizes
+        .range([5 * multiplier, 20 * multiplier]); // Adjust the range to your desired minimum and maximum node sizes
 
     const nodesWithLabels = svg.selectAll(".node")
         .data(nodes)
