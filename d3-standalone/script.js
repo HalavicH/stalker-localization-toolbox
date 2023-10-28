@@ -171,9 +171,9 @@ function renderGraph(graph) {
 }
 
 function displayStatistics(statistics) {
-    const infoOverlay = document.getElementById("info");
+    const infoOverlay = document.getElementById("overall-stats");
     infoOverlay.innerHTML = `
-        <h2>Info</h2>
+        <h2>Overall Stats</h2>
         <table>
             <tr>
                 <td class="status-label">Nodes (Files):</td>
@@ -265,12 +265,15 @@ function renderLinks(svg, links) {
             const statusContent = document.getElementById("status-content");
 
             statusContent.innerHTML = `
-                <div class="status-label">Link From: </div>
+                <div class="status-label status-bar-label">Link From: </div>
                 <div class="path" onclick="copySelfToClipboard(this)">${d.source.id}</div>
-                <div class="status-label">Link To: </div>
+                <div class="status-label status-bar-label">Link To: </div>
                 <div class="path" onclick="copySelfToClipboard(this)">${d.target.id}</div>
             `;
+
+            displayLinkDetails(d);
         });
+
 }
 
 function renderNodesWithLabels(svg, nodes, color, force, graph) {
@@ -329,11 +332,12 @@ function renderNodesWithLabels(svg, nodes, color, force, graph) {
             // Example: Display node information in the status bar
             const statusContent = document.getElementById("status-content");
             statusContent.innerHTML = `
-                <div class="status-label">File name: </div>
+                <div class="status-label status-bar-label">File name: </div>
                 <div class="path" onclick="copySelfToClipboard(this)">${d.id}</div>
-                <div class="status-label">Total ids: </div>
+                <div class="status-label status-bar-label">Total ids: </div>
                 <div class="path" onclick="copySelfToClipboard(this)">${graph[d.id].total_id_cnt}</div>
             `;
+            displayNodeDetails(d, graph);
         });
 
     // Append text labels on top of the nodes with background rectangles
@@ -378,6 +382,69 @@ function renderNodesWithLabels(svg, nodes, color, force, graph) {
 
     return nodesWithLabels;
 }
+
+function displayNodeDetails(node, graph) {
+    const detailsOverlay = document.getElementById("details");
+    detailsOverlay.innerHTML = `
+        <h2>Details</h2>
+        <div class="legend-item">
+            <div class="status-label">File Name: </div>
+            <div class="overlay-data">${getFileName(node.id)}</div>
+        </div>
+            <div class="legend-item">
+            <div class="status-label">Total IDs:</div>
+            <div class="overlay-data">${graph[node.id].total_id_cnt}</div>
+        </div>
+<!--        <div class="status-label">Total Duplicated IDs:</div>-->
+<!--        <div class="scrollable-list">${getDuplicatedIdsList(node.id, graph)}</div>-->
+    `;
+    detailsOverlay.style.visibility = "visible";
+}
+
+function displayLinkDetails(link) {
+    const detailsOverlay = document.getElementById("details");
+    detailsOverlay.innerHTML = `
+        <h2>Details</h2>
+        <div class="status-label">Duplicates in Files:</div>
+        <div class="overlay-data">${getFileName(link.source.id)}, ${getFileName(link.target.id)}</div>
+        <div class="legend-item">
+            <div class="status-label">Total Duplicated IDs: </div>
+            <div class="overlay-data">${link.duplicateKeysCnt}</div>
+        </div>
+        <div class="scrollable-list">
+            <div class="path">${link.duplicateKeys.join("</div><div class='path' onclick='copySelfToClipboard(this)'>")}</div>
+        </div>
+    `;
+    detailsOverlay.style.visibility = "visible";
+}
+
+function getFileName(filePath) {
+    const parts = filePath.split("/");
+    return parts[parts.length - 1];
+}
+
+function getDuplicatedIdsList(nodeId, graph) {
+    const duplicatedIds = graph[nodeId].duplicated_ids;
+    if (duplicatedIds && duplicatedIds.length > 0) {
+        return duplicatedIds.join("<br>");
+    } else {
+        return "No duplicated IDs found.";
+    }
+}
+
+// Add an event handler to hide the "Details" overlay when clicking outside of nodes/links
+document.addEventListener("click", function (event) {
+    const detailsOverlay = document.getElementById("details");
+    if (
+        !event.target.closest(".node") &&
+        !event.target.classList.contains("link") &&
+        !event.target.closest(".overlay") && // Check the target's parents for overlay class
+        !event.target.closest(".status-bar") // Check the target's parents for status-bar class
+    ) {
+        // Clicked outside of nodes and links, hide the overlay
+        detailsOverlay.style.visibility = "hidden";
+    }
+});
 
 // ---------------------- INITIALIZE GRAPH ----------------------
 

@@ -95,7 +95,11 @@ body, html, svg {
 .status-label {
     font-weight: bold;
     color: #999999;
-    margin: 0 5px 0 15px;
+    /*margin: 0 5px 0 5px;*/
+}
+
+.status-bar-label {
+    margin: 0 5px 0 5px;
 }
 
 .path {
@@ -114,7 +118,7 @@ body, html, svg {
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
     transition: box-shadow 0.2s ease-in-out;
-    padding: 20px;
+    padding: 20px 10px 10px 20px;
     margin: 8px 5px;
     max-width: 30%;
     max-height: 50%;
@@ -129,6 +133,21 @@ body, html, svg {
 h2 {
     color: #ff9c5a;
     margin-top: 10px;
+}
+
+.overlay>div {
+    padding: 3px 5px;
+}
+
+.overlay>.overlay-data {
+    padding: 3px 10px;
+}
+
+.scrollable-list {
+    display: flex;
+    flex-direction: column;
+    padding-left: 10px;
+    padding-top: 5px;
 }
 
 /* Notification */
@@ -163,17 +182,25 @@ h2 {
     vertical-align: center;
 }
 
+/* Tweaks with ids */
 #svg-legend {
     width: 25px;
     height: 20px;
 }
 
-#info {
-    top: 165px;
+#overall-stats {
+    top: 173px;
     left: 0;
 }
 
 #legend {
     top: 0;
     left: 0;
+}
+
+#details {
+    top: 0;
+    right: 0;
+    width: 25%;
+    max-height: 91%;
 }
