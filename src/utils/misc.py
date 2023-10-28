@@ -72,3 +72,9 @@ def check_for_update():
             return '[bright_black]You are using the latest version of sltools.[/bright_black]'
     else:
         return f'Failed to check for updates: {response.text}'
+
+
+def set_default(obj):
+    if isinstance(obj, set):
+        return list(obj)
+    raise TypeError(f"{obj} is not instance of set. Don't know how to default it")

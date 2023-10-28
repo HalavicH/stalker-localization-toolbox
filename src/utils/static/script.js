@@ -71,10 +71,6 @@ function extractData(graph) {
         }
     }
 
-    let global = document.createElement("div");
-    global.id = "global-data";
-    global.setAttribute("base_path", graph.base_path);
-    document.body.appendChild(global);
     return {nodes, links};
 }
 
@@ -460,7 +456,7 @@ function displayLinkDetails(link) {
         <h2>Details</h2>
         <div class="status-label">Duplicates in Files:</div>
         <div class="overlay-data">${getFileName(link.source.id)}, ${getFileName(link.target.id)}</div>
-        <button class="action-button" onclick="handleDiffButton(event)" source_file="${link.source.id}" target_file="${link.target.id}">Open dif in VS Code</button>
+        <button class="stalker-button" onclick="handleDiffButton(event)" source_file="${link.source.id}" target_file="${link.target.id}">Open diff in VS Code</button>
         <div class="legend-item">
             <div class="status-label">Total Duplicated IDs: </div>
             <div class="overlay-data">${link.duplicateKeysCnt}</div>
@@ -502,33 +498,49 @@ document.addEventListener("click", function (event) {
 
 // ---------------------- INITIALIZE GRAPH ----------------------
 
-d3.json("visualization_data.json").then(renderGraph);
+//d3.json("visualization_data.json").then(renderGraph);
+//data = {{ data_json|safe }}
+renderGraph(JSON.parse(globalData))
 
 // Add an event listener to the button
 function handleDiffButton(evt) {
     let btn = evt.target;
     // Replace these with the appropriate source and target paths
-    const basePath = document.querySelector("#global-data").getAttribute("base_path");
-    const sourcePath = basePath + btn.getAttribute("source_file");
-    const targetPath = basePath + btn.getAttribute("target_file");
-
+    const sourcePath = btn.getAttribute("source_file");
+    const targetPath = btn.getAttribute("target_file");
 
     // Execute the shell command to open the diff in VS Code
-    const {exec} = require("child_process");
-    const command = `code --diff ${sourcePath} ${targetPath}`;
-    console.log(`Trying to run '${command}'`)
+    console.log(`Trying to run diff`)
 
-    exec(command, (error, stdout, stderr) => {
-        if (error) {
-            console.error(`Error executing command: ${error.message}`);
-            return;
+    callDiffEndpoint(sourcePath, targetPath)
+        .then(() => {
+            console.log(`VS Code diff opened successfully.`);
+        })
+        .catch((error) => {
+            console.error(`Error executing command: ${error}`);
+        });
+}
+
+async function callDiffEndpoint(file1, file2) {
+    const url = "http://127.0.0.1:5000/diff";
+
+    try {
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({file1, file2})
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+            console.log(data.message);
+        } else {
+            console.error(data.error);
         }
-
-        if (stderr) {
-            console.error(`Command error: ${stderr}`);
-            return;
-        }
-
-        console.log(`VS Code diff opened successfully.`);
-    });
+    } catch (error) {
+        console.error("Error calling the endpoint:", error);
+    }
 }

@@ -162,12 +162,6 @@ def display_per_file_overlaps(overlaps, show_unique=False):
         log.always()
 
 
-def set_default(obj):
-    if isinstance(obj, set):
-        return list(obj)
-    raise TypeError(f"{obj} is not instance of set. Don't know how to default it")
-
-
 def find_string_duplicates(args, is_read_only):
     files = get_xml_files_and_log(args.paths, "Analyzing patterns for")
 
@@ -185,10 +179,10 @@ def find_string_duplicates(args, is_read_only):
             "file_to_string_mapping": list_strings_from_all_files(files)
         }
 
-        with open("visualization_data.json", 'w', encoding='utf-8') as f:
-            json.dump(visualization_data, f, default=set_default, ensure_ascii=False, indent=4)
+        # with open("visualization_data.json", 'w', encoding='utf-8') as f:
+        #     json.dump(visualization_data, f, default=set_default, ensure_ascii=False, indent=4)
 
         if args.web_visualizer:
-            run_flask_server()
+            run_flask_server(visualization_data)
 
         display_per_file_overlaps(overlaps)
