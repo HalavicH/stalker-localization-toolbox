@@ -13,10 +13,8 @@ from src.utils.xml_utils import parse_xml_root
 
 
 def process_file(file_path, results, args):
-    xml_string = read_xml(file_path)
-    root = parse_xml_root(xml_string)
-
-    for string_elem in root.findall(".//string"):
+    strings_element_list, xml_string = list_strings(file_path)
+    for string_elem in strings_element_list:
         string_id = string_elem.get("id")
         text_elem = string_elem.find("text")
         text_content = text_elem.text.strip() if text_elem is not None else ""
@@ -34,6 +32,26 @@ def process_file(file_path, results, args):
             results[string_id].append(data_obj)
         else:
             results[string_id] = [data_obj]
+
+
+def list_strings_from_all_files(files):
+    results = {}
+
+    for file in files:
+        xml_string_tags, _ = list_strings(file)
+        strings = []
+        for string_tag in xml_string_tags:
+            strings.append(string_tag.get("id"))
+        results[file] = strings
+
+    return results
+
+
+def list_strings(file_path):
+    xml_string = read_xml(file_path)
+    root = parse_xml_root(xml_string)
+    strings_element_list = root.findall(".//string")
+    return strings_element_list, xml_string
 
 
 def display_per_string(results):
@@ -146,7 +164,8 @@ def display_per_file_overlaps(overlaps, show_unique=False):
 def set_default(obj):
     if isinstance(obj, set):
         return list(obj)
-    raise TypeError
+    raise TypeError(f"{obj} is not instance of set. Don't know how to default it")
+
 
 def find_string_duplicates(args, is_read_only):
     files = get_xml_files_and_log(args.paths, "Analyzing patterns for")
@@ -160,8 +179,12 @@ def find_string_duplicates(args, is_read_only):
         display_per_string(results)
     else:
         overlaps = analyze_file_overlaps(results)
-        with open("duplicates-report.json", 'w', encoding='utf-8') as f:
-            json.dump(overlaps, f, default=set_default, ensure_ascii=False, indent=4)
+        visualization_data = {
+            "overlaps_report": overlaps,
+            "file_to_string_mapping": list_strings_from_all_files(files)
+        }
+
+        with open("visualization_data.json", 'w', encoding='utf-8') as f:
+            json.dump(visualization_data, f, default=set_default, ensure_ascii=False, indent=4)
 
         display_per_file_overlaps(overlaps)
-

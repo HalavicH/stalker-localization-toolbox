@@ -133,6 +133,7 @@ function dragEnded(d, force) {
 
 // ---------------------- MAIN RENDER FUNCTION ----------------------
 function renderGraph(graph) {
+    graph = graph.overlaps_report;
     const {nodes, links} = extractData(graph);
 
     // Set the initial width and height
@@ -458,4 +459,4 @@ document.addEventListener("click", function (event) {
 
 // ---------------------- INITIALIZE GRAPH ----------------------
 
-d3.json("duplicates-report.json").then(renderGraph);
+d3.json("visualization_data.json").then(renderGraph);
