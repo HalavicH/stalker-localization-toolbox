@@ -107,3 +107,19 @@ h2 {
     color: #ff9c5a;
     margin-top: 10px;
 }
+
+/* Notification style */
+.notification {
+    position: fixed;
+    top: 20px; /* Adjust the top distance as needed */
+    right: 20px; /* Adjust the right distance as needed */
+    background-color: rgba(0, 0, 0, 0.7);
+    color: #fff;
+    padding: 10px 15px;
+    border-radius: 5px;
+    font-size: 14px;
+    transition: opacity 1s ease-in-out;
+    z-index: 9999;
+    pointer-events: none; /* Allow interaction with elements underneath */
+    opacity: 1;
+}

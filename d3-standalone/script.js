@@ -81,8 +81,32 @@ function copySelfToClipboard(element) {
 
     document.body.removeChild(textArea);
 
-    // Optionally, you can provide user feedback here
-    alert(`'${textToCopy}' copied to clipboard!`);
+    // // Optionally, you can provide user feedback here
+    // alert(`'${textToCopy}' copied to clipboard!`);
+
+    // Show a tooltip or feedback to indicate successful copying (optional)
+    showNotification(`
+        <div class="status-label">Path copied to clipboard: (Ctrl+V) to paste</div>
+        <div class="path">${textToCopy}</div>
+    `);
+}
+
+// Function to show a notification in the top right corner
+function showNotification(html) {
+    const notification = document.createElement("div");
+    notification.innerHTML = html;
+    notification.className = "notification";
+
+    // Append the notification to the body
+    document.body.appendChild(notification);
+
+    // Automatically remove the notification after a short delay
+    setTimeout(() => {
+        notification.style.opacity = "0";
+        setTimeout(() => {
+            document.body.removeChild(notification);
+        }, 2000); // Adjust the delay (in milliseconds) as needed
+    }, 2000); // Adjust the delay (in milliseconds) as needed
 }
 
 // ---------------------- DRAG HANDLERS ----------------------
