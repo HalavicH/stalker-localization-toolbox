@@ -8,6 +8,7 @@ from src.commands.common import get_xml_files_and_log, process_files_with_progre
 from src.log_config_loader import log
 from src.utils.colorize import cf_yellow, cf_cyan
 from src.utils.file_utils import read_xml
+from src.utils.flask_server import run_flask_server
 from src.utils.misc import create_table
 from src.utils.xml_utils import parse_xml_root
 
@@ -186,5 +187,8 @@ def find_string_duplicates(args, is_read_only):
 
         with open("visualization_data.json", 'w', encoding='utf-8') as f:
             json.dump(visualization_data, f, default=set_default, ensure_ascii=False, indent=4)
+
+        if args.web_visualizer:
+            run_flask_server()
 
         display_per_file_overlaps(overlaps)

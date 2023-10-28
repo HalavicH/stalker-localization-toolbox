@@ -165,6 +165,8 @@ def parse_args():
                                        help="Looks for duplicates of [green]'<string id=\"...\">'[/green] to eliminate unwanted conflicts/overrides")
     parser_fsd.add_argument('--per-string-report', action='store_true', default=False,
                             help='Display detailed report with string text')
+    parser_fsd.add_argument('--web-visualizer', action='store_true', default=False,
+                            help='Display duplicates as D3 interactive graph')
     parser_fsd.add_argument('paths', nargs='*', help='Paths to files or directories')
 
     ###### Parse ######

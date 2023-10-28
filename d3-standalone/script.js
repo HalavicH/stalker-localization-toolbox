@@ -7,7 +7,7 @@
  */
 
 multiplier = 1.5
-show_all_files = true;
+show_all_files = false;
 
 // Create nodes array from graph.file_to_string_mapping
 function createNodesArray(graph) {
@@ -71,6 +71,10 @@ function extractData(graph) {
         }
     }
 
+    let global = document.createElement("div");
+    global.id = "global-data";
+    global.setAttribute("base_path", graph.base_path);
+    document.body.appendChild(global);
     return {nodes, links};
 }
 
@@ -190,7 +194,7 @@ function renderGraph(graph) {
         nodesWithLabels.attr("transform", d => `translate(${d.x},${d.y})`);
     });
 
-    let stats = calculateStats(links);
+    let stats = calculateStats(links, nodes);
     displayStatistics(stats);
 }
 
@@ -200,15 +204,23 @@ function displayStatistics(statistics) {
         <h2>Overall Stats</h2>
         <table>
             <tr>
-                <td class="status-label">Nodes (Files):</td>
+                <td class="status-label">Total files:</td>
                 <td>${statistics.numNodes}</td>
             </tr>
             <tr>
-                <td class="status-label">Links (Duplicates):</td>
+                <td class="status-label">No dups files (grey):</td>
+                <td>${statistics.numNoDups}</td>
+            </tr>
+            <tr>
+                <td class="status-label">Files with dups (Blue):</td>
+                <td>${statistics.numDups}</td>
+            </tr>
+            <tr>
+                <td class="status-label">Between-files-dups (Links):</td>
                 <td>${statistics.numLinks}</td>
             </tr>
             <tr>
-                <td class="status-label">Total Duplicates:</td>
+                <td class="status-label">Total string duplicates:</td>
                 <td>${statistics.totalDuplicates}</td>
             </tr>
         </table>
@@ -254,13 +266,15 @@ function createForceSimulation(nodes, links, width, height) {
 }
 
 
-function calculateStats(links) {
+function calculateStats(links, nodes) {
+    const numNodes = nodes.length
     // Calculate statistics
-    const numNodes = d3.set(links.flatMap(d => [d.source.id, d.target.id])).size();
+    const numDups = d3.set(links.flatMap(d => [d.source.id, d.target.id])).size();
+    const numNoDups = numNodes - numDups;
     const numLinks = links.length;
     const totalDuplicates = links.reduce((total, link) => total + link.duplicateKeysCnt, 0);
 
-    return {numNodes, numLinks, totalDuplicates};
+    return {numNoDups, numDups, numNodes, numLinks, totalDuplicates};
 }
 
 function renderLinks(svg, links) {
@@ -446,6 +460,7 @@ function displayLinkDetails(link) {
         <h2>Details</h2>
         <div class="status-label">Duplicates in Files:</div>
         <div class="overlay-data">${getFileName(link.source.id)}, ${getFileName(link.target.id)}</div>
+        <button class="action-button" onclick="handleDiffButton(event)" source_file="${link.source.id}" target_file="${link.target.id}">Open dif in VS Code</button>
         <div class="legend-item">
             <div class="status-label">Total Duplicated IDs: </div>
             <div class="overlay-data">${link.duplicateKeysCnt}</div>
@@ -488,3 +503,32 @@ document.addEventListener("click", function (event) {
 // ---------------------- INITIALIZE GRAPH ----------------------
 
 d3.json("visualization_data.json").then(renderGraph);
+
+// Add an event listener to the button
+function handleDiffButton(evt) {
+    let btn = evt.target;
+    // Replace these with the appropriate source and target paths
+    const basePath = document.querySelector("#global-data").getAttribute("base_path");
+    const sourcePath = basePath + btn.getAttribute("source_file");
+    const targetPath = basePath + btn.getAttribute("target_file");
+
+
+    // Execute the shell command to open the diff in VS Code
+    const {exec} = require("child_process");
+    const command = `code --diff ${sourcePath} ${targetPath}`;
+    console.log(`Trying to run '${command}'`)
+
+    exec(command, (error, stdout, stderr) => {
+        if (error) {
+            console.error(`Error executing command: ${error.message}`);
+            return;
+        }
+
+        if (stderr) {
+            console.error(`Command error: ${stderr}`);
+            return;
+        }
+
+        console.log(`VS Code diff opened successfully.`);
+    });
+}
