@@ -1,3 +1,4 @@
+/* Base Styles */
 body, html, svg {
     width: 100%;
     height: 100%;
@@ -7,6 +8,7 @@ body, html, svg {
     background-color: #282c34; /* Obsidian background color */
 }
 
+/* Links */
 .link {
     stroke: #abb2bf; /* Lighter link color */
     stroke-opacity: 0.3;
@@ -21,7 +23,7 @@ body, html, svg {
     filter: drop-shadow(0 0 5px rgba(255, 0, 0, 1)); /* SVG filter for box shadow */
 }
 
-/* NODE */
+/* Nodes */
 .circle {
     stroke: rgba(0, 0, 0, 0.3);
     stroke-width: 2px;
@@ -40,13 +42,13 @@ body, html, svg {
     stroke-width: 2.5px;
 }
 
+/* Labels */
 .label-group {
     visibility: hidden;
     opacity: 0;
     transition: visibility 0s, opacity 0.2s ease-in-out;
 }
 
-/* LABELS */
 .label-text {
     fill: #abb2bf; /* Lighter text color */
     color: #abb2bf;
@@ -60,32 +62,27 @@ body, html, svg {
     border-radius: 5px;
 }
 
-/***************************************************/
+/* Tooltips */
 .tooltip {
     position: absolute;
     visibility: hidden;
-
     background-color: rgba(0, 0, 0, 0.3); /* Bluish-grayish-darkish background */
     backdrop-filter: blur(5px); /* Apply the blur effect */
     color: #dcdcdc; /* Light gray text */
-
     padding: 5px;
     border-radius: 5px;
 }
 
-/***************************************************/
 /* Status Bar */
 .status-bar {
     position: fixed;
     bottom: 0;
     left: 0;
     width: 100%;
-
     background-color: rgba(0, 0, 0, 0.3); /* Bluish-grayish-darkish background */
     backdrop-filter: blur(5px); /* Apply the blur effect */
     color: #dcdcdc; /* Light gray text */
     box-shadow: 0px -2px 10px rgba(0, 0, 0, 0.2); /* Shadow at the bottom */
-
     padding: 3px 5px;
     z-index: 1000;
 }
@@ -103,7 +100,6 @@ body, html, svg {
 
 .path {
     font-family: monospace;
-    /*font-weight: bold;*/
     color: #ff9c5a;
     cursor: pointer;
 }
@@ -111,29 +107,25 @@ body, html, svg {
 /* Overlay */
 .overlay {
     position: fixed;
-    top: 0; /* Position at the top of the viewport */
-    left: 0; /* Position at the left of the viewport */
-
-    background-color: rgba(30, 30, 30, 0.3); /* Bluish-grayish-darkish background with 30% opacity */
-    backdrop-filter: blur(5px); /* Apply the blur effect */
-    color: #dcdcdc; /* Light gray text */
-    border: 2px solid #202020; /* Dark border */
-    border-radius: 10px; /* Rounded corners */
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3); /* Box shadow */
+    top: 0;
+    left: 0;
+    background-color: rgba(30, 30, 30, 0.3);
+    backdrop-filter: blur(5px);
+    color: #dcdcdc;
+    border: 2px solid #202020;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
     transition: box-shadow 0.2s ease-in-out;
-
     padding: 20px;
     margin: 8px 5px;
-
-    max-width: 30%; /* 30% of the screen width */
-    max-height: 50%; /* 50% of the screen height */
-
+    max-width: 30%;
+    max-height: 50%;
     z-index: 999;
-    overflow: auto; /* Enable scrolling if content exceeds max height */
+    overflow: auto;
 }
 
 .overlay:hover {
-    box-shadow: 0 0 10px rgba(255, 156, 90, 0.3); /* Box shadow */
+    box-shadow: 0 0 10px rgba(255, 156, 90, 0.3);
 }
 
 h2 {
@@ -141,11 +133,11 @@ h2 {
     margin-top: 10px;
 }
 
-/* Notification style */
+/* Notification */
 .notification {
     position: fixed;
-    top: 20px; /* Adjust the top distance as needed */
-    right: 20px; /* Adjust the right distance as needed */
+    top: 20px;
+    right: 20px;
     background-color: rgba(0, 0, 0, 0.7);
     color: #fff;
     padding: 10px 15px;
@@ -153,18 +145,18 @@ h2 {
     font-size: 14px;
     transition: opacity 1s ease-in-out;
     z-index: 9999;
-    pointer-events: none; /* Allow interaction with elements underneath */
+    pointer-events: none;
     opacity: 1;
 }
 
 /* Legend */
 .legend-circle {
-    width: 20px; /* Adjust the size as needed */
-    height: 20px; /* Adjust the size as needed */
-    background-color: rgb(31, 119, 180); /* Circle color */
-    border-radius: 50%; /* Makes it a circle */
-    display: inline-block; /* To make it inline with the label */
-    margin-right: 5px; /* Adjust the spacing between the icon and label */
+    width: 20px;
+    height: 20px;
+    background-color: rgb(31, 119, 180);
+    border-radius: 50%;
+    display: inline-block;
+    margin-right: 5px;
 }
 
 .legend-item {
