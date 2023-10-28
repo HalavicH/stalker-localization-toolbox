@@ -214,12 +214,21 @@ function createZoomableSVG(width, height) {
     return {container, svg, zoom};
 }
 
+function calculateDistance(link) {
+    // Adjust this calculation based on your data and preferences
+    return someBaseDistanceValue + link.numberOfDuplicates * someMultiplier;
+}
+
 function createForceSimulation(nodes, links, width, height) {
     return d3.forceSimulation(nodes)
-        .force("link", d3.forceLink(links).distance(100))
+        .force("link", d3.forceLink(links)
+            .distance(d => (1 / d.value) * 100 + 100)
+            .strength(d => 1 / (d.value + 1)) // Adjust the strength based on duplicate count
+        )
         .force("charge", d3.forceManyBody())
         .force("center", d3.forceCenter(width / 2, height / 2));
 }
+
 
 function calculateStats(links) {
     // Calculate statistics
@@ -283,7 +292,8 @@ function renderNodesWithLabels(svg, nodes, color, force, graph) {
     // Create a scale function to map total_id_cnt to node size
     const nodeSizeScale = d3.scaleLinear()
         .domain([0, maxTotalIdCount])
-        .range([5 * multiplier, 20 * multiplier]); // Adjust the range to your desired minimum and maximum node sizes
+        //  * multiplier
+        .range([3, maxTotalIdCount / 10]); // Adjust the range to your desired minimum and maximum node sizes
 
     const nodesWithLabels = svg.selectAll(".node")
         .data(nodes)
