@@ -69,6 +69,22 @@ function hashCode(str) {
     return hash;
 }
 
+function copySelfToClipboard(element) {
+    const textToCopy = element.innerText;
+
+    const textArea = document.createElement("textarea");
+    textArea.value = textToCopy;
+    document.body.appendChild(textArea);
+
+    textArea.select();
+    document.execCommand("copy");
+
+    document.body.removeChild(textArea);
+
+    // Optionally, you can provide user feedback here
+    alert(`'${textToCopy}' copied to clipboard!`);
+}
+
 // ---------------------- DRAG HANDLERS ----------------------
 
 function dragStarted(d, force) {
@@ -164,13 +180,14 @@ function renderLinks(svg, links) {
         .attr("stroke-width", d => Math.sqrt(d.value));
 
     // Add a tooltip to show the number of duplicate keys when hovering over the link
-    linkElements.on("mouseover", function (d) {
-        const tooltip = d3.select("#tooltip");
-        let header = `Duplicate Keys: (Total: ${d.duplicateKeysCnt})<br>`;
-        ids = d.duplicateKeys.join("<br>")
-        tooltip.html(header + ids);
-        tooltip.style("visibility", "visible");
-    })
+    linkElements
+        .on("mouseover", function (d) {
+            const tooltip = d3.select("#tooltip");
+            let header = `Duplicate Keys: (Total: ${d.duplicateKeysCnt})<br>`;
+            ids = d.duplicateKeys.join("<br>")
+            tooltip.html(header + ids);
+            tooltip.style("visibility", "visible");
+        })
         .on("mousemove", function () {
             const tooltip = d3.select("#tooltip");
             tooltip.style("top", (d3.event.pageY - 10) + "px")
@@ -179,6 +196,20 @@ function renderLinks(svg, links) {
         .on("mouseout", function () {
             const tooltip = d3.select("#tooltip");
             tooltip.style("visibility", "hidden");
+        })
+        .on("click", function (d) {
+            const statusBar = document.getElementById("status-bar");
+            statusBar.style.visibility = "visible";
+
+            // Example: Display link information in the status bar
+            const statusContent = document.getElementById("status-content");
+
+            statusContent.innerHTML = `
+                <div class="status-label">Link From: </div>
+                <div class="path" onclick="copySelfToClipboard(this)">${d.source.id}</div>
+                <div class="status-label">Link To: </div>
+                <div class="path" onclick="copySelfToClipboard(this)">${d.target.id}</div>
+            `;
         });
 }
 
@@ -230,6 +261,17 @@ function renderNodesWithLabels(svg, nodes, color, force, graph) {
             let element = document.querySelector(id);
             element.style.opacity = "0";
             element.style.visibility = "hidden";
+        })
+        .on("click", function (d) {
+            const statusBar = document.getElementById("status-bar");
+            statusBar.style.visibility = "visible";
+
+            // Example: Display node information in the status bar
+            const statusContent = document.getElementById("status-content");
+            statusContent.innerHTML = `
+                <div class="status-label">File name: </div>
+                <div class="path" onclick="copySelfToClipboard(this)">${d.id}</div>
+            `;
         });
 
     // Append text labels on top of the nodes with background rectangles
