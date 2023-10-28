@@ -328,6 +328,8 @@ function renderNodesWithLabels(svg, nodes, color, force, graph) {
             statusContent.innerHTML = `
                 <div class="status-label">File name: </div>
                 <div class="path" onclick="copySelfToClipboard(this)">${d.id}</div>
+                <div class="status-label">Total ids: </div>
+                <div class="path" onclick="copySelfToClipboard(this)">${graph[d.id].total_id_cnt}</div>
             `;
         });
 
