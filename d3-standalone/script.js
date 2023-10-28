@@ -162,6 +162,30 @@ function renderGraph(graph) {
         // Update node and label positions
         nodesWithLabels.attr("transform", d => `translate(${d.x},${d.y})`);
     });
+
+    let stats = calculateStats(links);
+    displayStatistics(stats);
+}
+
+function displayStatistics(statistics) {
+    const infoOverlay = document.getElementById("info");
+    infoOverlay.innerHTML = `
+        <h2>Info</h2>
+        <table>
+            <tr>
+                <td class="status-label">Nodes (Files):</td>
+                <td>${statistics.numNodes}</td>
+            </tr>
+            <tr>
+                <td class="status-label">Links (Duplicates):</td>
+                <td>${statistics.numLinks}</td>
+            </tr>
+            <tr>
+                <td class="status-label">Total Duplicates:</td>
+                <td>${statistics.totalDuplicates}</td>
+            </tr>
+        </table>
+    `;
 }
 
 function createZoomableSVG(width, height) {
@@ -192,6 +216,15 @@ function createForceSimulation(nodes, links, width, height) {
         .force("link", d3.forceLink(links).distance(100))
         .force("charge", d3.forceManyBody())
         .force("center", d3.forceCenter(width / 2, height / 2));
+}
+
+function calculateStats(links) {
+    // Calculate statistics
+    const numNodes = d3.set(links.flatMap(d => [d.source.id, d.target.id])).size();
+    const numLinks = links.length;
+    const totalDuplicates = links.reduce((total, link) => total + link.duplicateKeysCnt, 0);
+
+    return {numNodes, numLinks, totalDuplicates};
 }
 
 function renderLinks(svg, links) {
@@ -320,11 +353,11 @@ function renderNodesWithLabels(svg, nodes, color, force, graph) {
             .attr("class", "label-bg")
             .attr("rx", 5) // Optional: Adds rounded corners to the background rectangle
             .attr("ry", 5) // Optional: Adds rounded corners to the background rectangle
-            .style("fill", "white")
             .attr("width", labelWidth) // Set the width based on label content and padding
             .attr("height", 20) // Adjust the height of the background rectangle as needed
             .attr("x", -labelWidth / 2) // Adjust the x-coordinate to center the rectangle behind the label
-            .attr("y", -10); // Adjust the y-coordinate to center the rectangle behind the label
+            .attr("y", -10) // Adjust the y-coordinate to center the rectangle behind the label
+            .attr("fill", "rgba(0, 0, 0, 0.7)"); // Set the fill color
 
         // Append the text label inside the label group
         labelGroup.append("text")

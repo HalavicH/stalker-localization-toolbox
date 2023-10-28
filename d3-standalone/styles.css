@@ -9,7 +9,16 @@ body, html, svg {
 
 .link {
     stroke: #abb2bf; /* Lighter link color */
-    stroke-opacity: 0.6;
+    stroke-opacity: 0.3;
+    transition: stroke-opacity 0.2s ease-in-out, stroke 0.2s, stroke-width 0.2s;
+    /*filter: drop-shadow(0 0 10px rgba(0, 0, 0, 0.3)); !* SVG filter for box shadow *!*/
+}
+
+.link:hover {
+    stroke: #ffffff; /* Lighter link color */
+    stroke-opacity: 1;
+    /*stroke-width: 2px;*/
+    filter: drop-shadow(0 0 5px rgba(255, 0, 0, 1)); /* SVG filter for box shadow */
 }
 
 /* NODE */
@@ -37,11 +46,32 @@ body, html, svg {
     transition: visibility 0s, opacity 0.2s ease-in-out;
 }
 
-/*.label-text {*/
-/*    fill: #abb2bf; !* Lighter text color *!*/
-/*    color: #abb2bf;*/
-/*    !*visibility: hidden; !* By default, hide the text *!*!*/
-/*}*/
+/* LABELS */
+.label-text {
+    fill: #abb2bf; /* Lighter text color */
+    color: #abb2bf;
+    /*visibility: hidden; !* By default, hide the text *!*/
+}
+
+.label-bg {
+    background-color: rgba(0, 0, 0, 0.3); /* Bluish-grayish-darkish background */
+    /*backdrop-filter: blur(5px); !* Apply the blur effect *!*/
+    padding: 5px;
+    border-radius: 5px;
+}
+
+/***************************************************/
+.tooltip {
+    position: absolute;
+    visibility: hidden;
+
+    background-color: rgba(0, 0, 0, 0.3); /* Bluish-grayish-darkish background */
+    backdrop-filter: blur(5px); /* Apply the blur effect */
+    color: #dcdcdc; /* Light gray text */
+
+    padding: 5px;
+    border-radius: 5px;
+}
 
 /***************************************************/
 /* Status Bar */
@@ -50,11 +80,13 @@ body, html, svg {
     bottom: 0;
     left: 0;
     width: 100%;
+
     background-color: rgba(0, 0, 0, 0.3); /* Bluish-grayish-darkish background */
     backdrop-filter: blur(5px); /* Apply the blur effect */
     color: #dcdcdc; /* Light gray text */
-    padding: 3px 5px;
     box-shadow: 0px -2px 10px rgba(0, 0, 0, 0.2); /* Shadow at the bottom */
+
+    padding: 3px 5px;
     z-index: 1000;
 }
 
@@ -62,6 +94,7 @@ body, html, svg {
     display: flex;
     flex-direction: row;
 }
+
 .status-label {
     font-weight: bold;
     color: #999999;
@@ -122,4 +155,25 @@ h2 {
     z-index: 9999;
     pointer-events: none; /* Allow interaction with elements underneath */
     opacity: 1;
+}
+
+/* Legend */
+.legend-circle {
+    width: 20px; /* Adjust the size as needed */
+    height: 20px; /* Adjust the size as needed */
+    background-color: rgb(31, 119, 180); /* Circle color */
+    border-radius: 50%; /* Makes it a circle */
+    display: inline-block; /* To make it inline with the label */
+    margin-right: 5px; /* Adjust the spacing between the icon and label */
+}
+
+.legend-item {
+    display: flex;
+    flex-direction: row;
+    vertical-align: center;
+}
+
+#svg-legend {
+    width: 25px;
+    height: 20px;
 }
