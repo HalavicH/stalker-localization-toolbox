@@ -34,4 +34,3 @@ UNKNOWN_LANG = "Unknown"
 TOO_LITTLE_DATA = "Too little data"
 
 file_changes_msg_queue = queue.Queue()
-

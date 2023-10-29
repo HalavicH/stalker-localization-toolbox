@@ -1,10 +1,7 @@
-from functools import reduce
-
 from langdetect import LangDetectException
 
 from src.commands.common import process_files_with_progress, get_xml_files_and_log
 from src.config import UNKNOWN_LANG, TOO_LITTLE_DATA, min_recognizable_text_length
-from src.log_config_loader import log
 from src.utils.colorize import *
 from src.utils.file_utils import read_xml
 from src.utils.lang_utils import detect_language
