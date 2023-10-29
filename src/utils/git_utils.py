@@ -1,6 +1,10 @@
 import os
 
-import git
+try:
+    import git
+except ImportError as e:
+    print("Can't import git module. In seems that git is not installed")
+
 import subprocess
 
 from rich import get_console
