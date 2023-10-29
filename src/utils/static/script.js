@@ -9,10 +9,11 @@
 import {hashCode} from "./misc.js";
 import {displayStatistics, showNotification} from "./infoProvider.js"
 import {renderLinks, renderNodesWithLabels} from "./renderer.js"
-import {getReportData, hasNewReport} from "./backendCommunication.js";
+import {getReportData, getLastReportHash} from "./backendCommunication.js";
 
 let show_all_files = false;
 let lastReport = undefined;
+let lastReportHash = null;
 
 // Create nodes array from graph.file_to_string_mapping
 function createNodesArray(graph) {
@@ -177,15 +178,6 @@ function calculateStats(links, nodes) {
     return {numNoDups, numDups, numNodes, numLinks, totalDuplicates};
 }
 
-// ---------------------- INITIALIZE GRAPH ----------------------
-
-//d3.json("visualization_data.json").then(renderGraph);
-//data = {{ data_json|safe }}
-getReportData().then((report) => {
-    lastReport = report;
-    renderGraph(report);
-});
-
 // Add an event handler to hide the "Details" overlay when clicking outside of nodes/links
 document.addEventListener("click", function (event) {
     const detailsOverlay = document.getElementById("details");
@@ -213,14 +205,16 @@ document.querySelector("#show-all-files").addEventListener("change", (evt) => {
     renderGraph(lastReport)
 })
 
-// Setup
+// ---------------------- INITIALIZE GRAPH ----------------------
 setInterval(async () => {
     try {
-        let hasNew = await hasNewReport();
-        if (hasNew === false) {
+        let newReportHash = await getLastReportHash();
+        if (newReportHash === lastReportHash) {
             console.info("Nothing changed so far");
             return;
         }
+        lastReportHash = newReportHash;
+        console.info("New report! Hash: " + lastReportHash);
     } catch (error) {
         console.error("Server is unavailable!");
         showNotification(`<div>Server died! No fresh data will come :(</div>`);

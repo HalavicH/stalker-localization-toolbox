@@ -169,12 +169,10 @@ def display_per_file_overlaps(overlaps, show_unique=False):
 
 
 def find_string_duplicates(args, is_read_only):
-    files = get_xml_files_and_log(args.paths, "Analyzing patterns for")
-
     if args.web_visualizer:
-        run_flask_server(args, files, find_and_prepare_duplicates_report)
+        run_flask_server(args, find_and_prepare_duplicates_report)
 
-    results, visualization_data = find_and_prepare_duplicates_report(args, files, is_read_only)
+    results, visualization_data = find_and_prepare_duplicates_report(args, is_read_only)
 
     if args.save_report:
         timestamp = datetime.datetime.now()
@@ -187,7 +185,9 @@ def find_string_duplicates(args, is_read_only):
         display_per_file_overlaps(visualization_data["overlaps_report"])
 
 
-def find_and_prepare_duplicates_report(args, files, is_read_only):
+def find_and_prepare_duplicates_report(args, is_read_only):
+    files = get_xml_files_and_log(args.paths, "Analyzing patterns for")
+
     results = {}
     process_files_with_progress(files, process_file, results, args, is_read_only)
     log.info(f"Total processed files: {len(files)}")

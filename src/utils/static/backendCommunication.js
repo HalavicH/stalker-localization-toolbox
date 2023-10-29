@@ -1,8 +1,8 @@
 import {showNotification} from "./infoProvider.js";
 
 
-export async function hasNewReport() {
-    return await executeGetRequest("/new-report-available");
+export async function getLastReportHash() {
+    return await executeGetRequest("/report-hash");
 }
 
 export async function openDiffInVsCode(file1, file2) {

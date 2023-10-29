@@ -1,3 +1,5 @@
+import queue
+
 PRIMARY_ENCODING = 'windows-1251'
 
 # Constants for command names
@@ -31,4 +33,5 @@ text_wrap_width = 80
 UNKNOWN_LANG = "Unknown"
 TOO_LITTLE_DATA = "Too little data"
 
+file_changes_msg_queue = queue.Queue()
 

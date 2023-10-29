@@ -42,6 +42,7 @@ setup(
         "setuptools~=68.2.2",
         "Flask",
         "flask_CORS",
+        "watchdog",
     ],
     python_requires='>=3.6',
     project_urls={
