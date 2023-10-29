@@ -1,0 +1,2 @@
+include src/utils/static/*
+include src/utils/templates/*.html
