@@ -6,10 +6,10 @@
  * @returns {Object} An object containing nodes and links
  */
 
-import {getFileName, prepareDivsWithIds, handleDiffButton, getReportData, hasReportUpdates} from "/static/utils.js";
-import {nodeIsNeighbor, hashCode, dragStarted, dragged, dragEnded} from "/static/misc.js";
-import {displayNodeDetails, displayLinkDetails, displayStatistics, copySelfToClipboard, showNotification} from "/static/infoProvider.js"
-import {renderLinks, renderNodesWithLabels} from "/static/renderer.js"
+import {hashCode} from "./misc.js";
+import {displayStatistics, showNotification} from "./infoProvider.js"
+import {renderLinks, renderNodesWithLabels} from "./renderer.js"
+import {getReportData, hasNewReport} from "./backendCommunication.js";
 
 let show_all_files = false;
 let lastReport = undefined;
@@ -215,9 +215,15 @@ document.querySelector("#show-all-files").addEventListener("change", (evt) => {
 
 // Setup
 setInterval(async () => {
-    let hasNew = await hasReportUpdates();
-    if (hasNew === false) {
-        console.info("Nothing changed so far");
+    try {
+        let hasNew = await hasNewReport();
+        if (hasNew === false) {
+            console.info("Nothing changed so far");
+            return;
+        }
+    } catch (error) {
+        console.error("Server is unavailable!");
+        showNotification(`<div>Server died! No fresh data will come :(</div>`);
         return;
     }
 
@@ -226,4 +232,4 @@ setInterval(async () => {
     showNotification(`<div>Detected changes in files! Refreshing the graph!</div>`);
     lastReport = newReport;
     renderGraph(lastReport);
-}, 2000);
+}, 1000);

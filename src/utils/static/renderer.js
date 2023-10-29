@@ -1,5 +1,5 @@
-import {nodeIsNeighbor, hashCode, dragStarted, dragged, dragEnded} from "/static/misc.js";
-import {displayNodeDetails, displayLinkDetails, displayStatistics, copySelfToClipboard, showNotification} from "/static/infoProvider.js"
+import {dragStarted, dragged, dragEnded} from "./misc.js";
+import {displayNodeDetails, displayLinkDetails, copySelfToClipboard} from "./infoProvider.js"
 
 let multiplier = 1.5
 

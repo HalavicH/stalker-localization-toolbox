@@ -1,6 +1,4 @@
-import {getFileName, prepareDivsWithIds, handleDiffButton} from "/static/utils.js";
-import {nodeIsNeighbor, hashCode, dragStarted, dragged, dragEnded} from "/static/misc.js";
-import {renderLinks, renderNodesWithLabels} from "/static/renderer.js"
+import {getFileName, prepareDivsWithIds, handleDiffButton} from "./utils.js";
 
 
 export function displayNodeDetails(node) {

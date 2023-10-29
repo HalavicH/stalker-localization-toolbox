@@ -40,7 +40,8 @@ setup(
         "rich_argparse~=1.4.0",
         "GitPython~=3.1.40",
         "setuptools~=68.2.2",
-        "Flask"
+        "Flask",
+        "flask_CORS",
     ],
     python_requires='>=3.6',
     project_urls={
