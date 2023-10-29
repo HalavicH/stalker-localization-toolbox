@@ -1,3 +1,4 @@
+import datetime
 import json
 import sys
 from collections import defaultdict
@@ -7,6 +8,7 @@ from src.log_config_loader import log
 from src.utils.colorize import cf_yellow, cf_cyan
 from src.utils.file_utils import read_xml
 from src.utils.flask_server import run_flask_server
+from src.utils.misc import set_default
 from src.utils.xml_utils import parse_xml_root
 
 
@@ -174,12 +176,14 @@ def find_string_duplicates(args, is_read_only):
 
     results, visualization_data = find_and_prepare_duplicates_report(args, files, is_read_only)
 
+    if args.save_report:
+        timestamp = datetime.datetime.now()
+        with open(f"duplicates-report-{timestamp}.json", 'w', encoding='utf-8') as f:
+            json.dump(visualization_data, f, default=set_default, ensure_ascii=False, indent=4)
+
     if args.per_string_report:
         display_per_string(results)
     else:
-        # with open("visualization_data.json", 'w', encoding='utf-8') as f:
-        #     json.dump(visualization_data, f, default=set_default, ensure_ascii=False, indent=4)
-
         display_per_file_overlaps(visualization_data["overlaps_report"])
 
 

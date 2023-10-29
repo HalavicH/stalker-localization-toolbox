@@ -162,11 +162,13 @@ def parse_args():
     # find-string-dups | fsd
     parser_fsd = subparsers.add_parser(FIND_STRING_DUPLICATES, aliases=CMD_TO_ALIASES[FIND_STRING_DUPLICATES],
                                        formatter_class=parser.formatter_class,
-                                       help="Looks for duplicates of [green]'<string id=\"...\">'[/green] to eliminate unwanted conflicts/overrides")
+                                       help="Looks for duplicates of [green]'<string id=\"...\">'[/green] to eliminate unwanted conflicts/overrides. Provides filecentric report by default")
     parser_fsd.add_argument('--per-string-report', action='store_true', default=False,
                             help='Display detailed report with string text')
     parser_fsd.add_argument('--web-visualizer', action='store_true', default=False,
                             help='Display duplicates as D3 interactive graph')
+    parser_fsd.add_argument('--save-report', action='store_true', default=False,
+                            help='Save filecentric report as JSON')
     parser_fsd.add_argument('paths', nargs='*', help='Paths to files or directories')
 
     ###### Parse ######
