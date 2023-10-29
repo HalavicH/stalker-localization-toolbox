@@ -171,6 +171,7 @@ def display_per_file_overlaps(overlaps, show_unique=False):
 def find_string_duplicates(args, is_read_only):
     if args.web_visualizer:
         run_flask_server(args, find_and_prepare_duplicates_report)
+        return
 
     results, visualization_data = find_and_prepare_duplicates_report(args, is_read_only)
 
