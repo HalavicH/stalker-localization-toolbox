@@ -236,3 +236,44 @@ h2 {
     width: 25%;
     max-height: 91%;
 }
+
+/*******/
+/* Loading message container */
+.loading-message {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    background-color: rgba(0, 0, 0, 0.2); /* Background color with transparency */
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3); /* Box shadow */
+    z-index: 9999;
+}
+
+.radiation-symbol {
+    width: 200px; /* Adjust the size as needed */
+    height: 200px; /* Adjust the size as needed */
+}
+
+/* Loading symbol (radiation symbol) */
+.loading-symbol {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    animation: rotation 2s linear infinite, pulse 1.5s infinite;
+}
+
+/* Loading text */
+.loading-message p {
+    font-size: 20pt;
+    color: #fff; /* Text color */
+    margin: 20px 20px 10px;
+}
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+}
+

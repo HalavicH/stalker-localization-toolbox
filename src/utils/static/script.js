@@ -6,7 +6,7 @@
  * @returns {Object} An object containing nodes and links
  */
 
-import {hashCode} from "./misc.js";
+import {hashCode, hideLoadingMessage, showLoadingMessage} from "./misc.js";
 import {displayStatistics, showNotification} from "./infoProvider.js"
 import {renderLinks, renderNodesWithLabels} from "./renderer.js"
 import {getReportData, getLastReportHash} from "./backendCommunication.js";
@@ -205,8 +205,8 @@ document.querySelector("#show-all-files").addEventListener("change", (evt) => {
     renderGraph(lastReport)
 })
 
-// ---------------------- INITIALIZE GRAPH ----------------------
-setInterval(async () => {
+
+async function monitorReport() {
     try {
         let newReportHash = await getLastReportHash();
         if (newReportHash === lastReportHash) {
@@ -220,10 +220,16 @@ setInterval(async () => {
         showNotification(`<div>Server died! No fresh data will come :(</div>`);
         return;
     }
+    hideLoadingMessage();
 
     let newReport = await getReportData();
     console.info("New data! Let's re-render it");
     showNotification(`<div>Detected changes in files! Refreshing the graph!</div>`);
     lastReport = newReport;
     renderGraph(lastReport);
-}, 1000);
+}
+
+// ---------------------- INITIALIZE GRAPH ----------------------
+showLoadingMessage();
+monitorReport().then();
+setInterval(monitorReport, 1000);

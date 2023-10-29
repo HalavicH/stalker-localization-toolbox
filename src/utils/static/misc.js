@@ -22,6 +22,16 @@ export function hashCode(str) {
     return hash;
 }
 
+// Show the loading message
+export function showLoadingMessage() {
+    document.querySelector('.loading-message').style.display = 'block';
+}
+
+// Hide the loading message
+export function hideLoadingMessage() {
+    document.querySelector('.loading-message').style.display = 'none';
+}
+
 // ---------------------- DRAG HANDLERS ----------------------
 
 export function dragStarted(d, force) {
