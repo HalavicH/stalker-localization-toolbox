@@ -107,9 +107,20 @@ export function copySelfToClipboard(element) {
 
 // Function to show a notification in the top right corner
 export function showNotification(html) {
+    const className = "notification";
+    showBanner(html, className);
+}
+
+// Function to show a notification in the top right corner
+export function showError(html) {
+    const className = "error-banner";
+    showBanner(html, className);
+}
+
+function showBanner(html, className) {
     const notification = document.createElement("div");
     notification.innerHTML = html;
-    notification.className = "notification";
+    notification.className = className;
 
     // Append the notification to the body
     document.body.appendChild(notification);
@@ -122,3 +133,4 @@ export function showNotification(html) {
         }, 2000); // Adjust the delay (in milliseconds) as needed
     }, 2000); // Adjust the delay (in milliseconds) as needed
 }
+

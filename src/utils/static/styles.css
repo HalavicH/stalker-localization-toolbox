@@ -150,7 +150,7 @@ h2 {
     padding-top: 5px;
 }
 
-/* Notification */
+/* Banners */
 .notification {
     position: fixed;
     top: 20px;
@@ -160,6 +160,22 @@ h2 {
     padding: 10px 15px;
     border-radius: 5px;
     font-size: 14px;
+    transition: opacity 1s ease-in-out;
+    z-index: 9999;
+    pointer-events: none;
+    opacity: 1;
+}
+
+.error-banner {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background-color: rgba(0, 0, 0, 0.7);
+    color: #ff0000;
+    /*border: 2px solid #000000;*/
+    padding: 10px 15px;
+    border-radius: 5px;
+    font-size: 20px;
     transition: opacity 1s ease-in-out;
     z-index: 9999;
     pointer-events: none;

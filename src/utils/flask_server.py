@@ -71,12 +71,11 @@ def diff_files():
     log.info(f"Running diff on: '{file1}', '{file2}'")
 
     try:
-        # Call the shell command
-        subprocess.call(["code", "--diff", file1, file2])
+        # Call the shell command using Popen
+        subprocess.Popen(["code", "--diff", file1, file2])
         return jsonify({"message": "Command executed successfully!"}), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 500
-
 
 def calc_report_hash(report):
     return hash(json.dumps(report, default=set_default))

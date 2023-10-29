@@ -1,4 +1,4 @@
-import {showNotification} from "./infoProvider.js";
+import {showError} from "./infoProvider.js";
 
 
 export async function getLastReportHash() {
@@ -34,7 +34,8 @@ export async function executePostRequest(endpoint, params) {
         });
 
         if (!response.ok) {
-            showNotification(`<div>Can't execute command.<br>Error: ${data.error}</div>`);
+            let error = await getError(response);
+            showError(`<div>Can't execute command.<br>Error: ${error}</div>`);
             console.error(response.status);
             responseObj = {error: response.status};
         } else {
@@ -45,7 +46,7 @@ export async function executePostRequest(endpoint, params) {
 
     } catch (error) {
         console.error("Error calling the endpoint:", error);
-        showNotification(`<div>Can't call the server. Error: ${error}</div>`);
+        showError(`<div>Can't call the server. Error: ${error}</div>`);
         responseObj = {error: error.toString()};
     }
 
@@ -56,6 +57,16 @@ export async function executePostRequest(endpoint, params) {
     return responseObj.data;
 }
 
+
+async function getError(response) {
+    let error = undefined;
+    try {
+        let data = await response.json();
+        return data.error || "Server returned: " + response.statusText;
+    } catch (_) {
+        return "Server returned: " + response.statusText;
+    }
+}
 
 export async function executeGetRequest(endpoint) {
     const url = "http://127.0.0.1:5000" + endpoint;
@@ -75,7 +86,9 @@ export async function executeGetRequest(endpoint) {
         });
 
         if (!response.ok) {
-            showNotification(`<div>Can't get fresh data.<br>Error: ${data.error}</div>`);
+            let error = await getError(response);
+
+            showError(`<div>Can't get fresh data.<br>Error: ${error}</div>`);
             console.error(response.status);
             responseObj = {error: response.status};
         } else {
@@ -85,7 +98,7 @@ export async function executeGetRequest(endpoint) {
 
     } catch (error) {
         console.error("Error calling the endpoint:", error);
-        showNotification(`<div>Can't call the server. Error: ${error}</div>`);
+        showError(`<div>Can't call the server. Error: ${error}</div>`);
         responseObj = {error: error.toString()};
     }
 
