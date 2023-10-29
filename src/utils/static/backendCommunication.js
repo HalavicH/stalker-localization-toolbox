@@ -14,6 +14,10 @@ export async function getReportData() {
     return await executeGetRequest("/report");
 }
 
+// Send a request to the server to indicate that the tab is still open
+export function sendHeartbeat() {
+    executePostRequest('/update-heartbeat', 0).then();
+}
 
 export async function executePostRequest(endpoint, params) {
     const url = "http://127.0.0.1:5000" + endpoint;

@@ -9,7 +9,7 @@
 import {hashCode, hideLoadingMessage, showLoadingMessage} from "./misc.js";
 import {displayStatistics, showNotification} from "./infoProvider.js"
 import {renderLinks, renderNodesWithLabels} from "./renderer.js"
-import {getReportData, getLastReportHash} from "./backendCommunication.js";
+import {getReportData, getLastReportHash, sendHeartbeat} from "./backendCommunication.js";
 
 let show_all_files = false;
 let lastReport = undefined;
@@ -228,6 +228,9 @@ async function monitorReport() {
     lastReport = newReport;
     renderGraph(lastReport);
 }
+
+// Send a heartbeat every 30 seconds
+setInterval(sendHeartbeat, 1000);
 
 // ---------------------- INITIALIZE GRAPH ----------------------
 showLoadingMessage();
