@@ -65,7 +65,7 @@ def check_inactivity():
             # Perform actions for inactivity (e.g., shutdown the server)
             log.info("No heartbeat received. Shutting down the server...")
             os.kill(os.getpid(), signal.SIGINT)
-            
+
         else:
             log.debug("Heartbeat received. Server is active.")
         time.sleep(2)

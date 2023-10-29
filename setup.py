@@ -44,6 +44,7 @@ setup(
         "flask_CORS",
         "watchdog",
     ],
+    include_package_data=True,
     python_requires='>=3.6',
     project_urls={
         'Bug Reports': 'https://github.com/HalavicH/stalker-localization-toolbox/issues/',
