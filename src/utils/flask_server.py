@@ -12,11 +12,10 @@ import requests
 from flask import Flask, render_template, request, jsonify
 from flask_cors import CORS
 
-from src.commands.common import get_xml_files_and_log
-from src.log_config_loader import log
-from src.utils.misc import set_default, remove_invalid_paths
-from src.utils.watch_files_for_change import watch_directories, thread_watch_directories
 from src.config import file_changes_msg_queue
+from src.log_config_loader import log
+from src.utils.misc import set_default
+from src.utils.watch_files_for_change import thread_watch_directories
 
 app = Flask(__name__)
 

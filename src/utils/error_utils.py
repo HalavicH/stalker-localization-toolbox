@@ -33,7 +33,6 @@ def log_saved_errors():
             log.error("\t" + issue)
 
 
-
 def display_encoding_error_details(xml_str, error_str):
     # Assume the position is given as a character index in the error message
     match = re.search(r'position (\d+):', error_str)

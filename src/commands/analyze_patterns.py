@@ -1,12 +1,9 @@
 import json
 import subprocess
 import time
-from collections import defaultdict
 from datetime import datetime
 
-import rich
 from rich import pretty
-from rich.panel import Panel
 
 from src.commands.common import get_xml_files_and_log, process_files_with_progress
 from src.log_config_loader import log
