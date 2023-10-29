@@ -29,10 +29,11 @@ Text:
 - [x] Analysis for not translated files/text blocks
 - [x] Automatic text translation using DeepL.
 - [x] Analyze broken patterns/placeholders/colors
-  - [ ] Save report only with --save option
+  - [x] Save report only with --save option
   - [ ] Compare 2 file reports
   - [ ] Fix broken patterns/placeholders/colors
-- [ ] Search for duplicate keys
+- [x] Search for duplicate keys
+- [x] Capitalize text entries
 - [ ] Grammar and typos checkup
 - [x] Capitalization of the text blocks
 - [ ] Automatic scraping for files you need to translate (if you just start translating) with
@@ -56,6 +57,15 @@ IDE/text editor, git to this encoding by default
 breaking changes like missing/broken placeholder, etc, so it's hardly
 recommended to make git repository out of your mod, and commit changes before
 each script use (or at least commit often)
+
+## Changelog
+## v0.1.2
+- Add text capitalization command
+- Add search for duplicate keys with visualization as D3 graph
+- Fix & update broken pattern analysis
+  - Improve pattern analysis with --save option
+- Fix translation command by "wiring" the source language option
+
 
 ## Module Usage
 ```shell
