@@ -6,7 +6,7 @@
  * @returns {Object} An object containing nodes and links
  */
 
-import {hashCode, hideLoadingMessage, showLoadingMessage} from "./misc.js";
+import {downloadObjectAsJson, hashCode, hideLoadingMessage, showLoadingMessage} from "./misc.js";
 import {displayStatistics, showNotification} from "./infoProvider.js"
 import {renderLinks, renderNodesWithLabels} from "./renderer.js"
 import {getReportData, getLastReportHash} from "./backendCommunication.js";
@@ -170,15 +170,21 @@ function calculateStats(links, nodes) {
     const numLinks = links.length;
 
     const uniqueDuplicates = new Set();
-
     links.forEach(link => {
         link.duplicateKeys.forEach(key => {
             uniqueDuplicates.add(key);
         });
     });
 
+    const uniqStrings = new Set();
+    nodes.forEach(node => {
+        node.strings.forEach(key => {
+            uniqStrings.add(key);
+        });
+    });
+
     const totalDuplicates = uniqueDuplicates.size;
-    return {numNoDups, numDups, numNodes, numLinks, totalDuplicates};
+    return {numNoDups, numDups, numNodes, numLinks, totalDuplicates, uniqStrings};
 }
 
 // Add an event handler to hide the "Details" overlay when clicking outside of nodes/links

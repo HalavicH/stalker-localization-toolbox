@@ -73,6 +73,33 @@ body, html, svg {
     border-radius: 5px;
 }
 
+/* Tooltip container */
+.has-tooltip {
+    position: relative;
+    display: inline-block;
+    /*border-bottom: 1px dotted black; !* If you want dots under the hoverable text *!*/
+}
+
+/* Tooltip text */
+.has-tooltip .tooltiptext {
+    visibility: hidden;
+    width: 120px;
+    background-color: black;
+    color: #fff;
+    text-align: center;
+    padding: 5px 0;
+    border-radius: 6px;
+
+    /* Position the tooltip text - see examples below! */
+    position: absolute;
+    z-index: 9999;
+}
+
+/* Show the tooltip text when you mouse over the tooltip container */
+.has-tooltip:hover .tooltiptext {
+    visibility: visible;
+}
+
 /* Status Bar */
 .status-bar {
     position: fixed;
@@ -127,7 +154,7 @@ body, html, svg {
     max-width: 30%;
     max-height: 50%;
     z-index: 999;
-    overflow: auto;
+    /*overflow: auto;*/
 }
 
 .overlay:hover {
@@ -333,4 +360,21 @@ h2 {
 .inactive {
     filter: grayscale(1);
     box-shadow: none;
+}
+
+/* Download */
+.downloadable {
+    cursor: pointer;
+}
+
+.download-icon {
+    width: 16px;
+    height: 16px;
+}
+
+.download-icon-container {
+    padding: 0 2px;
+    margin-left: 5px;
+    background-color: #999999;
+    border-radius: 50%;
 }

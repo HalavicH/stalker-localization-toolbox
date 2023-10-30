@@ -50,3 +50,14 @@ export function dragEnded(d, force) {
     d.fx = null;
     d.fy = null;
 }
+
+export function downloadObjectAsJson(obj, filename) {
+    let jsonString = JSON.stringify(obj, null, 4);
+    let blob = new Blob([jsonString], {type: "application/json"});
+    let link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = filename;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+}

@@ -1,4 +1,5 @@
 import {getFileName, prepareDivsWithIds, handleDiffButton} from "./utils.js";
+import {downloadObjectAsJson} from "./misc.js";
 
 
 export function displayNodeDetails(node) {
@@ -108,8 +109,23 @@ export function displayStatistics(statistics) {
                 <td class="status-label">Total string duplicates:</td>
                 <td>${statistics.totalDuplicates}</td>
             </tr>
+            <tr>
+                <td class="status-label">Total uniq string IDs:</td>
+                <td>${statistics.uniqStrings.size}</td>
+                <td id="download-unique-strings" class="downloadable has-tooltip">
+                    <div class="download-icon-container">
+                        <img src="/static/download.svg" class="download-icon" alt=""/>
+                        <div class="tooltiptext">Download all unique strings as JSON file<div/>
+                    </div>
+                </td>
+            </tr>
         </table>
     `;
+
+    // Setup downloads
+    infoOverlay.querySelector("#download-unique-strings").addEventListener("click", () => {
+        downloadObjectAsJson(Array.from(statistics.uniqStrings).sort(), "unique-strings-all-files.json");
+    });
 }
 
 
