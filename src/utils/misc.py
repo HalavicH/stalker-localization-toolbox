@@ -1,6 +1,6 @@
 import os
 import traceback
-import pkg_resources
+from importlib.metadata import version
 
 import requests
 from rich.table import Table
@@ -60,7 +60,7 @@ def exception_originates_from(func_name, exception):
 
 
 def check_for_update():
-    current_version = pkg_resources.get_distribution('sltools').version
+    current_version = version('sltools')
     response = requests.get(f'https://pypi.org/pypi/sltools/json')
     if response.ok:
         latest_version = response.json()['info']['version']
