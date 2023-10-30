@@ -7,6 +7,7 @@ from src.commands.capitalize_all_text import capitalize_all_text
 from src.commands.find_string_duplicates import find_string_duplicates
 from src.commands.fix_encoding import fix_encoding
 from src.commands.format_xml import format_xml
+from src.commands.sort_strings_in_files import sort_files_with_duplicates
 from src.commands.translate import translate
 from src.commands.validate_encoding import validate_encoding
 from src.commands.validate_xml import validate_xml
@@ -33,6 +34,7 @@ COMMAND_REGISTRY = {
     # FIX_KNOWN_BROKEN_PATTERNS: {"callback": fix_known_broken_patterns, "read_only": False},
     CAPITALIZE_TEXT: {"callback": capitalize_all_text, "read_only": False},
     FIND_STRING_DUPLICATES: {"callback": find_string_duplicates, "read_only": True},
+    SORT_FILES_WITH_DUPLICATES: {"callback": sort_files_with_duplicates, "read_only": False},
 }
 
 

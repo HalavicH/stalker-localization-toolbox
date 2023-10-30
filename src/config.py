@@ -12,6 +12,7 @@ TRANSLATE = 'translate'
 ANALYZE_PATTERNS = 'analyze-patterns'
 CAPITALIZE_TEXT = 'capitalize-text'
 FIND_STRING_DUPLICATES = 'find-string-duplicates'
+SORT_FILES_WITH_DUPLICATES = 'sort-files-with-duplicates'
 FIX_KNOWN_BROKEN_PATTERNS = 'fix-known-broken-patterns'
 
 CMD_TO_ALIASES = {
@@ -25,6 +26,7 @@ CMD_TO_ALIASES = {
     FIX_KNOWN_BROKEN_PATTERNS: ['fbp'],
     CAPITALIZE_TEXT: ['ct'],
     FIND_STRING_DUPLICATES: ['fsd'],
+    SORT_FILES_WITH_DUPLICATES: ['sfwd'],
 }
 
 min_recognizable_text_length = 30

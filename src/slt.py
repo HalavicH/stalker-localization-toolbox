@@ -171,6 +171,15 @@ def parse_args():
                             help='Save filecentric report as JSON')
     parser_fsd.add_argument('paths', nargs='*', help='Paths to files or directories')
 
+    # find-string-dups | fsd
+    parser_sfwd = subparsers.add_parser(SORT_FILES_WITH_DUPLICATES, aliases=CMD_TO_ALIASES[SORT_FILES_WITH_DUPLICATES],
+                                       formatter_class=parser.formatter_class,
+                                       help="Sorts strings in files alphabetically placing duplicates on top")
+    parser_sfwd.add_argument('--sort-duplicates-only', action='store_true', default=False,
+                            help="Don't sort non-duplicates")
+    parser_sfwd.add_argument('paths', nargs='*', help='Paths to two files you want to compare and sort dups')
+    add_git_override_arguments(parser_sfwd)
+
     ###### Parse ######
     args = parser.parse_args()
     log.debug(f"Args: {args}")
