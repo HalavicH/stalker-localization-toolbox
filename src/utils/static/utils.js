@@ -1,4 +1,5 @@
-import {openDiffInVsCode} from "./backendCommunication.js";
+import {executePostRequest, openDiffInVsCode} from "./backendCommunication.js";
+import {showNotification} from "./infoProvider.js";
 
 export function getFileName(filePath) {
     const parts = filePath.split("/");
@@ -30,5 +31,18 @@ export function handleDiffButton(evt) {
         })
         .catch((error) => {
             console.error(`Error executing command: ${error}`);
+        });
+}
+
+export function handlePowerButton(evt) {
+    console.log("Try to shutdown the server");
+    executePostRequest("/shutdown", 0)
+        .then(() => {
+            document.querySelector(".shutdown-container").classList.add("inactive");
+            showNotification("Stopped server");
+        })
+        .catch((error) => {
+            showNotification("Server already shut down");
+
         });
 }

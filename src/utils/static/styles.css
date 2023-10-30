@@ -109,7 +109,7 @@ body, html, svg {
 }
 
 .same-content {
-    color: #60ff5a;   
+    color: #60ff5a;
 }
 
 /* Overlay */
@@ -139,11 +139,11 @@ h2 {
     margin-top: 10px;
 }
 
-.overlay>div {
+.overlay > div {
     padding: 3px 5px;
 }
 
-.overlay>.overlay-data {
+.overlay > .overlay-data {
     padding: 3px 10px;
 }
 
@@ -207,7 +207,7 @@ h2 {
     background-color: #444;
     border: 2px solid #777;
     color: #eee;
-    font-family: 'Arial', sans-serif;  /* You can replace this with a more rugged font if you have one */
+    font-family: 'Arial', sans-serif; /* You can replace this with a more rugged font if you have one */
     font-size: 12px;
     padding: 5px 10px;
     margin: 5px 10px;
@@ -291,9 +291,46 @@ h2 {
     color: #fff; /* Text color */
     margin: 20px 20px 10px;
 }
+
 @keyframes pulse {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.1); }
-    100% { transform: scale(1); }
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.1);
+    }
+    100% {
+        transform: scale(1);
+    }
 }
 
+/* Shutdown */
+.shutdown-container {
+    position: fixed;
+    bottom: 20px;
+    left: 0;
+
+    padding: 10px;
+    transition: all 0.2s;
+}
+
+.shutdown-img {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+
+    transition: all 0.2s;
+}
+
+.active {
+
+}
+
+.shutdown-img:hover {
+    box-shadow: 0 0 10px #ff9c5a;
+}
+
+.inactive {
+    filter: grayscale(1);
+    box-shadow: none;
+}

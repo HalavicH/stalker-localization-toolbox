@@ -1,4 +1,4 @@
-import {showError} from "./infoProvider.js";
+import {showError, showNotification} from "./infoProvider.js";
 
 
 export async function getLastReportHash() {
@@ -12,11 +12,6 @@ export async function openDiffInVsCode(file1, file2) {
 export async function getReportData() {
     const url = "http://127.0.0.1:5000/report";
     return await executeGetRequest("/report");
-}
-
-// Send a request to the server to indicate that the tab is still open
-export function sendHeartbeat() {
-    executePostRequest('/update-heartbeat', 0).then();
 }
 
 export async function executePostRequest(endpoint, params) {

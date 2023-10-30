@@ -45,43 +45,18 @@ client_heartbeats = {}
 heartbeat_timeout = 10
 last_heartbeat_time = time.time()
 
+def kill_server():
+    log.info("Shutting down server!!!")
+    log.info("Shutting down server!!!")
+    log.info("Shutting down server!!!")
+    os.kill(os.getpid(), signal.SIGINT)
 
 # Route to update the heartbeat
-@app.route('/update-heartbeat', methods=['POST'])
-def update_heartbeat():
-    global last_heartbeat_time
-    last_heartbeat_time = time.time()
-    return jsonify('Heartbeat updated'), 200
+@app.route('/shutdown', methods=['POST'])
+def shutdown():
+    Timer(1, kill_server).start()
 
-
-# Check for inactivity and trigger actions
-def check_inactivity():
-    global last_heartbeat_time
-    log.info("Start heartbeat monitoring")
-    while True:
-        current_time = time.time()
-        if current_time - last_heartbeat_time > heartbeat_timeout:
-            # Perform actions for inactivity (e.g., shutdown the server)
-            log.info("No heartbeat received. Shutting down the server...")
-            os.kill(os.getpid(), signal.SIGINT)
-
-        else:
-            log.debug("Heartbeat received. Server is active.")
-        time.sleep(2)
-
-
-# Background task to check for inactive clients
-def check_heartbeats():
-    while True:
-        current_time = time.time()
-        for client_id, last_heartbeat_time in list(client_heartbeats.items()):
-            if current_time - last_heartbeat_time > heartbeat_timeout:
-                # Perform actions for an inactive client (e.g., shutdown the server)
-                print(f"Client {client_id} is inactive. Shutting down the server...")
-                os.kill(os.getpid(), signal.SIGINT)  # Graceful shutdown
-            else:
-                print(f"Client {client_id} is active.")
-        time.sleep(60)  # Check every minute
+    return jsonify('Dead :D'), 200
 
 
 @app.route('/')
@@ -113,11 +88,13 @@ def diff_files():
 
     file1 = os.path.abspath(file1)
     file2 = os.path.abspath(file2)
-    log.info(f"Running diff on: '{file1}', '{file2}'")
+
+    cmd = f'code --diff "{file1}" "{file2}"'
+    log.info(f"Running diff with: '{cmd}'")
 
     try:
         # Call the shell command using Popen
-        subprocess.Popen(["code", "--diff", file1, file2], shell=True)
+        subprocess.Popen(cmd, shell=True)
         return jsonify({"message": "Command executed successfully!"}), 200
     except Exception as e:
         log.error(f"Can't diff files: {e}")
@@ -161,11 +138,6 @@ def check_endpoint_and_open_browser():
             response = requests.get(url)
             if response.status_code == 200:
                 webbrowser.open_new(url)
-
-                # Start the background task to check for inactivity
-                inactivity_thread = threading.Thread(target=check_inactivity)
-                inactivity_thread.daemon = True
-                inactivity_thread.start()
 
                 break  # Exit the loop once the page is opened
         except requests.exceptions.RequestException as e:
