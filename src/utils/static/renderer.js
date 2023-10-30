@@ -4,7 +4,7 @@ import {displayNodeDetails, displayLinkDetails, copySelfToClipboard} from "./inf
 let multiplier = 1.5
 
 
-export function renderLinks(svg, links) {
+export function renderLinks(svg, links, graph) {
     // Render links within the SVG
     const linkElements = svg.selectAll(".link")
         .data(links)
@@ -51,7 +51,7 @@ export function renderLinks(svg, links) {
                     }
                 });
 
-            displayLinkDetails(d);
+            displayLinkDetails(d, graph);
         });
 
 }

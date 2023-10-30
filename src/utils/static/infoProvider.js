@@ -29,8 +29,35 @@ export function displayNodeDetails(node) {
     detailsOverlay.style.visibility = "visible";
 }
 
-export function displayLinkDetails(link) {
+export function displayLinkDetails(link, graph) {
     const detailsOverlay = document.getElementById("details");
+    let duplicatesDivs = [];
+
+    link.duplicateKeys.forEach(dup => {
+        let hash1 = graph.file_to_string_mapping[link.source.id][dup];
+        let hash2 = graph.file_to_string_mapping[link.target.id][dup];
+    
+        console.log("hash1 " + hash1 + " hash2" + hash2);
+        if (hash1 === hash2) {
+            duplicatesDivs.push(`<div class="path same-content">${dup}</div>`);
+        } else {
+            duplicatesDivs.push(`<div class="path">${dup}</div>`);
+        }
+    })
+
+    duplicatesDivs.sort((a, b) => {
+        if (a.includes("same-content")) {
+            if (b.includes("same-content")) {
+                return 0;
+            }
+            return -1;
+        }
+        if (!b.includes("same-content")) {
+            return 1;
+        }
+        return 0;
+    })
+
     detailsOverlay.innerHTML = `
         <h2>Details</h2>
         <div class="status-label">Duplicates in Files:</div>
@@ -41,7 +68,7 @@ export function displayLinkDetails(link) {
             <div class="overlay-data">${link.duplicateKeysCnt}</div>
         </div>
         <div class="scrollable-list">
-            <div class="path">${link.duplicateKeys.join("</div><div class='path'>")}</div>
+            ${duplicatesDivs.join("\n")}
         </div>
     `;
 

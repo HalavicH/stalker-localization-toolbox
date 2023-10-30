@@ -27,11 +27,13 @@ function createNodesArray(graph) {
             continue;
         }
 
+
+        let strings = Object.keys(graph.file_to_string_mapping[file]);
         nodes.push({
             id: file,
-            strings: graph.file_to_string_mapping[file],
+            strings: strings,
             index: index,
-            totalKeysCnt: graph.file_to_string_mapping[file].length,
+            totalKeysCnt: strings.length,
             hasDuplicates: hasDuplicates // Set hasDuplicates based on whether the file has duplicates
         });
 
@@ -103,7 +105,7 @@ function renderGraph(graph) {
     const color = d3.scaleOrdinal(d3.schemeCategory10);
 
     // Render links within the SVG
-    renderLinks(svg, links);
+    renderLinks(svg, links, graph);
 
     // Render nodes with labels within the SVG
     const nodesWithLabels = renderNodesWithLabels(svg, nodes, color, force, graph);

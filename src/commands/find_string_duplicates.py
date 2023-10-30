@@ -43,13 +43,12 @@ def list_strings_from_all_files(files):
     for file in files:
         try:
             xml_string_tags, _ = list_strings(file)
+            strings = {}
+            for string_tag in xml_string_tags:
+                strings[string_tag.get("id")] = hash(string_tag.find("text").text.strip())
+            results[file] = strings
         except Exception as e:
             log.error(f"Can't get strings for file: '{file}'. Error: {e}")
-
-        strings = []
-        for string_tag in xml_string_tags:
-            strings.append(string_tag.get("id"))
-        results[file] = strings
 
     return results
 

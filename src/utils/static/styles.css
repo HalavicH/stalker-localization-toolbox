@@ -108,6 +108,10 @@ body, html, svg {
     cursor: pointer;
 }
 
+.same-content {
+    color: #60ff5a;   
+}
+
 /* Overlay */
 .overlay {
     position: fixed;
