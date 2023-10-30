@@ -36,3 +36,11 @@ UNKNOWN_LANG = "Unknown"
 TOO_LITTLE_DATA = "Too little data"
 
 file_changes_msg_queue = queue.Queue()
+
+
+class DefaultArgs(object):
+    sort_duplicates_only = False
+    allow_no_repo = False
+    allow_dirty = False
+    allow_not_tracked = False
+    pass

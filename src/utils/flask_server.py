@@ -12,7 +12,8 @@ import requests
 from flask import Flask, render_template, request, jsonify
 from flask_cors import CORS
 
-from src.config import file_changes_msg_queue
+from src.commands.sort_strings_in_files import sort_files_with_duplicates
+from src.config import file_changes_msg_queue, DefaultArgs
 from src.log_config_loader import log
 from src.utils.misc import set_default
 from src.utils.watch_files_for_change import thread_watch_directories
@@ -45,11 +46,13 @@ client_heartbeats = {}
 heartbeat_timeout = 10
 last_heartbeat_time = time.time()
 
+
 def kill_server():
     log.info("Shutting down server!!!")
     log.info("Shutting down server!!!")
     log.info("Shutting down server!!!")
     os.kill(os.getpid(), signal.SIGINT)
+
 
 # Route to update the heartbeat
 @app.route('/shutdown', methods=['POST'])
@@ -76,6 +79,23 @@ def get_report_hash():
 def get_report():
     json_dumps = json.dumps(CTX[LAST_REPORT_KEY], default=set_default)
     return json_dumps, 200
+
+
+@app.route('/sort-duplicates-only', methods=['POST'])
+def sort__duplicates_in_files():
+    file1 = request.json.get('file1')
+    file2 = request.json.get('file2')
+
+    args = DefaultArgs()
+    args.paths = [file1, file2]
+    args.sort_duplicates_only = True
+
+    try:
+        sort_files_with_duplicates(args, False)
+        return jsonify({"message": "Command executed successfully!"}), 200
+    except Exception as e:
+        log.error(f"Can't sort files: {e}")
+        return jsonify({"error": str(e)}), 500
 
 
 @app.route('/diff', methods=['POST'])

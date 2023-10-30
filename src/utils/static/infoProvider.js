@@ -1,4 +1,4 @@
-import {getFileName, prepareDivsWithIds, handleDiffButton} from "./utils.js";
+import {getFileName, prepareDivsWithIds, handleDiffButton, handleSortButton} from "./utils.js";
 import {downloadObjectAsJson} from "./misc.js";
 
 
@@ -63,7 +63,8 @@ export function displayLinkDetails(link, graph) {
         <h2>Details</h2>
         <div class="status-label">Duplicates in Files:</div>
         <div class="overlay-data">${getFileName(link.source.id)}, ${getFileName(link.target.id)}</div>
-        <button class="stalker-button" source_file="${link.source.id}" target_file="${link.target.id}">Open diff in VS Code</button>
+        <button id="diff" class="stalker-button" source_file="${link.source.id}" target_file="${link.target.id}">Open diff in VS Code</button>
+        <button id="sort" class="stalker-button" source_file="${link.source.id}" target_file="${link.target.id}">Sort duplicates with sltools</button>
         <div class="legend-item">
             <div class="status-label">Total Duplicated IDs: </div>
             <div class="overlay-data">${link.duplicateKeysCnt}</div>
@@ -73,7 +74,8 @@ export function displayLinkDetails(link, graph) {
         </div>
     `;
 
-    detailsOverlay.querySelector(".stalker-button").addEventListener("click", handleDiffButton);
+    detailsOverlay.querySelector("#diff").addEventListener("click", handleDiffButton);
+    detailsOverlay.querySelector("#sort").addEventListener("click", handleSortButton);
 
     detailsOverlay.addEventListener("click", evt => {
         if (evt.target.classList.contains("path")) {

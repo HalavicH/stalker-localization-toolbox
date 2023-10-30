@@ -9,6 +9,10 @@ export async function openDiffInVsCode(file1, file2) {
     return await executePostRequest("/diff", {file1, file2});
 }
 
+export async function sortEntriesInFiles(file1, file2) {
+    return await executePostRequest("/sort-duplicates-only", {file1, file2});
+}
+
 export async function getReportData() {
     const url = "http://127.0.0.1:5000/report";
     return await executeGetRequest("/report");
