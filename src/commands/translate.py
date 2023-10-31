@@ -1,4 +1,5 @@
 import requests
+from langdetect import LangDetectException
 
 from src.commands.common import get_xml_files_and_log, process_files_with_progress
 from src.utils.colorize import cf_blue
@@ -68,9 +69,13 @@ def process_file(file_path, results: list, args):
         orig_text = elem.text
 
         plain_text = purify_text(orig_text)
-        lang, _ = detect_language(plain_text)
-        if lang == lang_to:
-            log.info(f"Text with id '{string_id}' is already translated")
+        try:
+            lang, _ = detect_language(plain_text)
+            if lang == lang_to:
+                log.info(f"Text with id '{string_id}' is already translated")
+                continue
+        except LangDetectException as e:
+            log.warning(e)
             continue
 
         # prepare text for translation
