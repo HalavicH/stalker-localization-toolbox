@@ -29,10 +29,11 @@ Text:
 - [x] Analysis for not translated files/text blocks
 - [x] Automatic text translation using DeepL.
 - [x] Analyze broken patterns/placeholders/colors
-  - [ ] Save report only with --save option
+  - [x] Save report only with --save option
   - [ ] Compare 2 file reports
   - [ ] Fix broken patterns/placeholders/colors
-- [ ] Search for duplicate keys
+- [x] Search for duplicate keys
+  - [x] Add visualized duplicates graph using D3
 - [ ] Grammar and typos checkup
 - [x] Capitalization of the text blocks
 - [ ] Automatic scraping for files you need to translate (if you just start translating) with
