@@ -5,8 +5,8 @@ import time
 from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler
 
-from src.commands.common import get_xml_files_and_log
-from src.config import file_changes_msg_queue
+from sltools.commands.common import get_xml_files_and_log
+from sltools.config import file_changes_msg_queue
 
 
 class MyHandler(FileSystemEventHandler):

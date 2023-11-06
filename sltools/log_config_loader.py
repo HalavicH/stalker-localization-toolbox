@@ -5,7 +5,7 @@ import sys
 import colorlog
 import rich
 
-from src.utils.colorize import cf
+from sltools.utils.colorize import cf
 
 # Define a custom logging level
 ALWAYS_LEVEL = 55

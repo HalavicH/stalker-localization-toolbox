@@ -1,6 +1,6 @@
 import re
 
-from src.log_config_loader import log
+from sltools.log_config_loader import log
 
 failed_files = {}
 

@@ -2,11 +2,11 @@
 from rich import get_console
 from rich.progress import Progress
 
-from src.log_config_loader import log
-from src.utils.colorize import cf_green
-from src.utils.file_utils import find_xml_files
-from src.utils.git_utils import is_allowed_to_continue
-from src.utils.misc import get_term_width
+from sltools.log_config_loader import log
+from sltools.utils.colorize import cf_green
+from sltools.utils.file_utils import find_xml_files
+from sltools.utils.git_utils import is_allowed_to_continue
+from sltools.utils.misc import get_term_width
 
 
 # 1. Get the list of XML files and log the number of files

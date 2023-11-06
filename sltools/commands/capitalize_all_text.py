@@ -1,11 +1,11 @@
 from rich import get_console
 
-from src.commands.common import get_xml_files_and_log, process_files_with_progress
-from src.log_config_loader import log
-from src.utils.colorize import cf_cyan
-from src.utils.file_utils import read_xml, save_xml
-from src.utils.misc import create_table
-from src.utils.xml_utils import parse_xml_root, to_utf_string_with_proper_declaration, format_xml_string
+from sltools.commands.common import get_xml_files_and_log, process_files_with_progress
+from sltools.log_config_loader import log
+from sltools.utils.colorize import cf_cyan
+from sltools.utils.file_utils import read_xml, save_xml
+from sltools.utils.misc import create_table
+from sltools.utils.xml_utils import parse_xml_root, to_utf_string_with_proper_declaration, format_xml_string
 
 
 def capitalize_first_letter(s):

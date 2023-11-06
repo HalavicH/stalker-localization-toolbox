@@ -1,10 +1,10 @@
-from src.config import PRIMARY_ENCODING
-from src.commands.validate_encoding import validate_encoding
-from src.log_config_loader import log
-from src.utils.colorize import cf_yellow, cf_green, cf_red, cf_cyan
-from src.utils.error_utils import log_and_save_error, display_encoding_error_details
-from src.utils.file_utils import read_xml
-from src.utils.git_utils import is_allowed_to_continue
+from sltools.config import PRIMARY_ENCODING
+from sltools.commands.validate_encoding import validate_encoding
+from sltools.log_config_loader import log
+from sltools.utils.colorize import cf_yellow, cf_green, cf_red, cf_cyan
+from sltools.utils.error_utils import log_and_save_error, display_encoding_error_details
+from sltools.utils.file_utils import read_xml
+from sltools.utils.git_utils import is_allowed_to_continue
 
 
 def change_file_encoding(file_name, e_from, e_to):

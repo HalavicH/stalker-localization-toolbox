@@ -1,8 +1,8 @@
 import chardet
 
-from src.config import PRIMARY_ENCODING
-from src.log_config_loader import log
-from src.utils.colorize import cf_green, cf_yellow, cf_red
+from sltools.config import PRIMARY_ENCODING
+from sltools.log_config_loader import log
+from sltools.utils.colorize import cf_green, cf_yellow, cf_red
 
 # Constants
 ALLOWED_ENCODINGS = [PRIMARY_ENCODING, 'ascii']

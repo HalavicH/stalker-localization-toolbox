@@ -1,13 +1,13 @@
 from langdetect import LangDetectException
 
-from src.commands.common import process_files_with_progress, get_xml_files_and_log
-from src.config import UNKNOWN_LANG, TOO_LITTLE_DATA, min_recognizable_text_length
-from src.utils.colorize import *
-from src.utils.file_utils import read_xml
-from src.utils.lang_utils import detect_language
-from src.utils.misc import create_table, color_lang
-from src.utils.plain_text_utils import *
-from src.utils.xml_utils import parse_xml_root, extract_text_from_xml
+from sltools.commands.common import process_files_with_progress, get_xml_files_and_log
+from sltools.config import UNKNOWN_LANG, TOO_LITTLE_DATA, min_recognizable_text_length
+from sltools.utils.colorize import *
+from sltools.utils.file_utils import read_xml
+from sltools.utils.lang_utils import detect_language
+from sltools.utils.misc import create_table, color_lang
+from sltools.utils.plain_text_utils import *
+from sltools.utils.xml_utils import parse_xml_root, extract_text_from_xml
 
 
 def process_file(file_path, results: list, args):

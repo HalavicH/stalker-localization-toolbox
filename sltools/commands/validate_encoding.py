@@ -1,10 +1,10 @@
 from rich import get_console
 
-from src.commands.common import get_xml_files_and_log, process_files_with_progress
-from src.log_config_loader import log
-from src.utils.colorize import cf_green, cf_red
-from src.utils.encoding_utils import detect_encoding, is_file_content_win1251_compatible
-from src.utils.misc import create_table
+from sltools.commands.common import get_xml_files_and_log, process_files_with_progress
+from sltools.log_config_loader import log
+from sltools.utils.colorize import cf_green, cf_red
+from sltools.utils.encoding_utils import detect_encoding, is_file_content_win1251_compatible
+from sltools.utils.misc import create_table
 
 
 def process_file(file, results: list, args):

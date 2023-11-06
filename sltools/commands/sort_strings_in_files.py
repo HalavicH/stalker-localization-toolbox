@@ -1,9 +1,9 @@
 from lxml import etree
 
-from src.log_config_loader import log
-from src.utils.file_utils import read_xml, save_xml
-from src.utils.git_utils import is_allowed_to_continue
-from src.utils.xml_utils import parse_xml_root, to_utf_string_with_proper_declaration, format_xml_string
+from sltools.log_config_loader import log
+from sltools.utils.file_utils import read_xml, save_xml
+from sltools.utils.git_utils import is_allowed_to_continue
+from sltools.utils.xml_utils import parse_xml_root, to_utf_string_with_proper_declaration, format_xml_string
 
 
 def sort_files_with_duplicates(args, is_read_only):

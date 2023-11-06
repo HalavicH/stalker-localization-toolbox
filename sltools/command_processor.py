@@ -1,21 +1,21 @@
 import sys
 from argparse import Namespace
 
-from src.commands.analyze_file_language import check_primary_lang
-from src.commands.analyze_patterns import analyze_patterns
-from src.commands.capitalize_all_text import capitalize_all_text
-from src.commands.find_string_duplicates import find_string_duplicates
-from src.commands.fix_encoding import fix_encoding
-from src.commands.format_xml import format_xml
-from src.commands.sort_strings_in_files import sort_files_with_duplicates
-from src.commands.translate import translate
-from src.commands.validate_encoding import validate_encoding
-from src.commands.validate_xml import validate_xml
-from src.config import *
-from src.log_config_loader import log
-from src.utils.colorize import cf_green
-from src.utils.error_utils import *
-from src.utils.git_utils import is_git_available, log_ignore_option, log_skipped_files
+from sltools.commands.analyze_file_language import check_primary_lang
+from sltools.commands.analyze_patterns import analyze_patterns
+from sltools.commands.capitalize_all_text import capitalize_all_text
+from sltools.commands.find_string_duplicates import find_string_duplicates
+from sltools.commands.fix_encoding import fix_encoding
+from sltools.commands.format_xml import format_xml
+from sltools.commands.sort_strings_in_files import sort_files_with_duplicates
+from sltools.commands.translate import translate
+from sltools.commands.validate_encoding import validate_encoding
+from sltools.commands.validate_xml import validate_xml
+from sltools.config import *
+from sltools.log_config_loader import log
+from sltools.utils.colorize import cf_green
+from sltools.utils.error_utils import *
+from sltools.utils.git_utils import is_git_available, log_ignore_option, log_skipped_files
 
 
 def fix_known_broken_patterns(args, is_read_only):

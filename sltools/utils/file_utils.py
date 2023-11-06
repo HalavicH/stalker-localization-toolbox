@@ -2,8 +2,8 @@ import codecs
 import glob
 import os
 
-from src.config import PRIMARY_ENCODING
-from src.log_config_loader import log
+from sltools.config import PRIMARY_ENCODING
+from sltools.log_config_loader import log
 
 
 def find_xml_files(path):

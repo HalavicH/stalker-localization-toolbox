@@ -5,12 +5,12 @@ from datetime import datetime
 
 from rich import pretty
 
-from src.commands.common import get_xml_files_and_log, process_files_with_progress
-from src.log_config_loader import log
-from src.utils.colorize import *
-from src.utils.file_utils import read_xml
-from src.utils.plain_text_utils import check_placeholders, analyze_patterns_in_text
-from src.utils.xml_utils import parse_xml_root
+from sltools.commands.common import get_xml_files_and_log, process_files_with_progress
+from sltools.log_config_loader import log
+from sltools.utils.colorize import *
+from sltools.utils.file_utils import read_xml
+from sltools.utils.plain_text_utils import check_placeholders, analyze_patterns_in_text
+from sltools.utils.xml_utils import parse_xml_root
 
 # Dictionary keys
 META_DATA_KEY = "meta_data"

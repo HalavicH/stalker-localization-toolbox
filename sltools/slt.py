@@ -15,14 +15,14 @@ import sys
 import time
 import traceback
 
-from src.command_processor import process_command
-from src.config import *
-from src.utils.colorize import *
-from src.log_config_loader import log
+from sltools.command_processor import process_command
+from sltools.config import *
+from sltools.utils.colorize import *
+from sltools.log_config_loader import log
 
 from rich_argparse import RichHelpFormatter
 
-from src.utils.misc import check_for_update
+from sltools.utils.misc import check_for_update
 
 app_description = """
 This app is All-in-one solution for working with stalker localization

@@ -3,13 +3,13 @@ import json
 import sys
 from collections import defaultdict
 
-from src.commands.common import get_xml_files_and_log, process_files_with_progress
-from src.log_config_loader import log
-from src.utils.colorize import cf_yellow, cf_cyan
-from src.utils.file_utils import read_xml
-from src.utils.flask_server import run_flask_server
-from src.utils.misc import set_default
-from src.utils.xml_utils import parse_xml_root
+from sltools.commands.common import get_xml_files_and_log, process_files_with_progress
+from sltools.log_config_loader import log
+from sltools.utils.colorize import cf_yellow, cf_cyan
+from sltools.utils.file_utils import read_xml
+from sltools.utils.flask_server import run_flask_server
+from sltools.utils.misc import set_default
+from sltools.utils.xml_utils import parse_xml_root
 
 
 def process_file(file_path, results, args):

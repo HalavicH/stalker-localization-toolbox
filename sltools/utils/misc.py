@@ -5,7 +5,7 @@ from importlib.metadata import version
 import requests
 from rich.table import Table
 
-from src.utils.colorize import *
+from sltools.utils.colorize import *
 
 
 def get_term_width():

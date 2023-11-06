@@ -1,11 +1,11 @@
 from rich import get_console
 
-from src.commands.common import get_xml_files_and_log, process_files_with_progress
-from src.utils.colorize import cf_cyan, cf_green
-from src.utils.file_utils import read_xml, save_xml
-from src.utils.misc import create_table, exception_originates_from
-from src.utils.plain_text_utils import format_text_entry, tabwidth
-from src.utils.xml_utils import *
+from sltools.commands.common import get_xml_files_and_log, process_files_with_progress
+from sltools.utils.colorize import cf_cyan, cf_green
+from sltools.utils.file_utils import read_xml, save_xml
+from sltools.utils.misc import create_table, exception_originates_from
+from sltools.utils.plain_text_utils import format_text_entry, tabwidth
+from sltools.utils.xml_utils import *
 
 include_example = cf_red('#include "some/other/file.xml"')
 

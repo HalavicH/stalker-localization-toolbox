@@ -9,8 +9,8 @@ import subprocess
 
 from rich import get_console
 
-from src.log_config_loader import log
-from src.utils.colorize import cf_cyan
+from sltools.log_config_loader import log
+from sltools.utils.colorize import cf_cyan
 
 skipped_files = []
 

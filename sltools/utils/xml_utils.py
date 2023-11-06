@@ -5,10 +5,10 @@ import re
 from lxml import etree
 from lxml.etree import _Element
 
-from src.config import PRIMARY_ENCODING
-from src.log_config_loader import log
-from src.utils.colorize import cf_yellow, cf_red
-from src.utils.error_utils import log_and_save_error
+from sltools.config import PRIMARY_ENCODING
+from sltools.log_config_loader import log
+from sltools.utils.colorize import cf_yellow, cf_red
+from sltools.utils.error_utils import log_and_save_error
 
 declaration_str = "<?xml version='1.0' encoding='WINDOWS-1251'?>"
 

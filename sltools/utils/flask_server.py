@@ -12,11 +12,11 @@ import requests
 from flask import Flask, render_template, request, jsonify
 from flask_cors import CORS
 
-from src.commands.sort_strings_in_files import sort_files_with_duplicates
-from src.config import file_changes_msg_queue, DefaultArgs
-from src.log_config_loader import log
-from src.utils.misc import set_default
-from src.utils.watch_files_for_change import thread_watch_directories
+from sltools.commands.sort_strings_in_files import sort_files_with_duplicates
+from sltools.config import file_changes_msg_queue, DefaultArgs
+from sltools.log_config_loader import log
+from sltools.utils.misc import set_default
+from sltools.utils.watch_files_for_change import thread_watch_directories
 
 app = Flask(__name__)
 
