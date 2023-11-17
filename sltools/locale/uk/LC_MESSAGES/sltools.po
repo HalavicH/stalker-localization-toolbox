@@ -99,3 +99,167 @@ msgstr "Шукає дублікати [green]'<string id=\"...\">'[/green] дл�
 msgid "Sorts strings in files alphabetically placing duplicates on top"
 msgstr "Сортує рядки у файлах за алфавітом, розміщуючи повтори зверху"
 
+msgid "Unknown"
+msgstr "Невідомо"
+
+msgid "Too little data"
+msgstr "Замало даних для аналізу"
+
+msgid "Processing command: %s"
+msgstr "Обробка команди: %s"
+
+msgid "Command '%s' is not implemented"
+msgstr "Команда '%s' не реалізована"
+
+msgid "Git is not available on this system. It's vital to have files in a git repo to prevent potential file damage. Please install Git."
+msgstr "Git недоступний в цій системі. Важливо мати файли в git-репозиторії, щоб запобігти потенційному пошкодженню файлів. Будь ласка, встановіть Git."
+
+msgid "Running command '%s' on paths: '%s'"
+msgstr "Виконую команду '%s' для шляхах: '%s'"
+
+msgid "Done"
+msgstr "Готово"
+
+msgid "Can't log error due to fucking rich formatter. Fixme."
+msgstr "Не можу залогувати помилку через клятий форматтер. Убийте мене."
+
+msgid "Unknown loglevel: "
+msgstr "Невідомий рівень логування: "
+
+msgid "New log level: "
+msgstr "Новий рівень логування: "
+
+msgid "[bright_black]You are using the latest version of sltools.[/bright_black]"
+msgstr "[bright_black]Ви використовуєте останню версію sltools.[/bright_black]"
+
+msgid "Failed to check for updates: %s"
+msgstr "Не вдалося перевірити наявність оновлень: %s"
+
+msgid "%s is not instance of set. Don't know how to default it"
+msgstr "%s не є екземпляром набору. Не знаю, як встановити за замовчуванням"
+
+msgid "Shutting down server!!!"
+msgstr "Завершення роботи сервера!!!"
+
+msgid "Dead :D"
+msgstr "Мертвий :D"
+
+msgid "Try to open %s"
+msgstr "Намагаюсь відкрити %s"
+
+msgid "Command executed successfully!"
+msgstr "Команда успішно виконана!"
+
+msgid "Can't sort files: %s"
+msgstr "Не можу сортувати файли: %s"
+
+msgid "Both file paths are required!"
+msgstr "Потрібні шляхи до обох файлів!"
+
+msgid "Running diff with: '%s'"
+msgstr "Виконання різниці з: '%s'"
+
+msgid "Can't diff files: %s"
+msgstr "Не можу порівняти файли: %s"
+
+msgid "Watching for changes in files"
+msgstr "Спостереження за змінами у файлах"
+
+msgid "%s has been %s"
+msgstr "%s було %s"
+
+msgid "Files changed"
+msgstr "Файли змінені"
+
+msgid "File: '%s'"
+msgstr "Файл: '%s'"
+
+msgid "\t\t\tFailed files errors:"
+msgstr "\t\t\tПомилки при обробці файлів:"
+
+msgid "Could not extract position from error message: %s"
+msgstr "Не вдалося витягнути позицію з повідомлення про помилку: %s"
+
+msgid "Illegal character! Error at row %s, column %s:"
+msgstr "Недопустимий символ! Помилка у рядку %s, стовпці %s:"
+
+msgid "[default]%s[/default]"
+msgstr "[default]%s[/default]"
+
+msgid "Can't decode file %s as ascii. Error %s"
+msgstr "Не можу декодувати файл %s як ascii. Помилка %s"
+
+msgid "Can't decode file %s as windows-1251. Error %s"
+msgstr "Не можу декодувати файл %s як windows-1251. Помилка %s"
+
+msgid "Folded text %s"
+msgstr "Згорнутий текст %s"
+
+msgid "Number of \"\\n\" replaced with newline: %s"
+msgstr "Кількість \"\\n\", замінених на новий рядок: %s"
+
+msgid "Replaced text %s"
+msgstr "Текст замінено %s"
+
+msgid "Number of newline replaced with \"\\n\": %s"
+msgstr "Кількість нових рядків, замінених на \"\\n\": %s"
+
+msgid "Pattern matches: %s"
+msgstr "Відповідають шаблону: %s"
+
+msgid "No XML file found under path: '%s'.\nPlease provide path which contains xml files"
+msgstr "Під шляхом '%s' не знайдено XML файлів.\nБудь ласка, вкажіть шлях (файл/папка), який містить XML файли"
+
+msgid "Found following glob files: %s"
+msgstr "Знайдені такі glob файли: %s"
+
+msgid "Input files number: %s"
+msgstr "Кількість вхідних файлів: %s"
+
+msgid "Warning: File %s doesn't have encoding header in it"
+msgstr "Попередження: У файлі %s немає заголовка кодування"
+
+msgid "Try to detect and fix comments"
+msgstr "Намагаюсь виявити та виправити коментарі"
+
+msgid "Try to detect and fix ampersand issues"
+msgstr "Намагаюсь виявити та виправити проблеми з амперсандом"
+
+msgid "Try to detect and resolve includes"
+msgstr "Намагаюсь виявити та вставити файли '#include ...'"
+
+msgid "Try to detect and fix XML declaration"
+msgstr "Намагаюсь виявити та виправити декларацію XML"
+
+msgid "Done with fixing"
+msgstr "Виправлення завершено"
+
+msgid "modified"
+msgstr "модифіковано"
+
+msgid "created"
+msgstr "створено"
+
+msgid "deleted"
+msgstr "видалено"
+
+msgid "Monitoring"
+msgstr "Моніторинг"
+
+msgid "\t\tSkipped files due to being dirty/not tracked by git:"
+msgstr "\t\tПропущені файли через те, що вони брудні/не відстежуються git:"
+
+msgid "\t%s: %s"
+msgstr "\t%s: %s"
+
+msgid "'It seems that there's no git repository here. Skipping the file processing. "
+msgstr "'Здається, тут немає git-репозиторію. Пропускаємо обробку файлу. "
+
+msgid "'File %s' is not tracked by git. Skipping the file processing."
+msgstr "'Файл %s' не відстежується git. Пропускаємо обробку файлу."
+
+msgid "File '%s' is dirty (modified but not staged/committed). Skipping the file processing."
+msgstr "Файл '%s' брудний (змінений, але не поставлений/зафіксований). Пропускаємо обробку файлу."
+
+msgid "Note: If you sure you won't break anything, you can process this path anyway using %s"
+msgstr "Примітка: Якщо ви впевнені, що нічого не зламаєте, ви можете все одно обробити цей шлях, використовуючи %s"
