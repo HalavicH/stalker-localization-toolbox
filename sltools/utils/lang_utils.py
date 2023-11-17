@@ -20,7 +20,7 @@ except FileNotFoundError:
 
 lang.install()
 
-t = lang.gettext
+_tr = lang.gettext
 
 
 def detect_language(text, possible_languages=["uk", "en", "ru", "fr", "es"]):
