@@ -19,7 +19,7 @@ from sltools.command_processor import process_command
 from sltools.config import *
 from sltools.utils.colorize import *
 from sltools.log_config_loader import log
-from src.utils.lang_utils import t
+from sltools.utils.lang_utils import t
 
 from rich_argparse import RichHelpFormatter
 
