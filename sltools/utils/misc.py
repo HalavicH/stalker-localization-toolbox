@@ -2,6 +2,10 @@ import os
 import traceback
 from importlib.metadata import version
 
+from langdetect import detect_langs
+
+from sltools.utils.plain_text_utils import fold_text
+
 import requests
 from rich.table import Table
 
@@ -78,3 +82,12 @@ def check_paths_exist(paths):
 
 def remove_invalid_paths(paths):
     return [path for path in paths if os.path.exists(path)]
+
+
+def detect_language(text, possible_languages=["uk", "en", "ru", "fr", "es"]):
+    detections = detect_langs(fold_text(text))
+    for detection in detections:
+        lang, confidence = str(detection).split(':')
+        if lang in possible_languages:
+            return lang, float(confidence)
+    return "Unknown", 0.0

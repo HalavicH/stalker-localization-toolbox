@@ -4,8 +4,7 @@ from langdetect import LangDetectException
 from sltools.commands.common import get_xml_files_and_log, process_files_with_progress
 from sltools.utils.colorize import cf_blue
 from sltools.utils.file_utils import read_xml, save_xml
-from sltools.utils.lang_utils import detect_language
-from sltools.utils.misc import color_lang
+from sltools.utils.misc import color_lang, detect_language
 from sltools.utils.plain_text_utils import *
 from sltools.utils.xml_utils import parse_xml_root, to_utf_string_with_proper_declaration, \
     format_xml_string

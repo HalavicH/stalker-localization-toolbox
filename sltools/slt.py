@@ -150,7 +150,7 @@ def parse_args():
     ct_help = _tr('Capitalize first letter [cyan](a->A)[/cyan] in all text entries in a file or directory')
     parser_ct = subparsers.add_parser(CAPITALIZE_TEXT, aliases=CMD_TO_ALIASES[CAPITALIZE_TEXT],
                                       formatter_class=parser.formatter_class, help=ct_help)
-    parser_ct.add_argument('paths', nargs='*', help='Paths to files or directories')
+    parser_ct.add_argument('paths', nargs='*', help=_tr('Paths to files or directories'))
     add_git_override_arguments(parser_ct)
 
     # find-string-dups | fsd
@@ -163,7 +163,7 @@ def parse_args():
                             help=_tr('Display duplicates as D3 interactive graph'))
     parser_fsd.add_argument('--save-report', action='store_true', default=False,
                             help=_tr('Save filecentric report as JSON'))
-    parser_fsd.add_argument('paths', nargs='*', help='Paths to files or directories')
+    parser_fsd.add_argument('paths', nargs='*', help=_tr('Paths to files or directories'))
 
     # find-string-dups | fsd
     parser_sfwd = subparsers.add_parser(SORT_FILES_WITH_DUPLICATES, aliases=CMD_TO_ALIASES[SORT_FILES_WITH_DUPLICATES],

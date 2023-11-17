@@ -1,9 +1,5 @@
 import os.path
 
-from langdetect import detect_langs
-
-from sltools.utils.plain_text_utils import fold_text
-
 import gettext
 
 locale_dir = os.path.dirname(__file__) + '/../locale'
@@ -22,11 +18,3 @@ lang.install()
 
 _tr = lang.gettext
 
-
-def detect_language(text, possible_languages=["uk", "en", "ru", "fr", "es"]):
-    detections = detect_langs(fold_text(text))
-    for detection in detections:
-        lang, confidence = str(detection).split(':')
-        if lang in possible_languages:
-            return lang, float(confidence)
-    return "Unknown", 0.0

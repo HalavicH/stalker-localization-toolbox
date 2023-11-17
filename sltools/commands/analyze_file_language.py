@@ -4,8 +4,7 @@ from sltools.commands.common import process_files_with_progress, get_xml_files_a
 from sltools.config import UNKNOWN_LANG, TOO_LITTLE_DATA, min_recognizable_text_length
 from sltools.utils.colorize import *
 from sltools.utils.file_utils import read_xml
-from sltools.utils.lang_utils import detect_language
-from sltools.utils.misc import create_table, color_lang
+from sltools.utils.misc import create_table, color_lang, detect_language
 from sltools.utils.plain_text_utils import *
 from sltools.utils.xml_utils import parse_xml_root, extract_text_from_xml
 
