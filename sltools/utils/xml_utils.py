@@ -1,29 +1,25 @@
 import codecs
 import os
 import re
-
 from lxml import etree
 from lxml.etree import _Element
-
 from sltools.config import PRIMARY_ENCODING
 from sltools.log_config_loader import log
 from sltools.utils.colorize import cf_yellow, cf_red
 from sltools.utils.error_utils import log_and_save_error
+from sltools.utils.lang_utils import _tr
 
 declaration_str = "<?xml version='1.0' encoding='WINDOWS-1251'?>"
 
 
 def remove_xml_declaration(xml_string, file_path, log_and_save_err=True):
     doc_info = parse_doc_info(xml_string)
-
-    # Regular expression pattern to match the XML declaration with any amount of whitespace
     pattern = re.compile(r'<\?xml.*?\?>', re.IGNORECASE)
-    # Use re.sub to replace the matched text with an empty string
     string_was_here = 'xml_encoding_string_was_here'
     xml_string_without_declaration = re.sub(pattern, string_was_here, xml_string)
 
     if string_was_here not in xml_string_without_declaration:
-        message = cf_yellow(f"Warning: File {file_path} doesn't have encoding header in it")
+        message = cf_yellow(_tr("Warning: File %s doesn't have encoding header in it") % file_path)
         if log_and_save_err:
             log_and_save_error(file_path, message, level='warning')
         return xml_string_without_declaration, False
@@ -221,16 +217,13 @@ def fix_ampersand_misuse(xml_string):
 
 
 def fix_possible_errors(xml_string, file_path):
-    # String manipulation
-    log.debug("Try to detect and fix comments")
+    log.debug(_tr("Try to detect and fix comments"))
     fixed_comments = fix_illegal_comments(xml_string)
-    log.debug("Try to detect and fix ampersand issues")
+    log.debug(_tr("Try to detect and fix ampersand issues"))
     fixed_ampersand = fix_ampersand_misuse(fixed_comments)
-    log.debug("Try to detect and resolve includes")
+    log.debug(_tr("Try to detect and resolve includes"))
     resolved_includes = resolve_xml_includes(fixed_ampersand)
-
-    # XML DOM parser manipulation
-    log.debug("Try to detect and fix XML declaration")
+    log.debug(_tr("Try to detect and fix XML declaration"))
     fixed_declaration = fix_xml_declaration(resolved_includes, file_path)
-    log.debug("Done with fixing")
+    log.debug(_tr("Done with fixing"))
     return fixed_declaration

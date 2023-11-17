@@ -4,20 +4,21 @@ import os
 
 from sltools.config import PRIMARY_ENCODING
 from sltools.log_config_loader import log
+from sltools.utils.lang_utils import _tr
 
 
 def find_xml_files(path):
     if os.path.isdir(path):
-        glob_pattern = f'{path}/**/*.xml'
+        glob_pattern = '%s/**/*.xml' % path
     else:
         glob_pattern = path
 
     xml_files = set(glob.glob(glob_pattern, recursive=True))
     if len(xml_files) == 0:
-        raise ValueError(f"No XML file found under path: '{path}'.\nPlease provide path which contains xml files")
+        raise ValueError(_tr("No XML file found under path: '%s'.\nPlease provide path which contains xml files") % path)
 
-    log.debug(f"Found following glob files: {xml_files}")
-    log.info(f"Input files number: {len(xml_files)}")
+    log.debug(_tr("Found following glob files: %s") % xml_files)
+    log.info(_tr("Input files number: %s") % len(xml_files))
 
     return xml_files
 

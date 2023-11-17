@@ -6,6 +6,7 @@ import requests
 from rich.table import Table
 
 from sltools.utils.colorize import *
+from sltools.utils.lang_utils import _tr
 
 
 def get_term_width():
@@ -42,16 +43,6 @@ def color_lang(lang):
 
 
 def exception_originates_from(func_name, exception):
-    """
-    Checks if the exception originated from the given function or its children.
-
-    Parameters:
-    - func_name (str): The name of the function to check against.
-    - exception (Exception): The caught exception.
-
-    Returns:
-    - bool: True if the exception originated from the function or its children, False otherwise.
-    """
     stack_trace = traceback.extract_tb(exception.__traceback__)
     for frame in stack_trace:
         if frame.name == func_name:
@@ -61,23 +52,24 @@ def exception_originates_from(func_name, exception):
 
 def check_for_update():
     current_version = version('sltools')
-    response = requests.get(f'https://pypi.org/pypi/sltools/json')
+    response = requests.get('https://pypi.org/pypi/sltools/json')
     if response.ok:
         latest_version = response.json()['info']['version']
         if current_version < latest_version:
-            return (f'\n☢️\\[[blue]notice[/blue]] A new release of [cyan]sltools[/cyan] is available: '
-                    f'[red]{current_version}[/red] -> [green]{latest_version}[/green]. '
-                    f'To upgrade run [green]pip install sltools --upgrade[/green]')
+            return (_tr("\n☢️\\[[blue]notice[/blue]] A new release of [cyan]sltools[/cyan] is available: "
+                        "[red]%s[/red] -> [green]%s[/green]. "
+                        "To upgrade run [green]pip install sltools --upgrade[/green]") % (
+                        current_version, latest_version))
         else:
-            return '[bright_black]You are using the latest version of sltools.[/bright_black]'
+            return _tr('[bright_black]You are using the latest version of sltools.[/bright_black]')
     else:
-        return f'Failed to check for updates: {response.text}'
+        return _tr('Failed to check for updates: %s') % response.text
 
 
 def set_default(obj):
     if isinstance(obj, set):
         return list(obj)
-    raise TypeError(f"{obj} is not instance of set. Don't know how to default it")
+    raise TypeError(_tr("%s is not instance of set. Don't know how to default it") % obj)
 
 
 def check_paths_exist(paths):

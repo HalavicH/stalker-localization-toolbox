@@ -17,6 +17,7 @@ from sltools.config import file_changes_msg_queue, DefaultArgs
 from sltools.log_config_loader import log
 from sltools.utils.misc import set_default
 from sltools.utils.watch_files_for_change import thread_watch_directories
+from sltools.utils.lang_utils import _tr
 
 app = Flask(__name__)
 
@@ -48,9 +49,7 @@ last_heartbeat_time = time.time()
 
 
 def kill_server():
-    log.info("Shutting down server!!!")
-    log.info("Shutting down server!!!")
-    log.info("Shutting down server!!!")
+    log.info(_tr("Shutting down server!!!"))
     os.kill(os.getpid(), signal.SIGINT)
 
 
@@ -59,13 +58,13 @@ def kill_server():
 def shutdown():
     Timer(1, kill_server).start()
 
-    return jsonify('Dead :D'), 200
+    return jsonify(_tr('Dead :D')), 200
 
 
 @app.route('/')
 def index():
     html_ = 'index.html'
-    print("Try to open", html_)
+    log.debug(_tr("Try to open %s") % html_)
 
     return render_template(html_)
 
@@ -92,9 +91,9 @@ def sort__duplicates_in_files():
 
     try:
         sort_files_with_duplicates(args, False)
-        return jsonify({"message": "Command executed successfully!"}), 200
+        return jsonify({"message": _tr("Command executed successfully!")}), 200
     except Exception as e:
-        log.error(f"Can't sort files: {e}")
+        log.error(_tr("Can't sort files: %s") % e)
         return jsonify({"error": str(e)}), 500
 
 
@@ -104,20 +103,20 @@ def diff_files():
     file2 = request.json.get('file2')
 
     if not file1 or not file2:
-        return jsonify({"error": "Both file paths are required!"}), 400
+        return jsonify({"error": _tr("Both file paths are required!")}), 400
 
     file1 = os.path.abspath(file1)
     file2 = os.path.abspath(file2)
 
-    cmd = f'code --diff "{file1}" "{file2}"'
-    log.info(f"Running diff with: '{cmd}'")
+    cmd = 'code --diff "%s" "%s"' % (file1, file2)
+    log.info(_tr("Running diff with: '%s'") % cmd)
 
     try:
         # Call the shell command using Popen
         subprocess.Popen(cmd, shell=True)
-        return jsonify({"message": "Command executed successfully!"}), 200
+        return jsonify({"message": _tr("Command executed successfully!")}), 200
     except Exception as e:
-        log.error(f"Can't diff files: {e}")
+        log.error(_tr("Can't diff files: %s") % e)
         return jsonify({"error": str(e)}), 500
 
 
@@ -132,11 +131,11 @@ def worker():
     CTX[LAST_REPORT_HASH_KEY] = calc_report_hash(report)
 
     while True:
-        log.info("Watching for changes in files")
+        log.info(_tr("Watching for changes in files"))
         event = file_changes_msg_queue.get()
         if event is None:  # Exit condition
             break
-        log.info(f"{event['file_path']} has been {event['action']}")
+        log.info(_tr("%s has been %s") % (event['file_path'], event['action']))
         try:
             _, report = CTX[CALLBACK_KEY](CTX[ARGS_KEY], True)
         except FileNotFoundError:
@@ -144,7 +143,7 @@ def worker():
             continue
 
         if report != CTX[LAST_REPORT_KEY]:
-            log.info("Files changed")
+            log.info(_tr("Files changed"))
             CTX[LAST_REPORT_KEY] = report
             CTX[LAST_REPORT_HASH_KEY] = calc_report_hash(report)
         else:

@@ -6,6 +6,7 @@ from colorama import Fore
 from sltools.config import text_wrap_width
 from sltools.log_config_loader import log
 from collections import Counter
+from sltools.utils.lang_utils import _tr
 
 from sltools.utils.colorize import rich_guard
 
@@ -16,23 +17,22 @@ def fold_text(text: str) -> str:
     # Replace multiple whitespaces with a single space and trim leading/trailing whitespaces
     folded = ' '.join(text.split())
     folded = ' '.join(folded.split("\n"))
-    log.debug(f"Folded text {folded}")
+    log.debug(_tr("Folded text %s") % folded)
     return folded
 
 
 def replace_n_sym_with_newline(text: str):
-    # Ensure that no extra newlines present
     folded = fold_text(text)
     replaced, count = folded.replace("\\n", "\n"), folded.count("\\n")
-    log.debug(f'Number of "\\n" replaced with newline: {count}')
-    log.debug(f"Replaced text {replaced}")
+    log.debug(_tr('Number of "\\n" replaced with newline: %s') % count)
+    log.debug(_tr("Replaced text %s") % replaced)
     return replaced
 
 
 def replace_new_line_with_n_sym(text: str):
     count = text.count("\n")
     replaced = text.replace("\n", "\\n")
-    log.debug(f'Number of newline replaced with "\\n": {count}')
+    log.debug(_tr('Number of newline replaced with "\\n": %s') % count)
     return replaced
 
 
@@ -305,7 +305,7 @@ def analyze_patterns_in_text(text):
             all_matches[i] = rich_guard(match)
 
         if all_matches:
-            log.debug(all_matches)
+            log.debug(_tr("Pattern matches: %s") % all_matches)
 
         count_dict = dict(Counter(all_matches))
         if len(count_dict) > 0:
