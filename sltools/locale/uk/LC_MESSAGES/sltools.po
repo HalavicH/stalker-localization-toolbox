@@ -60,9 +60,6 @@ msgstr "API-ключ для сервісу перекладу"
 msgid "Analyze patterns in a file or directory"
 msgstr "Аналізувати шаблони у файлі або каталозі"
 
-msgid "Please provide args. Use [red]%s[/red] for help"
-msgstr "Будь ласка, надайте аргументи. Використовуйте [red]%s[/red] для довідки"
-
 msgid "Save detailed report as JSON file (for future comparison)"
 msgstr "Зберегти детальний звіт у вигляді JSON-файлу (для подальшого порівняння)"
 
@@ -83,9 +80,6 @@ msgstr "Шляхи до двох файлів, які потрібно порі�
 
 msgid "Language to exclude from the report separated with \"+\". E.g: [cyan]--exclude uk+en[/cyan]"
 msgstr "Мова, яку потрібно виключити зі звіту, відокремлюється знаком \"+\". Наприклад: [cyan]--виключити uk+en[/cyan]."
-
-msgid "Please provide args. Use [red]sltools -h[/red] for help"
-msgstr "Будь ласка, надайте аргументи. Скористайтеся [red]sltools -h[/red] для отримання довідки"
 
 msgid "Don't sort non-duplicates"
 msgstr "Не сортувати дублікати"

@@ -12,7 +12,7 @@ from sltools.commands.translate import translate
 from sltools.commands.validate_encoding import validate_encoding
 from sltools.commands.validate_xml import validate_xml
 from sltools.config import *
-from sltools.log_config_loader import log
+from sltools.utils.lang_utils import _tr
 from sltools.utils.colorize import cf_green
 from sltools.utils.error_utils import *
 from sltools.utils.git_utils import is_git_available, log_ignore_option, log_skipped_files
@@ -39,11 +39,11 @@ COMMAND_REGISTRY = {
 
 
 def process_command(args: Namespace):
-    log.info(f"Processing command: {args.command}")
+    log.info(_tr("Processing command: %s") % args.command)
     callback_data = COMMAND_REGISTRY.get(args.command)
 
     if callback_data is None:
-        log.error(f"Command '{args.command}' is not implemented")
+        log.error(_tr("Command '%s' is not implemented") % args.command)
         sys.exit(1)
 
     callback = callback_data["callback"]
@@ -52,16 +52,16 @@ def process_command(args: Namespace):
     if not read_only:
         if not args.allow_no_repo:
             if not is_git_available():
-                log.error(
-                    "Git is not available on this system. It's vital to have files in a git repo to prevent potential file damage. Please install Git.")
+                err = _tr("Git is not available on this system. It's vital to have files in a git repo to prevent potential file damage. Please install Git.")
+                log.error(err)
                 log_ignore_option("--allow-no-repo")
                 return False
 
     # Do actual work
-    log.always(f"Running command '{args.command}' on paths: {args.paths}")
+    log.always(_tr("Running command '%s' on paths: '%s'") % (args.command, args.paths))
     callback(args, read_only)
 
-    log.info(cf_green("Done"))
+    log.info(cf_green(_tr("Done")))
 
     log_skipped_files()
     log_saved_errors()

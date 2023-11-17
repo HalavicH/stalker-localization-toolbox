@@ -6,6 +6,7 @@ import colorlog
 import rich
 
 from sltools.utils.colorize import cf
+from sltools.utils.lang_utils import _tr
 
 # Define a custom logging level
 ALWAYS_LEVEL = 55
@@ -59,7 +60,7 @@ class ExtendedLogger(logging.Logger):
                          extra=extra, stack_info=stack_info,
                          stacklevel=stacklevel)
         except Exception as e:
-            print("Can't log error due to fucking rich formatter. Fixme.")
+            print(_tr("Can't log error due to fucking rich formatter. Fixme."))
 
     def always(self, message="", *args, **kws):
         self._log(ALWAYS_LEVEL, message, args, **kws)
@@ -154,10 +155,10 @@ def update_log_level(_log):
     elif level_lower == "debug":
         new_log_level = logging.DEBUG
     else:
-        _log.warning(f"Unknown loglevel: {plog_level}")
+        _log.warning(_tr("Unknown loglevel: ") % plog_level)
         return _log
 
-    _log.always(f"New log level: {plog_level}")
+    _log.always(_tr("New log level: ") % plog_level)
     _log.setLevel(new_log_level)
     return _log
 

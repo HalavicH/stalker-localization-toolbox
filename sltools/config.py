@@ -1,5 +1,7 @@
 import queue
 
+from sltools.utils.lang_utils import _tr
+
 PRIMARY_ENCODING = 'windows-1251'
 
 # Constants for command names
@@ -32,8 +34,8 @@ CMD_TO_ALIASES = {
 min_recognizable_text_length = 30
 text_wrap_width = 80
 
-UNKNOWN_LANG = "Unknown"
-TOO_LITTLE_DATA = "Too little data"
+UNKNOWN_LANG = _tr("Unknown")
+TOO_LITTLE_DATA = _tr("Too little data")
 
 file_changes_msg_queue = queue.Queue()
 

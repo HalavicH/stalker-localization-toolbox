@@ -86,10 +86,9 @@ def parse_args():
     parser_ve.add_argument('paths', nargs='*', help=_tr('Paths to files or directories'))
 
     # fix-encoding | fe
+    fe_help = _tr('Fix UTF-8 encoding of a file or directory (Warning: may break encoding if detected wrongly)')
     parser_fe = subparsers.add_parser(FIX_ENCODING, aliases=CMD_TO_ALIASES[FIX_ENCODING],
-                                      formatter_class=parser.formatter_class,
-                                      help=_tr(
-                                          'Fix UTF-8 encoding of a file or directory (Warning: may break encoding if detected wrongly)'))
+                                      formatter_class=parser.formatter_class, help=fe_help)
     parser_fe.add_argument('paths', nargs='*', help=_tr('Paths to files or directories'))
     add_git_override_arguments(parser_fe)
 
@@ -115,9 +114,8 @@ def parse_args():
                                        formatter_class=parser.formatter_class,
                                        help=_tr('Check primary language of a file or directory'))
     parser_cpl.add_argument('paths', nargs='*', help=_tr('Paths to files or directories'))
-    parser_cpl.add_argument('--exclude', dest='exclude',
-                            help=_tr(
-                                'Language to exclude from the report separated with "+". E.g: [cyan]--exclude uk+en[/cyan]'))
+    cpl_help = _tr('Language to exclude from the report separated with "+". E.g: [cyan]--exclude uk+en[/cyan]')
+    parser_cpl.add_argument('--exclude', dest='exclude', help=cpl_help)
     parser_cpl.add_argument('--detailed', action='store_true',
                             help=_tr('Show detailed report with language occurrences per file'))
 
@@ -149,18 +147,16 @@ def parse_args():
     # add_git_override_arguments(parser_fbp)
 
     # capitalize-text | ct
+    ct_help = _tr('Capitalize first letter [cyan](a->A)[/cyan] in all text entries in a file or directory')
     parser_ct = subparsers.add_parser(CAPITALIZE_TEXT, aliases=CMD_TO_ALIASES[CAPITALIZE_TEXT],
-                                      formatter_class=parser.formatter_class,
-                                      help=_tr(
-                                          'Capitalize first letter [cyan](a->A)[/cyan] in all text entries in a file or directory'))
+                                      formatter_class=parser.formatter_class, help=ct_help)
     parser_ct.add_argument('paths', nargs='*', help='Paths to files or directories')
     add_git_override_arguments(parser_ct)
 
     # find-string-dups | fsd
+    fsd_help = _tr("Looks for duplicates of [green]'<string id=\"...\">'[/green] to eliminate unwanted conflicts/overrides. Provides filecentric report by default")
     parser_fsd = subparsers.add_parser(FIND_STRING_DUPLICATES, aliases=CMD_TO_ALIASES[FIND_STRING_DUPLICATES],
-                                       formatter_class=parser.formatter_class,
-                                       help=_tr(
-                                           "Looks for duplicates of [green]'<string id=\"...\">'[/green] to eliminate unwanted conflicts/overrides. Provides filecentric report by default"))
+                                       formatter_class=parser.formatter_class, help=fsd_help)
     parser_fsd.add_argument('--per-string-report', action='store_true', default=False,
                             help=_tr('Display detailed report with string text'))
     parser_fsd.add_argument('--web-visualizer', action='store_true', default=False,
