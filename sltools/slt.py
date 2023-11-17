@@ -25,9 +25,6 @@ from rich_argparse import RichHelpFormatter
 
 from sltools.utils.misc import check_for_update
 
-# From locale
-app_description = "app_description"
-
 
 def map_alias_to_command(args):
     for cmd in CMD_TO_ALIASES:
@@ -77,7 +74,7 @@ def add_git_override_arguments(parser):
 
 
 def parse_args():
-    parser = ExtendedHelpParser(description=_tr(app_description), formatter_class=CustomHelpFormatter)
+    parser = ExtendedHelpParser(description=_tr("app_description"), formatter_class=CustomHelpFormatter)
     parser.add_argument('--version', action='version', version='%(prog)s 0.1.2')
 
     subparsers = parser.add_subparsers(dest='command', help=_tr('Sub-commands available:'))
@@ -91,7 +88,8 @@ def parse_args():
     # fix-encoding | fe
     parser_fe = subparsers.add_parser(FIX_ENCODING, aliases=CMD_TO_ALIASES[FIX_ENCODING],
                                       formatter_class=parser.formatter_class,
-                                      help=_tr('Fix UTF-8 encoding of a file or directory (Warning: may break encoding if detected wrongly)'))
+                                      help=_tr(
+                                          'Fix UTF-8 encoding of a file or directory (Warning: may break encoding if detected wrongly)'))
     parser_fe.add_argument('paths', nargs='*', help=_tr('Paths to files or directories'))
     add_git_override_arguments(parser_fe)
 
@@ -106,7 +104,8 @@ def parse_args():
                                       formatter_class=parser.formatter_class,
                                       help=_tr('Format XML of a file or directory'))
     parser_fx.add_argument('paths', nargs='*', help=_tr('Paths to files or directories'))
-    parser_fx.add_argument('--fix', action='store_true', help=_tr('Fix XML issues if possible instead of skipping the file'))
+    parser_fx.add_argument('--fix', action='store_true',
+                           help=_tr('Fix XML issues if possible instead of skipping the file'))
     parser_fx.add_argument('--format-text-entries', action='store_true',
                            help=_tr('Format <text> tag contents to resemble in-game appearance'))
     add_git_override_arguments(parser_fx)
@@ -117,8 +116,8 @@ def parse_args():
                                        help=_tr('Check primary language of a file or directory'))
     parser_cpl.add_argument('paths', nargs='*', help=_tr('Paths to files or directories'))
     parser_cpl.add_argument('--exclude', dest='exclude',
-                            help=_tr('Language to exclude from the report separated with "+". E.g: ' + cf_cyan(
-                                "--exclude uk+en")))
+                            help=_tr(
+                                'Language to exclude from the report separated with "+". E.g: [cyan]--exclude uk+en[/cyan]'))
     parser_cpl.add_argument('--detailed', action='store_true',
                             help=_tr('Show detailed report with language occurrences per file'))
 
@@ -135,10 +134,10 @@ def parse_args():
     # analyze-patterns | ap
     parser_ap = subparsers.add_parser(ANALYZE_PATTERNS, aliases=CMD_TO_ALIASES[ANALYZE_PATTERNS],
                                       formatter_class=parser.formatter_class,
-                                      help='Analyze patterns in a file or directory')
-    parser_ap.add_argument('paths', nargs='*', help='Paths to files or directories')
+                                      help=_tr('Analyze patterns in a file or directory'))
+    parser_ap.add_argument('paths', nargs='*', help=_tr('Paths to files or directories'))
     parser_ap.add_argument('--save', action='store_true', default=False,
-                           help='Save detailed report as JSON file (for future comparison)')
+                           help=_tr('Save detailed report as JSON file (for future comparison)'))
     # parser_ap.add_argument('--compare', dest='compare_to_path',
     #                        help='Compare freshly-generated analysis with one provided in file')
 
@@ -152,29 +151,32 @@ def parse_args():
     # capitalize-text | ct
     parser_ct = subparsers.add_parser(CAPITALIZE_TEXT, aliases=CMD_TO_ALIASES[CAPITALIZE_TEXT],
                                       formatter_class=parser.formatter_class,
-                                      help='Capitalize first letter [cyan](a->A)[/cyan] in all text entries in a file or directory')
+                                      help=_tr(
+                                          'Capitalize first letter [cyan](a->A)[/cyan] in all text entries in a file or directory'))
     parser_ct.add_argument('paths', nargs='*', help='Paths to files or directories')
     add_git_override_arguments(parser_ct)
 
     # find-string-dups | fsd
     parser_fsd = subparsers.add_parser(FIND_STRING_DUPLICATES, aliases=CMD_TO_ALIASES[FIND_STRING_DUPLICATES],
                                        formatter_class=parser.formatter_class,
-                                       help="Looks for duplicates of [green]'<string id=\"...\">'[/green] to eliminate unwanted conflicts/overrides. Provides filecentric report by default")
+                                       help=_tr(
+                                           "Looks for duplicates of [green]'<string id=\"...\">'[/green] to eliminate unwanted conflicts/overrides. Provides filecentric report by default"))
     parser_fsd.add_argument('--per-string-report', action='store_true', default=False,
-                            help='Display detailed report with string text')
+                            help=_tr('Display detailed report with string text'))
     parser_fsd.add_argument('--web-visualizer', action='store_true', default=False,
-                            help='Display duplicates as D3 interactive graph')
+                            help=_tr('Display duplicates as D3 interactive graph'))
     parser_fsd.add_argument('--save-report', action='store_true', default=False,
-                            help='Save filecentric report as JSON')
+                            help=_tr('Save filecentric report as JSON'))
     parser_fsd.add_argument('paths', nargs='*', help='Paths to files or directories')
 
     # find-string-dups | fsd
     parser_sfwd = subparsers.add_parser(SORT_FILES_WITH_DUPLICATES, aliases=CMD_TO_ALIASES[SORT_FILES_WITH_DUPLICATES],
-                                       formatter_class=parser.formatter_class,
-                                       help="Sorts strings in files alphabetically placing duplicates on top")
+                                        formatter_class=parser.formatter_class,
+                                        help=_tr("Sorts strings in files alphabetically placing duplicates on top"))
     parser_sfwd.add_argument('--sort-duplicates-only', action='store_true', default=False,
-                            help="Don't sort non-duplicates")
-    parser_sfwd.add_argument('paths', nargs='*', help='Paths to two files you want to compare and sort dups')
+                             help=_tr("Don't sort non-duplicates"))
+    parser_sfwd.add_argument('paths', nargs='*',
+                             help=_tr('Paths to two files you want to compare and sort dups'))
     add_git_override_arguments(parser_sfwd)
 
     ###### Parse ######
@@ -195,20 +197,20 @@ def main():
     start_time = time.process_time()
 
     try:
-        log.debug("Start")
+        log.debug(_tr("Start"))
         args: argparse.Namespace = parse_args()
 
         # testing(args)
         process_command(args)
     except Exception as e:
         if os.environ.get("PY_ST"):
-            log.fatal(f"Failed to perform actions. Error: {traceback.format_exc()}")
+            log.fatal(_tr("Failed to perform actions. Error: %s") % traceback.format_exc())
         else:
-            log.fatal(f"Failed to perform actions. Error: {e}")
+            log.fatal(_tr("Failed to perform actions. Error: %s") % e)
 
     end_time = time.process_time()
     elapsed_time = end_time - start_time
-    log.always("Done! Total time: %s" % cf_green("%.3fs" % elapsed_time))
+    log.always(_tr("Done! Total time: %s") % cf_green("%.3fs" % elapsed_time))
     get_console().print(check_for_update())
 
 

@@ -1,7 +1,7 @@
 ## Things that I remind myself
 ### How to recompile locale
 ```shell
-
+msgfmt -o sltools/locale/uk/LC_MESSAGES/sltools.mo sltools/locale/uk/LC_MESSAGES/sltools.po
 ```
 
 ### How build and to push to PyPI using token

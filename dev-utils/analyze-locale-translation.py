@@ -15,17 +15,18 @@ def parse_po_file(po_file_path):
             key = line.strip().split('msgid ', 1)[1]
         elif line.startswith('msgstr'):
             value = line.strip().split('msgstr ', 1)[1]
-            if key:
+            if key and key != '""':
                 po_keys[key] = value
                 key, value = None, None
     return po_contents, po_keys
 
 
 def find_and_update_keys(directory, po_file_path):
-    pattern = re.compile(r"_tr\('([^']*)'\)")
+    # Corrected pattern to match both single and double-quoted strings
+    pattern = re.compile(r"_tr\('([^']*)'|_tr\(\"([^\"]*)\"\)")
     _, existing_keys = parse_po_file(po_file_path)
     all_keys = []
-    new_keys = []
+    new_keys = {}
 
     for root, dirs, files in os.walk(directory):
         for file in files:
@@ -34,18 +35,17 @@ def find_and_update_keys(directory, po_file_path):
                 with open(path, 'r') as f:
                     content = f.read()
                     matches = pattern.findall(content)
-                    for key in matches:
-                        formatted_key = f'"{key}"'
+                    for key_tuple in matches:
+                        key = next(s for s in key_tuple if s)  # Get the non-empty string from the tuple
+                        formatted_key = '"' + key.replace('"', '\\"') + '"'
                         all_keys.append(formatted_key)
                         if formatted_key not in existing_keys:
-                            new_keys.append((f'msgid {formatted_key}\n', f'msgstr {formatted_key}\n\n'))
+                            new_keys[f'msgid {formatted_key}\n'] = f'msgstr {formatted_key}\n\n'
 
     with open(po_file_path, 'a', encoding='utf-8') as po_file:
-        for key, msgstr in new_keys:
+        for key, msgstr in new_keys.items():
+            print(f"{key} is absent. Adding...")
             po_file.write(key + msgstr)
-
-    # for key in all_keys:
-    #     print(key)
 
     # Check for unused keys
     for key in existing_keys:
