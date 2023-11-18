@@ -65,7 +65,7 @@ def check_for_update():
                         "To upgrade run [green]pip install sltools --upgrade[/green]") % (
                         current_version, latest_version))
         else:
-            return _tr('[bright_black]You are using the latest version of sltools.[/bright_black]')
+            return _tr('[bright_black]You are using the latest version of sltools.[/bright_black]') + " " + current_version
     else:
         return _tr('Failed to check for updates: %s') % response.text
 

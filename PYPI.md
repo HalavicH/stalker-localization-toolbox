@@ -11,8 +11,9 @@ mod localizations with ease, both text and audio.
 ### Planned features
 Infra:
 - [x] Add version tracking from PyPI
-- [ ] Add multilang support
-  - [ ] Add ukrainian language support
+- [x] Add multilang support
+  - [x] Add ukrainian language support
+- [x] Add ~/.sltools/config file to store configuration
 
 Text:
 - [x] Git integration (check for dirty environment)
@@ -59,6 +60,9 @@ recommended to make git repository out of your mod, and commit changes before
 each script use (or at least commit often)
 
 ## Changelog
+## v0.2.0
+
+
 ## v0.1.2
 - Add text capitalization command
 - Add search for duplicate keys with visualization as D3 graph
