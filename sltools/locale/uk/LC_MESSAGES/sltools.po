@@ -115,7 +115,7 @@ msgid "Git is not available on this system. It's vital to have files in a git re
 msgstr "Git недоступний в цій системі. Важливо мати файли в git-репозиторії, щоб запобігти потенційному пошкодженню файлів. Будь ласка, встановіть Git."
 
 msgid "Running command '%s' on paths: '%s'"
-msgstr "Виконую команду '%s' для шляхів: '%s'"
+msgstr "Виконую команду '%s' для шляхів: %s"
 
 msgid "Done"
 msgstr "Готово"
@@ -246,8 +246,8 @@ msgstr "видалено"
 msgid "Monitoring"
 msgstr "Моніторинг"
 
-msgid "\t\tSkipped files due to being dirty/not tracked by git:"
-msgstr "\t\tПропущені файли через те, що вони брудні/не відстежуються git:"
+msgid "\tSkipped files due to being dirty/not tracked by git:"
+msgstr "\tПропущені файли через те, що вони брудні/не відстежуються git:"
 
 msgid "\t%s: %s"
 msgstr "\t%s: %s"
@@ -259,10 +259,10 @@ msgid "'File %s' is not tracked by git. Skipping the file processing."
 msgstr "'Файл %s' не відстежується git. Пропускаємо обробку файлу."
 
 msgid "File '%s' is dirty (modified but not staged/committed). Skipping the file processing."
-msgstr "Файл '%s' брудний (змінений, але не поставлений/зафіксований). Пропускаємо обробку файлу."
+msgstr "Файл '%s' \"брудний\" - змінений, але не застейджений (git add) чи закомічений (git commit). Пропускаю обробку файлу."
 
 msgid "Note: If you sure you won't break anything, you can process this path anyway using %s"
-msgstr "Примітка: Якщо ви впевнені, що нічого не зламаєте, ви можете все одно обробити цей шлях, використовуючи %s"
+msgstr "Примітка: Якщо ви впевнені, що нічого не зламаєте, ви можете дозволити обробити цей файл, використовуючи %s"
 
 msgid "Lang %s is in excludes. Skipping"
 msgstr "Мова %s знаходиться у виключеннях. Пропускаю"
@@ -590,3 +590,6 @@ msgstr "Файл: %s"
 
 msgid "Issues:"
 msgstr "Проблеми:"
+
+msgid "Dirty"
+msgstr "Брудний файл"

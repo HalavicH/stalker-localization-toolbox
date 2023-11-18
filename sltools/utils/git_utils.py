@@ -27,7 +27,7 @@ def log_skipped_files():
         return
 
     log.warning("#" * 80)
-    log.warning(_tr("\t\tSkipped files due to being dirty/not tracked by git:"))
+    log.warning(_tr("\tSkipped files due to being dirty/not tracked by git:"))
     log.warning("#" * 80)
     for reason, file in skipped_files:
         log.warning(_tr("\t%s: %s") % (reason, file))
@@ -78,7 +78,7 @@ def is_allowed_to_continue(path, allow_no_repo, allow_dirty, allow_not_tracked):
             if is_file_unstaged(repo, relative_path):
                 log.warning(_tr("File '%s' is dirty (modified but not staged/committed). Skipping the file processing.") % path)
                 log_ignore_option("--allow-dirty")
-                save_git_skipped_file(path, "Dirty")
+                save_git_skipped_file(path, _tr("Dirty"))
                 return False
 
     return True
