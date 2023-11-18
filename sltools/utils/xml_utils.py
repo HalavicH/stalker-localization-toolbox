@@ -6,7 +6,7 @@ from lxml.etree import _Element
 from sltools.config import PRIMARY_ENCODING
 from sltools.log_config_loader import log
 from sltools.utils.colorize import cf_yellow, cf_red
-from sltools.utils.error_utils import log_and_save_error
+from sltools.utils.error_utils import log_and_save_error, interpret_error
 from sltools.utils.lang_utils import _tr
 
 declaration_str = "<?xml version='1.0' encoding='WINDOWS-1251'?>"
@@ -93,7 +93,7 @@ def analyze_xml_parser_error(error, file=None, string=None):
     elif "Document is empty" in err_str:
         return True, _tr("XML file is empty which is not allowed")
     else:
-        return True, _tr("Can't parse root tag. Error %s") % error
+        return True, _tr("Can't parse root tag. Error: %s") % interpret_error(error)
 
 
 # Formatting utils

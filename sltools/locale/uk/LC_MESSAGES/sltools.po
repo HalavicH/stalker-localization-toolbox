@@ -82,7 +82,7 @@ msgid "Language to exclude from the report separated with \"+\". E.g: [cyan]--ex
 msgstr "Мова, яку потрібно виключити зі звіту, відокремлюється знаком \"+\". Наприклад: [cyan]--виключити uk+en[/cyan]."
 
 msgid "Don't sort non-duplicates"
-msgstr "Не сортувати дублікати"
+msgstr "Сортувати лише дублікати"
 
 msgid "Start"
 msgstr "Старт"
@@ -594,6 +594,9 @@ msgstr "Проблеми:"
 msgid "Dirty"
 msgstr "Брудний файл"
 
+################
+# Validate XML #
+################
 msgid "Warning: File %s has invalid header in it"
 msgstr "Попередження: Файл %s має неправльну декларацію в ньому"
 
@@ -615,8 +618,8 @@ msgstr "XML-файл містить '--' у коментарі. Зустріча
 msgid "XML file is empty which is not allowed"
 msgstr "XML-файл порожній, що є неприпустимим"
 
-msgid "Can't parse root tag. Error %s"
-msgstr "Не вдається розібрати кореневий тег. Помилка %s"
+msgid "Can't parse root tag. Error: %s"
+msgstr "Не вдається розпарсити кореневий тег. Помилка: %s"
 
 msgid "Fixed typical XML errors"
 msgstr "Виправлено типові помилки XML"
@@ -630,6 +633,9 @@ msgstr "Відформатований текст в тегах <text>"
 msgid "Text of '%s' was formatted"
 msgstr "Текст під айді '%s' було відформатовано"
 
+##############
+# App config #
+##############
 msgid "Configure application settings"
 msgstr "Налаштування параметрів програми"
 
@@ -653,4 +659,34 @@ msgstr "Увімкнено друк трасування стека в разі 
 
 msgid "Stacktrace printing on failure DISABLED"
 msgstr "Вимкнено друк трасування стека в разі збою"
+
+#####################
+# Error translation #
+#####################
+msgid "Extra content at the end of the document, line %s, column %s (tag %s, line %s)"
+msgstr "Додатковий вміст у кінці документа, рядок %s, стовпець %s (тег %s, рядок %s)"
+
+msgid "Opening and ending tag mismatch: %s line %s and %s, line %s, column %s"
+msgstr "Невідповідність початкового та кінцевого тегів: %s рядок %s та %s, рядок %s, стовпець %s"
+
+msgid "Premature end of data in tag %s line %s, column %s"
+msgstr "Передчасне завершення даних у тезі %s рядок %s, стовпець %s"
+
+msgid "Expected '>', line %s, column %s"
+msgstr "Очікувався закриваючи символ '>', (рядок %s, стовпець %s)"
+
+msgid "XML declaration allowed only at the start of the document, line %s, column %s"
+msgstr "Оголошення XML декларації дозволено лише на початку документа, (натомість вона на рядку %s, стовпці %s)"
+
+msgid "Input is not proper UTF-8, indicate encoding"
+msgstr "Файл не має XML декларації"
+
+msgid "Unsupported encoding %s, line %s, column %s"
+msgstr "Кодування %s не підтримується, рядок %s, стовпець %s"
+
+msgid "Unknown error: "
+msgstr "Невідома помилка:"
+
+msgid "String not closed, expecting '\"' or ''', line %s, column %s"
+msgstr "Рядок не закрито, очікується '\"' або ''', рядок %s, стовпець %s"
 
