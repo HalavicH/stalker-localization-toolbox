@@ -10,6 +10,7 @@ from sltools.utils.file_utils import read_xml
 from sltools.utils.flask_server import run_flask_server
 from sltools.utils.misc import set_default
 from sltools.utils.xml_utils import parse_xml_root
+from sltools.utils.lang_utils import _tr  # Ensure this import is included for _tr function
 
 
 def process_file(file_path, results, args):
@@ -29,7 +30,7 @@ def process_file(file_path, results, args):
             }
 
             if string_id in results:
-                log.warning(f"Found duplicate of '{string_id}' in '{file_path}'")
+                log.warning(_tr("Found duplicate of '%s' in '%s'") % (string_id, file_path))
                 results[string_id].append(data_obj)
             else:
                 results[string_id] = [data_obj]
@@ -176,7 +177,7 @@ def find_string_duplicates(args, is_read_only):
 
     if args.save_report:
         timestamp = datetime.datetime.now()
-        with open(f"duplicates-report-{timestamp}.json", 'w', encoding='utf-8') as f:
+        with open(_tr("duplicates-report-%s.json") % timestamp, 'w', encoding='utf-8') as f:
             json.dump(visualization_data, f, default=set_default, ensure_ascii=False, indent=4)
 
     if args.per_string_report:
@@ -186,11 +187,11 @@ def find_string_duplicates(args, is_read_only):
 
 
 def find_and_prepare_duplicates_report(args, is_read_only):
-    files = get_xml_files_and_log(args.paths, "Analyzing patterns for")
+    files = get_xml_files_and_log(args.paths, _tr("Analyzing patterns for"))
 
     results = {}
     process_files_with_progress(files, process_file, results, args, is_read_only)
-    log.info(f"Total processed files: {len(files)}")
+    log.info(_tr("Total processed files: %d") % len(files))
     overlaps = analyze_file_overlaps(results)
     visualization_data = {
         "overlaps_report": overlaps,

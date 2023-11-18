@@ -67,10 +67,10 @@ msgid "Capitalize first letter [cyan](a->A)[/cyan] in all text entries in a file
 msgstr "Зробити кожен текст блок з великої літери [cyan](a->A)[/cyan] (ОБЕРЕЖНО! капіталізує абсолютно все)"
 
 msgid "Display detailed report with string text"
-msgstr "Відображення детального звіту з для кожного рядку"
+msgstr "Відображення детального звіту для кожного рядку"
 
 msgid "Display duplicates as D3 interactive graph"
-msgstr "Відображити дублікати у вигляді інтерактивної діаграми D3"
+msgstr "Відобразити дублікати у вигляді інтерактивної діаграми D3"
 
 msgid "Save filecentric report as JSON"
 msgstr "Зберагти файлоцентричний звіт у форматі JSON файлу"

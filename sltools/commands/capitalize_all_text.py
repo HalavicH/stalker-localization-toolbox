@@ -6,6 +6,7 @@ from sltools.utils.colorize import cf_cyan
 from sltools.utils.file_utils import read_xml, save_xml
 from sltools.utils.misc import create_table
 from sltools.utils.xml_utils import parse_xml_root, to_utf_string_with_proper_declaration, format_xml_string
+from sltools.utils.lang_utils import _tr  # Ensure this import is included for _tr function
 
 
 def capitalize_first_letter(s):
@@ -28,7 +29,7 @@ def process_file(file_name, results, args):
             text_elem.text = capitalize_first_letter(orig_text)
             if orig_text != text_elem.text:
                 str_id = cf_cyan(string_elem.attrib.get("id"))
-                log.info(f"Text of '{str_id}' was capitalize")
+                log.info(_tr("Text of '%s' was capitalized") % str_id)
                 counter += 1
 
     resulting_xtr = to_utf_string_with_proper_declaration(root)
@@ -41,23 +42,23 @@ def process_file(file_name, results, args):
 
 def display_report(results):
     if len(results) == 0:
-        log.always("No files were modified")
+        log.always(_tr("No files were modified"))
 
-    table = create_table(["File", "Cnt"])
+    table = create_table([_tr("File"), _tr("Cnt")])
 
     for file, cnt in results:
         table.add_row(file, str(cnt))
 
-    log.always(f"Capitalized text blocks per file. Total files modified: {len(results)}")
+    log.always(_tr("Capitalized text blocks per file. Total files modified: %d") % len(results))
     get_console().print(table)
 
 
 def capitalize_all_text(args, is_read_only):
-    files = get_xml_files_and_log(args.paths, "Analyzing patterns for")
+    files = get_xml_files_and_log(args.paths, _tr("Analyzing patterns for"))
 
     results = []
 
     process_files_with_progress(files, process_file, results, args, is_read_only)
-    log.info(f"Total processed files: {len(files)}")
+    log.info(_tr("Total processed files: %d") % len(files))
 
     display_report(results)
