@@ -158,7 +158,7 @@ def update_log_level(_log):
         _log.warning(_tr("Unknown loglevel: ") % plog_level)
         return _log
 
-    _log.always(_tr("New log level: ") % plog_level)
+    _log.always(_tr("New log level: ") + plog_level)
     _log.setLevel(new_log_level)
     return _log
 

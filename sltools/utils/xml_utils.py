@@ -34,17 +34,18 @@ def parse_doc_info(xml_string: str):
     return tree.getroottree().docinfo
 
 
+
 def is_valid_doc_info(doc_info, file_path=None, log_and_save_err=None):
     version = doc_info.xml_version
     encoding_lower = doc_info.encoding.lower()
     if version != '1.0' or encoding_lower != PRIMARY_ENCODING:
-        message = cf_yellow(f"Warning: File {file_path} has invalid header in it")
+        message = _tr("Warning: File %s has invalid header in it") % cf_yellow(file_path)
         if log_and_save_err:
             log_and_save_error(file_path, message, level='warning')
         else:
-            version_message = f"Expected version='1.0' got '{cf_red(version)}'" if version != '1.0' else ""
-            encoding_message = f"Expected encoding='{PRIMARY_ENCODING}' got '{cf_red(encoding_lower)}'" if encoding_lower != PRIMARY_ENCODING else ""
-            raise ValueError(f"Wrong XML declaration. {version_message}{encoding_message}")
+            version_message = _tr("Expected version='1.0' got '%s'") % cf_red(version) if version != '1.0' else ""
+            encoding_message = _tr("Expected encoding='%s' got '%s'") % (PRIMARY_ENCODING, cf_red(encoding_lower)) if encoding_lower != PRIMARY_ENCODING else ""
+            raise ValueError(_tr("Wrong XML declaration. %s%s") % (version_message, encoding_message))
         return False
 
     return True
@@ -52,7 +53,7 @@ def is_valid_doc_info(doc_info, file_path=None, log_and_save_err=None):
 
 def parse_xml_root(xml_string):
     if isinstance(xml_string, str):
-        log.debug(f"Provided plain string. Encoding to {PRIMARY_ENCODING}")
+        log.debug(_tr("Provided plain string. Encoding to ") + PRIMARY_ENCODING)
         xml_string = xml_string.encode(PRIMARY_ENCODING)
 
     parser = etree.XMLParser(remove_blank_text=True)
@@ -88,12 +89,11 @@ def analyze_xml_parser_error(error, file=None, string=None):
     hyphen_within_comment = "Double hyphen within comment"
     err_str = str(error)
     if hyphen_within_comment in err_str:
-        return True, "XML file has '--' witin comment. First occurrence at: " + err_str.replace(hyphen_within_comment,
-                                                                                                "")
+        return True, _tr("XML file has '--' within comment. First occurrence at: %s") % err_str.replace(hyphen_within_comment, "")
     elif "Document is empty" in err_str:
-        return True, "XML file is empty which is not allowed"
+        return True, _tr("XML file is empty which is not allowed")
     else:
-        return True, f"Can't parse root tag. Error {error}"
+        return True, _tr("Can't parse root tag. Error %s") % error
 
 
 # Formatting utils

@@ -115,7 +115,7 @@ msgid "Git is not available on this system. It's vital to have files in a git re
 msgstr "Git недоступний в цій системі. Важливо мати файли в git-репозиторії, щоб запобігти потенційному пошкодженню файлів. Будь ласка, встановіть Git."
 
 msgid "Running command '%s' on paths: '%s'"
-msgstr "Виконую команду '%s' для шляхах: '%s'"
+msgstr "Виконую команду '%s' для шляхів: '%s'"
 
 msgid "Done"
 msgstr "Готово"
@@ -214,7 +214,7 @@ msgid "Found following glob files: %s"
 msgstr "Знайдені такі glob файли: %s"
 
 msgid "Input files number: %s"
-msgstr "Кількість вхідних файлів: %s"
+msgstr "Кількість файлів для обробки: %s"
 
 msgid "Warning: File %s doesn't have encoding header in it"
 msgstr "Попередження: У файлі %s немає заголовка кодування"

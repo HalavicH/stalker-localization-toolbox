@@ -61,7 +61,5 @@ def process_command(args: Namespace):
     log.always(_tr("Running command '%s' on paths: '%s'") % (args.command, args.paths))
     callback(args, read_only)
 
-    log.info(cf_green(_tr("Done")))
-
     log_skipped_files()
     log_saved_errors()
