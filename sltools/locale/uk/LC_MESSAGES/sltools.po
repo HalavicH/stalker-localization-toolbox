@@ -630,3 +630,27 @@ msgstr "Відформатований текст в тегах <text>"
 msgid "Text of '%s' was formatted"
 msgstr "Текст під айді '%s' було відформатовано"
 
+msgid "Configure application settings"
+msgstr "Налаштування параметрів програми"
+
+msgid "Set default log level. (Available: %s)"
+msgstr "Встановити рівень логування за замовчуванням. (Доступно: %s)"
+
+msgid "Set app language. (Available: %s)"
+msgstr "Встановити мову програми. (Доступно: %s)"
+
+msgid "Enable/Disable showing error stack trace (Available: True/False)"
+msgstr "Увімкнути/вимкнути відображення стектрейсу помилки (Доступно: True/False)"
+
+msgid "Set new default log level to '%s'"
+msgstr "Новий рівень логування за замовчуванням: '%s'"
+
+msgid "Set new app language to '%s'"
+msgstr "Вибрано мову програми: '%s'"
+
+msgid "Stacktrace printing on failure ENABLED"
+msgstr "Увімкнено друк трасування стека в разі збою"
+
+msgid "Stacktrace printing on failure DISABLED"
+msgstr "Вимкнено друк трасування стека в разі збою"
+

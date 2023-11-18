@@ -12,7 +12,7 @@ locale_dir = os.path.dirname(__file__) + '/../locale'
 selected_lang = file_config.general.language
 
 # If the language is not set in the config file, check the environment variable
-if not selected_lang:
+if os.environ.get("LANGUAGE"):
     selected_lang = os.environ.get("LANGUAGE")
 
 # If the language is still not set, fallback to "en"

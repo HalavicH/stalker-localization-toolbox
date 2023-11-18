@@ -97,7 +97,7 @@ def parse_args():
     parser_config.add_argument('--loglevel', help=_tr('Set default log level. (Available: %s)') % ["debug", "info", "warning", "error"])
     parser_config.add_argument('--language', help=_tr('Set app language. (Available: %s)') % ["en", "uk"])
     parser_config.add_argument('--show-stacktrace', action=BooleanAction, type=str, default=None,
-                               help=_tr('Enable/Disable showing stack trace (Available: True/False)'))
+                               help=_tr('Enable/Disable showing error stack trace (Available: True/False)'))
 
     # validate-encoding | ve
     parser_ve = subparsers.add_parser(VALIDATE_ENCODING, aliases=CMD_TO_ALIASES[VALIDATE_ENCODING],
@@ -220,15 +220,15 @@ def handle_config_command(args):
 
     if args.language is not None:
         config_manager.update_config('general', 'language', args.language)
-        get_console().print(cf_cyan(_tr("Set new app language to '%s'") % args.loglevel))
+        get_console().print(cf_cyan(_tr("Set new app language to '%s'") % args.language))
 
     if args.show_stacktrace is not None:
         show_stacktrace_value = 'yes' if args.show_stacktrace else 'no'
         config_manager.update_config('general', 'show_stacktrace', show_stacktrace_value)
         if args.show_stacktrace:
-            get_console().print(cf_cyan(_tr("Enable stacktrace printing on failure")))
+            get_console().print(cf_cyan(_tr("Stacktrace printing on failure ENABLED")))
         else:
-            get_console().print(cf_cyan(_tr("Disable stacktrace printing on failure")))
+            get_console().print(cf_cyan(_tr("Stacktrace printing on failure DISABLED")))
 
 
 def main():
@@ -243,8 +243,11 @@ def main():
         else:
             process_command(args)
     except Exception as e:
-        print(file_config.general.show_stacktrace)
-        if os.environ.get("PY_ST") or file_config.general.show_stacktrace:
+        show_stack_trace = file_config.general.show_stacktrace or False
+        if os.environ.get("PY_ST"):
+            show_stack_trace = os.environ.get("PY_ST").lower() == 'true'
+
+        if show_stack_trace:
             log.fatal(_tr("Failed to perform actions. Error: %s") % traceback.format_exc())
         else:
             log.fatal(_tr("Failed to perform actions. Error: %s") % e)
