@@ -208,7 +208,7 @@ msgid "Pattern matches: %s"
 msgstr "Відповідають шаблону: %s"
 
 msgid "No XML file found under path: '%s'.\nPlease provide path which contains xml files"
-msgstr "Під шляхом '%s' не знайдено XML файлів.\nБудь ласка, вкажіть шлях (файл/папка), який містить XML файли"
+msgstr "За шляхом '%s' не знайдено XML файлів.\nБудь ласка, вкажіть шлях (файл/папка), який містить XML файли з локалізацією"
 
 msgid "Found following glob files: %s"
 msgstr "Знайдені такі glob файли: %s"

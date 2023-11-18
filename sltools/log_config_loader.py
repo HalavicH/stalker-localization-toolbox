@@ -5,6 +5,7 @@ import sys
 import colorlog
 import rich
 
+from sltools.config_file_manager import file_config
 from sltools.utils.colorize import cf
 from sltools.utils.lang_utils import _tr
 
@@ -141,24 +142,36 @@ def configure_logging():
 
 
 def update_log_level(_log):
+    # Initial assumption is that the log level comes from the config file
+    log_level_origin = "Config file"
+
+    # Default to the log level from the config file
+    new_log_level = file_config.general.loglevel
+
+    # Override with environment variable if it's set
     plog_level = os.environ.get("PLOG_LEVEL")
-    if plog_level is None:
+    if plog_level:
+        new_log_level = plog_level.lower()
+        log_level_origin = "Env variable"
+
+    # If no log level is set in either the config file or environment, return _log as is
+    if not new_log_level:
         return _log
 
-    level_lower = plog_level.lower()
-    if level_lower == "error":
+    if new_log_level == "error":
         new_log_level = logging.ERROR
-    elif level_lower == "warning":
+    elif new_log_level == "warning":
         new_log_level = logging.WARNING
-    elif level_lower == "info":
+    elif new_log_level == "info":
         new_log_level = logging.INFO
-    elif level_lower == "debug":
+    elif new_log_level == "debug":
         new_log_level = logging.DEBUG
     else:
-        _log.warning(_tr("Unknown loglevel: ") % plog_level)
+        _log.warning(_tr("Unknown loglevel: ") % new_log_level)
         return _log
 
-    _log.always(_tr("New log level: ") + plog_level)
+    if log_level_origin == "Env variable":
+        _log.always(_tr("New log level: ") + new_log_level)
     _log.setLevel(new_log_level)
     return _log
 

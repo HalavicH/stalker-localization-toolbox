@@ -1,5 +1,6 @@
 import queue
 
+from sltools.config_file_manager import ConfigFileManager
 from sltools.utils.lang_utils import _tr
 
 PRIMARY_ENCODING = 'windows-1251'
@@ -31,12 +32,14 @@ CMD_TO_ALIASES = {
     SORT_FILES_WITH_DUPLICATES: ['sfwd'],
 }
 
-min_recognizable_text_length = 30
-text_wrap_width = 80
-
+# CONSTANTS
 UNKNOWN_LANG = _tr("Unknown")
 TOO_LITTLE_DATA = _tr("Too little data")
 
+min_recognizable_text_length = 30
+text_wrap_width = 80
+
+# For flask server
 file_changes_msg_queue = queue.Queue()
 
 
