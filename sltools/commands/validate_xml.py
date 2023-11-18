@@ -5,6 +5,7 @@ from sltools.commands.common import get_xml_files_and_log, process_files_with_pr
 from sltools.utils.colorize import cf_green
 from sltools.utils.file_utils import read_xml
 from sltools.utils.xml_utils import *
+from sltools.utils.lang_utils import _tr
 
 include_example = cf_red('#include "some/other/file.xml"')
 
@@ -17,7 +18,7 @@ def process_file(file_path, results, args):
         with open(file_path, 'r', encoding=PRIMARY_ENCODING) as file:
             file.read()
     except UnicodeDecodeError as e:
-        msg = f"Can't open file {file_path} as {PRIMARY_ENCODING} encoded. Error: {e}"
+        msg = _tr("Can't open file %s as %s encoded. Error: %s") % (file_path, PRIMARY_ENCODING, e)
         log.warning(msg)
         results.append((file_path, issues))
         return
@@ -72,28 +73,28 @@ def process_file(file_path, results, args):
 
 
 def validate_xml(args, is_read_only):
-    files = get_xml_files_and_log(args.paths, "Validating XML-schema for")
+    files = get_xml_files_and_log(args.paths, _tr("Validating XML-schema for"))
 
     results = []
     process_files_with_progress(files, process_file, results, args, is_read_only)
 
-    log.info(f"Total processed files: {len(files)}")
+    log.info(_tr("Total processed files: %d") % len(files))
     display_report(results)
 
 
 def display_report(report):
     if len(report) == 0:
-        log.always(cf_green("All files are valid. Congrats"))
+        log.always(cf_green(_tr("All files are valid. Congrats")))
         return
 
     sorted_results = sorted(report, key=lambda x: x[0])
 
     log.always(('#' * 100))
-    log.always(cf_red(f'\t\t\t\t\t Found {len(report)} invalid files:'))
+    log.always(cf_red(_tr('\t\t\t\t\t Found %d invalid files:')) % len(report))
     log.always(('#' * 100))
 
     for file, issues in sorted_results:
-        log.always((f'File: {cf_green(file)}'))
-        log.always(cf_yellow(f'Issues:'))
+        log.always((_tr('File: %s')) % cf_green(file))
+        log.always(cf_yellow(_tr('Issues:')))
         for issue in issues:
             log.always(cf_yellow(f'\t{issue}'))

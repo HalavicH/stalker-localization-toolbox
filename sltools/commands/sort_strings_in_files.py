@@ -3,8 +3,9 @@ from lxml import etree
 from sltools.log_config_loader import log
 from sltools.utils.file_utils import read_xml, save_xml
 from sltools.utils.git_utils import is_allowed_to_continue
+from sltools.utils.misc import create_equal_length_comment_line
 from sltools.utils.xml_utils import parse_xml_root, to_utf_string_with_proper_declaration, format_xml_string
-
+from sltools.utils.lang_utils import _tr
 
 def sort_files_with_duplicates(args, is_read_only):
     file_path1 = args.paths[0]
@@ -16,7 +17,7 @@ def sort_files_with_duplicates(args, is_read_only):
     if not is_allowed_to_continue(file_path2, args.allow_no_repo, args.allow_dirty, args.allow_not_tracked):
         return
 
-    log.info(f"Sorting files: '{file_path1}' and '{file_path2}'")
+    log.info(_tr("Sorting files: '%s' and '%s'") % (file_path1, file_path2))
 
     # Parse XML roots for both files
     xml_tree1 = read_xml(file_path1)
@@ -24,22 +25,21 @@ def sort_files_with_duplicates(args, is_read_only):
     xml_tree2 = read_xml(file_path2)
     root2 = parse_xml_root(xml_tree2)
 
-    duplicates = []
     duplicates = find_common_string_ids(root1, root2)
-    log.info(f"Found {len(duplicates.keys())} duplicates")
+    log.info(_tr("Found %s duplicates" % len(duplicates.keys())))
 
     sort_and_save_file(duplicates, file_path1, root1, sort_duplicates_only)
     sort_and_save_file(duplicates, file_path2, root2, sort_duplicates_only)
 
 
 def sort_and_save_file(duplicates, file_path, root, sort_duplicates_only):
-    log.info(f"Processing file: '{file_path}'")
+    log.info(_tr("Processing file: '%s'") % file_path)
     sort_strings_by_id(root, duplicates, sort_duplicates_only)
     # For each file use to save the files
     resulting_xtr = to_utf_string_with_proper_declaration(root)
     formatted_xml_str = format_xml_string(resulting_xtr, file_path)
     save_xml(file_path, formatted_xml_str)
-    log.info(f"Done with file: '{file_path}'")
+    log.info(_tr("Done with file: '%s'") % file_path)
 
 
 def find_common_string_ids(root1, root2):
@@ -95,7 +95,7 @@ def sort_strings_by_id(root, duplicates, sort_duplicates_only):
 
     # Sort the elements alphabetically by their "id" attribute (string id)
     if not sort_duplicates_only:
-        log.info("Sorting all entries instead of only duplicates")
+        log.info(_tr("Sorting all entries instead of only duplicates"))
         sorted_string_elements.sort(key=lambda elem: elem.get("id", ""))
     different_duplicates.sort(key=lambda elem: elem.get("id", ""))
     identical_duplicates.sort(key=lambda elem: elem.get("id", ""))
@@ -104,27 +104,32 @@ def sort_strings_by_id(root, duplicates, sort_duplicates_only):
     root.clear()
 
     # Add the sorted elements back to the root, preserving comments
-    root.append(etree.Comment('========================================================='))
-    root.append(etree.Comment('Identical duplicated strings (safe to delete one of them)'))
-    root.append(etree.Comment('========================================================='))
+    identical_comment = _tr('Identical duplicated strings (safe to delete one of them)')
+    different_comment = _tr('Duplicated string IDs with different content (requires inspection)')
+    unique_comment = _tr('Unique string IDs (keeping as is)')
+
+    root.append(etree.Comment(create_equal_length_comment_line(identical_comment)))
+    root.append(etree.Comment(identical_comment))
+    root.append(etree.Comment(create_equal_length_comment_line(identical_comment)))
     populate_elements(elem_to_comments, root, identical_duplicates)
-    root.append(etree.Comment('=================================================================='))
-    root.append(etree.Comment('Duplicated string IDs with different content (requires inspection)'))
-    root.append(etree.Comment('=================================================================='))
+
+    root.append(etree.Comment(create_equal_length_comment_line(different_comment)))
+    root.append(etree.Comment(different_comment))
+    root.append(etree.Comment(create_equal_length_comment_line(different_comment)))
     populate_elements(elem_to_comments, root, different_duplicates)
-    root.append(etree.Comment('==============================='))
-    root.append(etree.Comment('Unique string IDs (keeping as is)'))
-    root.append(etree.Comment('==============================='))
+
+    root.append(etree.Comment(create_equal_length_comment_line(unique_comment)))
+    root.append(etree.Comment(unique_comment))
+    root.append(etree.Comment(create_equal_length_comment_line(unique_comment)))
     populate_elements(elem_to_comments, root, sorted_string_elements)
 
 
 def populate_elements(invalid_elements, root, sorted_elements):
     for elem in sorted_elements:
-        # Insert the stored invalid tags/comments before the corresponding <string> element
         string_id = elem.get("id")
         if string_id in invalid_elements:
             for comment in invalid_elements[string_id]:
-                log.debug(f"appending {etree.tostring(comment, pretty_print=True)}")
+                log.debug(_tr("appending %s") % etree.tostring(comment, pretty_print=True))
                 root.append(comment)
-        log.debug(f"appending {etree.tostring(elem, pretty_print=True)}")
+        log.debug(_tr("appending %s") % etree.tostring(elem, pretty_print=True))
         root.append(elem)

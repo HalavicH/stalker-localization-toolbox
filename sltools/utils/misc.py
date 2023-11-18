@@ -91,3 +91,7 @@ def detect_language(text, possible_languages=["uk", "en", "ru", "fr", "es"]):
         if lang in possible_languages:
             return lang, float(confidence)
     return "Unknown", 0.0
+
+
+def create_equal_length_comment_line(text, char='='):
+    return char * len(text)

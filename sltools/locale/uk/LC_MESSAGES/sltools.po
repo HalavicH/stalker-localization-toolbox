@@ -136,7 +136,7 @@ msgid "Failed to check for updates: %s"
 msgstr "Не вдалося перевірити наявність оновлень: %s"
 
 msgid "%s is not instance of set. Don't know how to default it"
-msgstr "%s не є екземпляром набору. Не знаю, як встановити за замовчуванням"
+msgstr "%s не є екземпляром set(). Не знаю, дефолтного значення для неї"
 
 msgid "Shutting down server!!!"
 msgstr "Завершення роботи сервера!!!"
