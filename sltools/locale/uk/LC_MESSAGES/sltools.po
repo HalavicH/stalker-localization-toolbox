@@ -263,3 +263,177 @@ msgstr "Файл '%s' брудний (змінений, але не постав
 
 msgid "Note: If you sure you won't break anything, you can process this path anyway using %s"
 msgstr "Примітка: Якщо ви впевнені, що нічого не зламаєте, ви можете все одно обробити цей шлях, використовуючи %s"
+
+msgid "Lang %s is in excludes. Skipping"
+msgstr "Мова %s знаходиться у виключеннях. Пропускаю"
+
+msgid "Can't detect language for the whole file. Probably it's empty"
+msgstr "Не вдається визначити мову для всього файлу. Можливо, він порожній?"
+
+msgid "Analyzing primary language for"
+msgstr "Аналіз основної мови для"
+
+msgid "Total processed files: %s"
+msgstr "Всього оброблено файлів: %s"
+
+msgid "No files detected!. Nothing to show"
+msgstr "Файлів не знайдено! Нема чого показувати."
+
+msgid "Short report on language. Total: %s files"
+msgstr "Короткий звіт про основну мову в файлах. Всього: %s файлів"
+
+msgid "Filename"
+msgstr "Ім'я файлу"
+
+msgid "Main Lang"
+msgstr "Основна мова"
+
+msgid "Detailed report (per each string). Total: %s files"
+msgstr "Детальний звіт (для кожної фрази). Всього: %s файлів"
+
+msgid "Language"
+msgstr "Мова"
+
+msgid "Count"
+msgstr "Кількість"
+
+msgid "Found duplicate of '%s' in '%s'"
+msgstr "Знайдено повторення '%s' в '%s'"
+
+msgid "duplicates-report-%s.json"
+msgstr "duplicates-report-%s.json"
+
+msgid "Analyzing patterns for"
+msgstr "Аналіз шаблонів для"
+
+msgid "Total processed files: %d"
+msgstr "Всього оброблено файлів: %d"
+
+msgid "Can't change encoding for %s. Rolling back..."
+msgstr "Не вдається змінити кодування для %s. Відкочую назад..."
+
+msgid "All files analyzed! Fixing encodings..."
+msgstr "Всі файли проаналізовано! Виправлення кодувань..."
+
+msgid "NOTE! Currently, reliable detection is only available for UTF-8 encoding."
+msgstr "УВАГА: Наразі надійне розпізнавання доступне лише для кодування UTF-8."
+
+msgid "For other suspicious files, manual review and encoding correction may be necessary."
+msgstr "Для інших підозрілих файлів може знадобитися ручна перевірка та виправлення кодування."
+
+msgid "Nothing to fix"
+msgstr "Нічого випрвляти :)"
+
+msgid "There is/are %d file(s) to fix"
+msgstr "Всього %d файлів, які потрібно виправити"
+
+msgid "Try to change encoding from %s to %s for file %s"
+msgstr "Намагаюсь змінити кодування з %s на %s для файлу %s"
+
+msgid "Success!"
+msgstr "Успішно!"
+
+msgid "Can't encode from %s to %s"
+msgstr "Не вдається перекодувати з %s в %s"
+
+msgid "File %s possibly has %s encoding. But maybe no, so won't do anything"
+msgstr "Файл %s, можливо, має кодування %s. Але може і ні, тому нічого не буде зроблено"
+
+msgid "%s %s files"
+msgstr "%s %s файлів"
+
+msgid "Processing file [green]#%03d[/] with name [green]%s[/]"
+msgstr "Опрацьовую файл [green]#%03d[/] з іменем [green]%s[/]."
+
+msgid "Analyzing patterns usage and errors"
+msgstr "Аналіз використання шаблонів/змінних і їх помилок"
+
+msgid "Saving the report at [cyan]%s[/cyan]"
+msgstr "Збереження звіту за адресою [cyan]%s[/cyan]"
+
+msgid "Displaying report"
+msgstr "Відображення звіту"
+
+msgid "Summary:"
+msgstr "Підсумок:"
+
+msgid "Patterns:"
+msgstr "Паттерни/змінні:"
+
+msgid "\t%s:"
+msgstr "\t%s:"
+
+msgid "\t\t%s: %s"
+msgstr "\t\t%s: %s"
+
+msgid "No pattern syntax errors detected"
+msgstr "Помилок синтаксису патернів/змінних не виявлено"
+
+msgid "Errors:"
+msgstr "Помилки:"
+
+msgid "[cyan]In file:[/cyan] %s:"
+msgstr "[cyan]У файлі:[/cyan] %s:"
+
+msgid "[cyan]In string with id:[/cyan] '%s'"
+msgstr "[cyan]У рядку з id:[/cyan] '%s'"
+
+msgid "Error: %s"
+msgstr "Помилка: %s"
+
+msgid ". Row: %s, column %s"
+msgstr ". Рядок: %s, колонка %s"
+
+msgid "[grey53]%s"
+msgstr "[grey53]%s"
+
+msgid "Meta-data:"
+msgstr "Метадані:"
+
+msgid "Missing files in current analysis: %s"
+msgstr "Файли, що відсутні в поточному аналізі: %s"
+
+msgid "Extra files in current analysis: %s"
+msgstr "Додаткові файли в поточному аналізі: %s"
+
+msgid "###### Mismatch in reports detected! ######"
+msgstr "###### Виявлено невідповідність у звітах! ######"
+
+msgid " Total missmatch: "
+msgstr " Всього невідповідностей: "
+
+msgid "Pattern: '%s', %d %s than before. Before %d after %d"
+msgstr "Шаблон: '%s', зустрічається на %d разів %s ніж до цього. До: %d після: %d"
+
+msgid " Mismatched files: "
+msgstr " Невідповідності в файлах: "
+
+msgid " Mismatched strings: "
+msgstr " Невідповідності в фразах: "
+
+msgid "String: '%s'"
+msgstr "Фраза: '%s'"
+
+msgid "Versions match! Jolly good!"
+msgstr "Версії збігаються! Чудово!"
+
+msgid "more"
+msgstr "більше"
+
+msgid "less"
+msgstr "менше"
+
+msgid "Text of '%s' was capitalized"
+msgstr "Текст '%s' тепер починається з великої літери"
+
+msgid "No files were modified"
+msgstr "Жодні файли не було змінено"
+
+msgid "File"
+msgstr "Файл"
+
+msgid "Cnt"
+msgstr "К-ть"
+
+msgid "Capitalized text blocks per file. Total files modified: %d"
+msgstr "Блоки тексту з великої літери в кожному файлі. Загальна кількість змінених файлів: %d"

@@ -37,7 +37,7 @@ def process_files_with_progress(files, process_func, results, args, is_read_only
             formatted_file = format_filename_for_display(file_path, max_file_width)
             progress_description = _tr("Processing file [green]#%03d[/] with name [green]%s[/]") % (i, formatted_file)
             progress.update(task, completed=i, description=progress_description)
-            log.debug(_tr("Processing file #%d name: %s") % (i, file_path))
+            log.debug(_tr("Processing file [green]#%03d[/] with name [green]%s[/]") % (i, file_path))
             process_func(file_path, results, args)
 
 
