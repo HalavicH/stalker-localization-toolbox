@@ -34,6 +34,7 @@ Text:
   - [ ] Compare 2 file reports
   - [ ] Fix broken patterns/placeholders/colors
 - [x] Search for duplicate keys
+  - [x] Add visualized duplicates graph using D3
 - [x] Capitalize text entries
 - [ ] Grammar and typos checkup
 - [x] Capitalization of the text blocks
@@ -60,8 +61,28 @@ recommended to make git repository out of your mod, and commit changes before
 each script use (or at least commit often)
 
 ## Changelog
-## v0.2.0
+### v0.2.0
 
+##### New Features and Enhancements
+- **Ukrainian Localization**: Added comprehensive Ukrainian language support.
+- **Config File Support**: Introduced configuration file support for enhanced customization.
+- **String Sorting Script**: New script for efficient string sorting added.
+- **Download Button**: Implemented a user-friendly download button in the interface.
+- **Highlight Duplicates**: Frontend now highlights duplicate contents for better visibility.
+
+##### Bug Fixes and Improvements
+- **Translation Fixes**: Multiple updates to improve translation accuracy.
+- **Locale Check Function**: Developed a function for better handling of language settings.
+- **Version Check Mechanism Update**: Enhanced the mechanism for more reliable version checking.
+- **Frontend and UI Updates**: Numerous improvements for a better user interface.
+
+##### Technical Updates
+- **Conversion to `%s` Formatting**: Transitioned from f-strings to `%s` formatting in code.
+- **Source Package Name Update**: Renamed the source package for better relevance.
+- **Error Handling Improvements**: Enhanced handling of errors related to featureless text.
+- **Documentation Updates**: Updated readme and other documents for clarity.
+
+*Released on November 18, 2023*
 
 ## v0.1.2
 - Add text capitalization command
