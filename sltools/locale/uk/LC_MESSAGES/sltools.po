@@ -437,3 +437,156 @@ msgstr "К-ть"
 
 msgid "Capitalized text blocks per file. Total files modified: %d"
 msgstr "Блоки тексту з великої літери в кожному файлі. Загальна кількість змінених файлів: %d"
+
+msgid "Error"
+msgstr "Помилка"
+
+msgid "Disabled"
+msgstr "Вимкнено"
+
+msgid "Yes"
+msgstr "Так"
+
+msgid "No"
+msgstr "Ні"
+
+msgid "N/a"
+msgstr "N/a"
+
+msgid "Unhandled error %s"
+msgstr "Необроблена помилка %s"
+
+msgid "Fix option enabled. Will fix:"
+msgstr "Увімкнено опцію виправлення. Виправлю:"
+
+msgid "\n\t- Guard '--' in comments,"
+msgstr "\n\t- '--' в коментах,"
+
+msgid "\n\t- Ampersand misuse (& -> &amp;),"
+msgstr "\n\t- Неправильне використання амперсанду (& -> &amp;),"
+
+msgid "\n\t- Resolve #include"
+msgstr "\n\t- Вирішу включення інших файлів (#include)"
+
+msgid "\n\t- Wrong/missing XML declaration"
+msgstr "\n\t- Неправильну/відсутню XML декларацію"
+
+msgid "Format <text> content option enabled. Will make text look as similar as possible to the in-game text"
+msgstr "Увімкнено опцію форматування тексту всередині <text>. Це зробить текст максимально схожим на текст у грі"
+
+msgid "Formatting XML-schema for"
+msgstr "Форматування XML-схеми для"
+
+msgid "You've just wasted your CPU cycles 😈"
+msgstr "Ви щойно даремно витратили свої процесорні цикли 😈."
+
+msgid "No files required formatting. %s"
+msgstr "Файли не потребують форматування. %s"
+
+msgid "Files which were requiring some fixes/formatting (total: %d)"
+msgstr "Файли, які потребували виправлення/форматування (всього: %d)"
+
+msgid "Fixed"
+msgstr "Виправлено"
+
+msgid "Formatted <text>"
+msgstr "Відформатовано <text>"
+
+msgid "Formatted"
+msgstr "Відформатовано XML"
+
+msgid "These files have syntax/other errors in them, so they weren't formatted."
+msgstr "Ці файли містять синтаксичні та інші помилки, тому вони не були відформатовані."
+
+msgid "Run command with --fix option to try to fix errors automatically\n"
+msgstr "Запусти команду з опцією --fix, щоб спробувати виправити помилки автоматично\n"
+
+msgid "API request failed"
+msgstr "Не вдалося виконати запит до API"
+
+msgid "DeepL"
+msgstr "DeepL"
+
+msgid " guessed lang: "
+msgstr " вгадана мова: "
+
+msgid "Fatal error during translation"
+msgstr "Фатальна помилка під час перекладу"
+
+msgid "Empty text block for string '%s'"
+msgstr "Порожній текстовий блок для рядка '%s'"
+
+msgid "Text with id '%s' is already translated"
+msgstr "Текст з ідентифікатором '%s' вже перекладено"
+
+msgid "Text prepared for translation"
+msgstr "Текст, підготовлений до перекладу"
+
+msgid "Translating text with id '%s'"
+msgstr "Переклад тексту з ідентифікатором '%s'"
+
+msgid "Translating from '%s' to '%s'"
+msgstr "Переклад з '%s' на '%s'"
+
+msgid "Access forbidden. It seems that the token is invalid or expired"
+msgstr "Доступ заборонено. Здається, що токен недійсний або термін дії закінчився"
+
+msgid "File %s is ok. Encoding: %s"
+msgstr "Файл %s в порядку. Кодування: %s"
+
+msgid "Validating encoding for"
+msgstr "Перевірка кодування для"
+
+msgid "No files with bad encoding detected!"
+msgstr "Файлів з поганим кодуванням не виявлено!"
+
+msgid "Files with possibly incompatible/broken encoding (total: %d)"
+msgstr "Файли з можливо несумісним/пошкодженим кодуванням (всього: %d)"
+
+msgid "Encoding"
+msgstr "Кодування"
+
+msgid "Comment"
+msgstr "Коментар"
+
+msgid "Sorting files: '%s' and '%s'"
+msgstr "Сортування файлів: '%s' та '%s'"
+
+msgid "Processing file: '%s'"
+msgstr "Файл що обробляється: '%s'"
+
+msgid "Done with file: '%s'"
+msgstr "Обробка завершена для файлу: '%s'"
+
+msgid "Sorting all entries instead of only duplicates"
+msgstr "Сортування всіх записів, а не лише дублікатів"
+
+msgid "Identical duplicated strings (safe to delete one of them)"
+msgstr "Ідентичні рядки, що повторюються (можна безпечно видалити один з них)"
+
+msgid "Duplicated string IDs with different content (requires inspection)"
+msgstr "Дубльовані ідентифікатори рядків з різним вмістом (потребує перевірки)"
+
+msgid "Unique string IDs (keeping as is)"
+msgstr "Унікальні ідентифікатори рядків (залишити як є)"
+
+msgid "appending %s"
+msgstr "додаю %s"
+
+msgid "Can't open file %s as %s encoded. Error: %s"
+msgstr "Не вдається відкрити файл %s у кодуванні %s. Помилка: %s"
+
+msgid "Validating XML-schema for"
+msgstr "Перевірка XML-схеми для"
+
+msgid "All files are valid. Congrats"
+msgstr "Всі файли валідні. Вітаю."
+
+msgid "\t\t\t\t\t Found %d invalid files:"
+msgstr "\t\t\t\t\t Знайдено %d поламаних файлів:"
+
+msgid "File: %s"
+msgstr "Файл: %s"
+
+msgid "Issues:"
+msgstr "Проблеми:"
