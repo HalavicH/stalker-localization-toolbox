@@ -664,29 +664,44 @@ msgstr "Вимкнено друк трасування стека в разі з
 # Error translation #
 #####################
 msgid "Extra content at the end of the document, line %s, column %s (tag %s, line %s)"
-msgstr "Додатковий вміст у кінці документа, рядок %s, стовпець %s (тег %s, рядок %s)"
+msgstr "Додатковий вміст у кінці документа, рядок %s, стовпець %s (тег %s, рядок %s).\n\t[cyan]Файл має закінчуватись </string_table>[/cyan]"
 
 msgid "Opening and ending tag mismatch: %s line %s and %s, line %s, column %s"
-msgstr "Невідповідність початкового та кінцевого тегів: %s рядок %s та %s, рядок %s, стовпець %s"
+msgstr "Невідповідність початкового та кінцевого тегів. Початок: %s рядок %s, кінець: %s, рядок %s, стовпець %s.\n\t[cyan]Перевір файл на цілісність[/cyan]"
 
 msgid "Premature end of data in tag %s line %s, column %s"
-msgstr "Передчасне завершення даних у тезі %s рядок %s, стовпець %s"
+msgstr "Передчасне завершення даних у тезі %s рядок %s, стовпець %s.\n\t[cyan]Перевір файл на цілісність[/cyan]"
 
 msgid "Expected '>', line %s, column %s"
-msgstr "Очікувався закриваючи символ '>', (рядок %s, стовпець %s)"
+msgstr "Очікувався закриваючи символ '>', (рядок %s, стовпець %s).\n\t[cyan]Перевір файл на цілісність[/cyan]"
 
 msgid "XML declaration allowed only at the start of the document, line %s, column %s"
-msgstr "Оголошення XML декларації дозволено лише на початку документа, (натомість вона на рядку %s, стовпці %s)"
+msgstr "Оголошення XML декларації дозволено лише на початку документа, (натомість вона на рядку %s, стовпці %s).\n\t[cyan]Прибери порожні строчки/коменти перед декларацією[/cyan]"
 
 msgid "Input is not proper UTF-8, indicate encoding"
-msgstr "Файл не має XML декларації"
+msgstr "Файл не має XML декларації.\n\t[cyan]Додай декларацію [green]'<?xml version=\"1.0\" encoding=\"WINDOWS-1251\" ?>'[/green] на першу строчку файлу[/cyan]"
 
 msgid "Unsupported encoding %s, line %s, column %s"
-msgstr "Кодування %s не підтримується, рядок %s, стовпець %s"
+msgstr "Кодування %s не підтримується, рядок %s, стовпець %s.\n\t[cyan]Додай/заміни декларацію на [green]'<?xml version=\"1.0\" encoding=\"WINDOWS-1251\" ?>'[/green] на першій строчці файлу[/cyan]"
 
 msgid "Unknown error: "
 msgstr "Невідома помилка:"
 
 msgid "String not closed, expecting '\"' or ''', line %s, column %s"
-msgstr "Рядок не закрито, очікується '\"' або ''', рядок %s, стовпець %s"
+msgstr "Рядок не закрито, очікується '\"' або ''', рядок %s, стовпець %s.\n\t[cyan]Перевір файл на цілісність[/cyan]"
+
+msgid "Can't resolve include! No such file or directory: %s"
+msgstr "Не вдається знайти файл що включається за допомогою #include! Файлу '%s' не існує.\n\t[cyan]Перевір наявність файлу що включається, а краще не використовуй #include взагалі :)[/cyan]"
+
+msgid "The XML declaration is incorrect"
+msgstr "XML-декларація некоректна.\n\t[cyan]Додай/заміни декларацію на [green]'<?xml version=\"1.0\" encoding=\"WINDOWS-1251\" ?>'[/green] на першій строчці файлу[/cyan]"
+
+msgid "XML document is empty"
+msgstr "Порожній XML-документ (немає кореневого тегу).\n\t[cyan]Видали файл, або додай порожній [green]<string_table></string_table>[/green] тег в кінці файлу[/cyan]"
+
+msgid "The document has %s-like macro which is not recommended. Try to resolve"
+msgstr "Документ містить %s-подібний макрос, що не рекомендується.\n\t[cyan]Рекомендується зкопіювати вміст файлу і вставити його замість інклюду[/cyan]"
+
+msgid "#include \"some/other/file.xml\""
+msgstr "#include \"якийсь/інший/файл.xml\""
 

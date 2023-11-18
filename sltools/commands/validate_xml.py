@@ -7,7 +7,7 @@ from sltools.utils.file_utils import read_xml
 from sltools.utils.xml_utils import *
 from sltools.utils.lang_utils import _tr
 
-include_example = cf_red('#include "some/other/file.xml"')
+include_example = cf_red(_tr('#include "some/other/file.xml"'))
 
 
 def process_file(file_path, results, args):
@@ -29,7 +29,7 @@ def process_file(file_path, results, args):
     try:
         xml_no_decl, declaration_correct = remove_xml_declaration(xml_string, file_path, log_and_save_err=False)
         if not declaration_correct:
-            msg = "The XML declaration is incorrect"
+            msg = _tr("The XML declaration is incorrect")
             issues.append(msg)
     except XMLSyntaxError as e:
         is_fatal, msg = analyze_xml_parser_error(e)
@@ -40,17 +40,19 @@ def process_file(file_path, results, args):
     except ValueError as e:
         # Invalid declaration
         issues.append(str(e))
+    except EmptyXmlDocError:
+        issues.append(_tr("XML document is empty"))
 
     # 3. Check and resolve #include
     # TODO: handle error messages if they are in included content.
     if is_include_present(xml_string):
-        msg = f'The document has {include_example + Fore.YELLOW}-like macro which is not recommended. Try to resolve'
+        msg = _tr('The document has %s-like macro which is not recommended. Try to resolve') % include_example
         issues.append(msg)
 
         try:
             xml_string = resolve_xml_includes(xml_string)
         except FileNotFoundError as e:
-            msg = cf_red(str(e).replace("[Errno 2] ", "\tError: Can't resolve include! "))
+            msg = cf_red(interpret_error(e))
             issues.append(msg)
 
     # 4. Parse root

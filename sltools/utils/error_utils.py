@@ -115,6 +115,11 @@ def interpret_error(e):
         base_msg = _tr("String not closed, expecting '\"' or ''', line %s, column %s")
         return base_msg % (line, column)
 
+    # No such file error
+    elif "[Errno 2] No such file or directory:" in error_str:
+        base_msg = _tr("Can't resolve include! No such file or directory: %s")
+        return base_msg % (error_str.split("No such file or directory:")[1])
+
     return _tr("Unknown error: ") + error_str
 
 

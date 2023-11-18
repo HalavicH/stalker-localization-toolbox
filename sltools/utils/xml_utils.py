@@ -28,11 +28,16 @@ def remove_xml_declaration(xml_string, file_path, log_and_save_err=True):
     return xml_string_without_declaration, is_valid_doc_info(doc_info, file_path, log_and_save_err)
 
 
+class EmptyXmlDocError(Exception):
+    pass
+
+
 def parse_doc_info(xml_string: str):
     parser = etree.XMLParser(recover=True)
     tree: _Element = etree.fromstring(xml_string.encode(PRIMARY_ENCODING), parser=parser)
+    if tree is None:
+        raise EmptyXmlDocError()
     return tree.getroottree().docinfo
-
 
 
 def is_valid_doc_info(doc_info, file_path=None, log_and_save_err=None):
