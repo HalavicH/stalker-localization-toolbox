@@ -45,7 +45,7 @@ def is_valid_doc_info(doc_info, file_path=None, log_and_save_err=None):
         else:
             version_message = _tr("Expected version='1.0' got '%s'") % cf_red(version) if version != '1.0' else ""
             encoding_message = _tr("Expected encoding='%s' got '%s'") % (PRIMARY_ENCODING, cf_red(encoding_lower)) if encoding_lower != PRIMARY_ENCODING else ""
-            raise ValueError(_tr("Wrong XML declaration. %s%s") % (version_message, encoding_message))
+            raise ValueError(_tr("Wrong XML declaration. %s %s") % (version_message, encoding_message))
         return False
 
     return True

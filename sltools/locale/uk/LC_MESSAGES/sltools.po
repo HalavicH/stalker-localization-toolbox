@@ -593,3 +593,40 @@ msgstr "Проблеми:"
 
 msgid "Dirty"
 msgstr "Брудний файл"
+
+msgid "Warning: File %s has invalid header in it"
+msgstr "Попередження: Файл %s має неправльну декларацію в ньому"
+
+msgid "Expected version='1.0' got '%s'"
+msgstr "Очікувана версія='1.0' отримала '%s'"
+
+msgid "Expected encoding='%s' got '%s'"
+msgstr "Очікуване кодування='%s' отримано '%s'"
+
+msgid "Wrong XML declaration. %s %s"
+msgstr "Неправильне оголошення XML. %s %s"
+
+msgid "Provided plain string. Encoding to "
+msgstr "Надано str() рядок. Перекодування в: "
+
+msgid "XML file has '--' within comment. First occurrence at: %s"
+msgstr "XML-файл містить '--' у коментарі. Зустрічається вперше в: %s"
+
+msgid "XML file is empty which is not allowed"
+msgstr "XML-файл порожній, що є неприпустимим"
+
+msgid "Can't parse root tag. Error %s"
+msgstr "Не вдається розібрати кореневий тег. Помилка %s"
+
+msgid "Fixed typical XML errors"
+msgstr "Виправлено типові помилки XML"
+
+msgid "Formatted XML schema"
+msgstr "Відформатовано XML схему"
+
+msgid "Formatted <text> entries"
+msgstr "Відформатований текст в тегах <text>"
+
+msgid "Text of '%s' was formatted"
+msgstr "Текст під айді '%s' було відформатовано"
+

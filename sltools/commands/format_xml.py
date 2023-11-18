@@ -21,7 +21,7 @@ def format_xml_text_entries(text_formatted_xml, indent_level) -> (str, bool):
             text_elem.text = format_text_entry(orig_text, indent_level)
             if orig_text != text_elem.text:
                 str_id = cf_cyan(string_elem.attrib.get("id"))
-                log.info(f"Text of '{str_id}' was formatted")
+                log.info(_tr("Text of '%s' was formatted") % str_id)
                 was_formatted = True
 
     indent(root)
@@ -53,13 +53,13 @@ def process_file(file_path, results, args):
         if args.fix:
             fixed_xml = fix_possible_errors(xml_string, file_path)
             if fixed_xml != xml_string:
-                log.debug("Fixed typical XML errors")
+                log.debug(_tr("Fixed typical XML errors"))
                 was_fixed = True
 
         # Format the document
         formatted = format_xml_string(fixed_xml, file_path)
         if formatted != fixed_xml:
-            log.debug("Formatted XML schema")
+            log.debug(_tr("Formatted XML schema"))
             was_formatted = True
 
         # Optionally format text entries
@@ -67,15 +67,15 @@ def process_file(file_path, results, args):
         if args.format_text_entries:
             text_formatted_xml, any_entry_formatted = format_xml_text_entries(text_formatted_xml, tabwidth * 3)
             if any_entry_formatted:
-                log.debug("Formatted <text> entries")
+                log.debug(_tr("Formatted <text> entries"))
                 text_was_formatted = True
 
         # Save the XML back to the file
         save_xml(file_path, text_formatted_xml)
 
         if any([was_fixed, text_was_formatted, was_formatted]):
-            was_fix_status = to_yes_no(was_fixed) if args.fix else cf_cyan("Disabled")
-            was_text_form_status = to_yes_no(text_was_formatted) if args.format_text_entries else cf_cyan("Disabled")
+            was_fix_status = to_yes_no(was_fixed) if args.fix else cf_cyan(_tr("Disabled"))
+            was_text_form_status = to_yes_no(text_was_formatted) if args.format_text_entries else cf_cyan(_tr("Disabled"))
             formatted_status = to_yes_no(was_formatted)
             results.append((file_path, was_fix_status, was_text_form_status, formatted_status))
 
