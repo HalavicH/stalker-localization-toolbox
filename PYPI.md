@@ -61,8 +61,12 @@ recommended to make git repository out of your mod, and commit changes before
 each script use (or at least commit often)
 
 ## Changelog
-### v0.2.0
+### v0.2.1
+##### New Features and Enhancements
+- **Add error explanation**: Add error explanation (ukrainian only)
+- **DeepL tokens stats**: Add command to check the free deepl token usage stats
 
+### v0.2.0
 ##### New Features and Enhancements
 - **Ukrainian Localization**: Added comprehensive Ukrainian language support.
 - **Config File Support**: Introduced configuration file support for enhanced customization.
@@ -84,7 +88,7 @@ each script use (or at least commit often)
 
 *Released on November 18, 2023*
 
-## v0.1.2
+### v0.1.2
 - Add text capitalization command
 - Add search for duplicate keys with visualization as D3 graph
 - Fix & update broken pattern analysis
