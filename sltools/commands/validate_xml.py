@@ -18,7 +18,7 @@ def process_file(file_path, results, args):
         with open(file_path, 'r', encoding=PRIMARY_ENCODING) as file:
             file.read()
     except UnicodeDecodeError as e:
-        msg = _tr("Can't open file %s as %s encoded. Error: %s") % (file_path, PRIMARY_ENCODING, e)
+        msg = _tr("Can't open file %s as %s encoded. Error: %s") % (file_path, PRIMARY_ENCODING, interpret_error(e))
         log.warning(msg)
         results.append((file_path, issues))
         return

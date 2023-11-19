@@ -90,6 +90,7 @@ def resolve_xml_includes(xml_string):
 
 
 # Error formatters
+# TODO: Remove and rewrite
 def analyze_xml_parser_error(error, file=None, string=None):
     hyphen_within_comment = "Double hyphen within comment"
     err_str = str(error)

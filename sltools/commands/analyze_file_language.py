@@ -3,6 +3,7 @@ from langdetect import LangDetectException
 from sltools.commands.common import process_files_with_progress, get_xml_files_and_log
 from sltools.config import UNKNOWN_LANG, TOO_LITTLE_DATA, min_recognizable_text_length
 from sltools.utils.colorize import *
+from sltools.utils.error_utils import interpret_error
 from sltools.utils.file_utils import read_xml
 from sltools.utils.misc import create_table, color_lang, detect_language
 from sltools.utils.plain_text_utils import *
@@ -27,7 +28,7 @@ def process_file(file_path, results: list, args):
                 if len(text) < min_recognizable_text_length:
                     language = TOO_LITTLE_DATA
             except LangDetectException as e:
-                log.debug(e, text)
+                log.debug(interpret_error(e), text)
                 stats[TOO_LITTLE_DATA] += 1
                 continue
 
@@ -46,7 +47,8 @@ def process_file(file_path, results: list, args):
         if len(all_text) < min_recognizable_text_length:
             main_lang = TOO_LITTLE_DATA
     except LangDetectException as e:
-        log.debug(_tr("Can't detect language for the whole file. Probably it's empty"))
+        log.debug(interpret_error(e))
+        log.info(_tr("Can't detect language for the whole file. Probably it's empty"))
         main_lang = TOO_LITTLE_DATA
 
     results.append((file_path, stats, main_lang))

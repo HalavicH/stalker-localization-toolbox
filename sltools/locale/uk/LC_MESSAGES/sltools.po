@@ -117,9 +117,6 @@ msgstr "Git недоступний в цій системі. Важливо ма
 msgid "Running command '%s' on paths: '%s'"
 msgstr "Виконую команду '%s' для шляхів: %s"
 
-msgid "Done"
-msgstr "Готово"
-
 msgid "Can't log error due to fucking rich formatter. Fixme."
 msgstr "Не можу залогувати помилку через клятий форматтер. Убийте мене."
 
@@ -380,6 +377,15 @@ msgstr "[cyan]У рядку з id:[/cyan] '%s'"
 
 msgid "Error: %s"
 msgstr "Помилка: %s"
+
+msgid "Can't import git module. In seems that git is not installed"
+msgstr "Не вдається імпортувати модуль git. Здається, що git не встановлено"
+
+msgid "Can't process strings for file: '%s'. Error: %s"
+msgstr "Не вдається обробити рядки файлу: '%s'. Помилка: %s"
+
+msgid "Can't get strings for file: '%s'. Error: %s"
+msgstr "Не вдається отримати рядки файлу: '%s'. Помилка: %s"
 
 msgid ". Row: %s, column %s"
 msgstr ". Рядок: %s, колонка %s"
@@ -685,7 +691,7 @@ msgid "Unsupported encoding %s, line %s, column %s"
 msgstr "Кодування %s не підтримується, рядок %s, стовпець %s.\n\t[cyan]Додай/заміни декларацію на [green]'<?xml version=\"1.0\" encoding=\"WINDOWS-1251\" ?>'[/green] на першій строчці файлу[/cyan]"
 
 msgid "Unknown error: "
-msgstr "Невідома помилка:"
+msgstr "Невідома помилка: "
 
 msgid "String not closed, expecting '\"' or ''', line %s, column %s"
 msgstr "Рядок не закрито, очікується '\"' або ''', рядок %s, стовпець %s.\n\t[cyan]Перевір файл на цілісність[/cyan]"

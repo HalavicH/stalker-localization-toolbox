@@ -3,6 +3,7 @@ from langdetect import LangDetectException
 
 from sltools.commands.common import get_xml_files_and_log, process_files_with_progress
 from sltools.utils.colorize import cf_blue
+from sltools.utils.error_utils import interpret_error
 from sltools.utils.file_utils import read_xml, save_xml
 from sltools.utils.misc import color_lang, detect_language
 from sltools.utils.plain_text_utils import *
@@ -37,7 +38,7 @@ def translate_deepl(text, target_language, api_key, src_language=None):
     response_json = response.json()
 
     if response.status_code != 200:
-        raise Exception(_tr('Error: %s') % response_json.get("message", _tr("API request failed")))
+        raise Exception('%s' % response_json.get("message", _tr("API request failed")))
 
     translated_text = response_json['translations'][0]['text']
     guessed_language = response_json['translations'][0]['detected_source_language']
@@ -87,7 +88,7 @@ def process_string_translation(args, lang_from, lang_to, string_tag):
             log.info(_tr("Text with id '%s' is already translated") % string_id)
             return
     except LangDetectException as e:
-        log.warning(e)
+        log.warning(interpret_error(e))
         return
     # prepare text for translation
     replaced_text = replace_n_sym_with_newline(orig_text)
@@ -99,10 +100,10 @@ def process_string_translation(args, lang_from, lang_to, string_tag):
     try:
         # Translated the text fragment
         translated = translate_deepl(prepared_text, lang_to, args.api_key, lang_from)
-    except AccessDeniedException as e:
+    except AccessDeniedException:
         raise
     except Exception as e:
-        log.error(_tr("Can't translate: '%s'. Error: %s" % (orig_text, e)))
+        log.error(_tr("Can't translate: '%s'. Error: %s" % (orig_text, interpret_error(e))))
         return
 
     # Restore translated text

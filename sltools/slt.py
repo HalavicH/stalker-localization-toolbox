@@ -174,8 +174,7 @@ def parse_args():
     add_git_override_arguments(parser_ct)
 
     # find-string-dups | fsd
-    fsd_help = _tr(
-        "Looks for duplicates of [green]'<string id=\"...\">'[/green] to eliminate unwanted conflicts/overrides. Provides filecentric report by default")
+    fsd_help = _tr("Looks for duplicates of [green]'<string id=\"...\">'[/green] to eliminate unwanted conflicts/overrides. Provides filecentric report by default")
     parser_fsd = subparsers.add_parser(FIND_STRING_DUPLICATES, aliases=CMD_TO_ALIASES[FIND_STRING_DUPLICATES],
                                        formatter_class=parser.formatter_class, help=fsd_help)
     parser_fsd.add_argument('--per-string-report', action='store_true', default=False,

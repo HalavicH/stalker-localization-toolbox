@@ -1,9 +1,11 @@
 import os
 
+from sltools.utils.lang_utils import _tr
+
 try:
     import git
 except ImportError as e:
-    print("Can't import git module. In seems that git is not installed")
+    print(_tr("Can't import git module. In seems that git is not installed"))
 
 import subprocess
 from rich import get_console

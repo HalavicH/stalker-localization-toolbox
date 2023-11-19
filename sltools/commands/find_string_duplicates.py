@@ -6,6 +6,7 @@ from collections import defaultdict
 from sltools.commands.common import get_xml_files_and_log, process_files_with_progress
 from sltools.log_config_loader import log
 from sltools.utils.colorize import cf_yellow, cf_cyan
+from sltools.utils.error_utils import interpret_error
 from sltools.utils.file_utils import read_xml
 from sltools.utils.flask_server import run_flask_server
 from sltools.utils.misc import set_default
@@ -35,7 +36,7 @@ def process_file(file_path, results, args):
             else:
                 results[string_id] = [data_obj]
     except Exception as e:
-        log.error(f"Can't process strings for file: '{file_path}'. Error: {e}");
+        log.error(_tr("Can't process strings for file: '%s'. Error: %s") % (file_path, interpret_error(e)))
 
 
 def list_strings_from_all_files(files):
@@ -49,7 +50,7 @@ def list_strings_from_all_files(files):
                 strings[string_tag.get("id")] = hash(string_tag.find("text").text.strip())
             results[file] = strings
         except Exception as e:
-            log.error(f"Can't get strings for file: '{file}'. Error: {e}")
+            log.error(_tr("Can't get strings for file: '%s'. Error: %s") % (file, interpret_error(e)))
 
     return results
 
