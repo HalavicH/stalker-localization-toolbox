@@ -711,3 +711,30 @@ msgstr "Документ містить %s-подібний макрос, що �
 msgid "#include \"some/other/file.xml\""
 msgstr "#include \"якийсь/інший/файл.xml\""
 
+###################################
+# Misc & Housekeeping translation #
+###################################
+msgid "Misc housekeeping and experimental commands"
+msgstr "Різні господарські та експериментальні команди"
+
+msgid "Checks DeepL tokens quota (provide token list separated by the space"
+msgstr "Перевіряє квоту токенів DeepL (надайте список токенів через пробіл)"
+
+msgid "Token"
+msgstr "Токен"
+
+msgid "Plan"
+msgstr "План"
+
+msgid "Used"
+msgstr "Використано"
+
+msgid "Available"
+msgstr "Доступно"
+
+msgid "Used %"
+msgstr "Використано %"
+
+msgid "DeepL Token Usage"
+msgstr "Статистика використання токенів [blue]DeepL[/blue]"
+

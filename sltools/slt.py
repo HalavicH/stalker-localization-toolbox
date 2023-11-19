@@ -24,7 +24,7 @@ from sltools.config_file_manager import ConfigFileManager, file_config
 
 from rich_argparse import RichHelpFormatter
 
-from sltools.utils.misc import check_for_update
+from sltools.utils.misc import check_for_update, check_deepl_tokens_usage
 
 
 def map_alias_to_command(args):
@@ -174,7 +174,8 @@ def parse_args():
     add_git_override_arguments(parser_ct)
 
     # find-string-dups | fsd
-    fsd_help = _tr("Looks for duplicates of [green]'<string id=\"...\">'[/green] to eliminate unwanted conflicts/overrides. Provides filecentric report by default")
+    fsd_help = _tr(
+        "Looks for duplicates of [green]'<string id=\"...\">'[/green] to eliminate unwanted conflicts/overrides. Provides filecentric report by default")
     parser_fsd = subparsers.add_parser(FIND_STRING_DUPLICATES, aliases=CMD_TO_ALIASES[FIND_STRING_DUPLICATES],
                                        formatter_class=parser.formatter_class, help=fsd_help)
     parser_fsd.add_argument('--per-string-report', action='store_true', default=False,
@@ -194,6 +195,14 @@ def parse_args():
     parser_sfwd.add_argument('paths', nargs='*',
                              help=_tr('Paths to two files you want to compare and sort dups'))
     add_git_override_arguments(parser_sfwd)
+
+    # Add config subparser
+    parser_misc = subparsers.add_parser('misc',
+                                        formatter_class=parser.formatter_class,
+                                        help=_tr('Misc housekeeping and experimental commands'))
+    parser_misc.add_argument('--check-deepl-tokens-usage',
+                             nargs='+',  # '+' means "at least one"
+                             help=_tr('Checks DeepL tokens quota (provide token list separated by the space'))
 
     ###### Parse ######
     args = parser.parse_args()
@@ -230,6 +239,11 @@ def handle_config_command(args):
             get_console().print(cf_cyan(_tr("Stacktrace printing on failure DISABLED")))
 
 
+def handle_misc_command(args):
+    if args.check_deepl_tokens_usage is not None:
+        check_deepl_tokens_usage(args.check_deepl_tokens_usage)
+
+
 def main():
     start_time = time.process_time()
     try:
@@ -239,6 +253,8 @@ def main():
         # If the command is 'config', handle the configuration update
         if args.command == 'config':
             handle_config_command(args)
+        elif args.command == 'misc':
+            handle_misc_command(args)
         else:
             process_command(args)
     except Exception as e:

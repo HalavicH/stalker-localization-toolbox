@@ -95,3 +95,76 @@ def detect_language(text, possible_languages=["uk", "en", "ru", "fr", "es"]):
 
 def create_equal_length_comment_line(text, char='='):
     return char * len(text)
+
+
+### Misc command
+def check_deepl_tokens_usage(token_list):
+    columns = [_tr("Token"), _tr("Plan"), _tr("Used"), _tr("Available"), _tr("Used %")]
+    table = create_table(columns, title=_tr("DeepL Token Usage"), border_style="blue")
+
+    api_url = 'https://api-free.deepl.com/v2/usage'
+
+    for token in token_list:
+        headers = {"Authorization": f"DeepL-Auth-Key {token}"}
+
+        try:
+            response = requests.get(api_url, headers=headers)
+            response.raise_for_status()
+            json_data = response.json()
+
+            if 'character_count' in json_data and 'character_limit' in json_data:
+                plan = json_data['character_limit']
+                used = json_data['character_count']
+                used_percentage = (used / plan) * 100 if plan != 0 else 0
+                available = plan - used
+                table.add_row(
+                    token,
+                    f"{plan:,}".replace(",", " ").rjust(7),
+                    f"{used:,}".replace(",", " ").rjust(7),
+                    f"{available:,}".replace(",", " ").rjust(7),
+                    generate_gradient_usage_bar(used_percentage, 30)
+                )
+            else:
+                table.add_row(token, cf_red(_tr("Error")), "N/A", "N/A", "N/A")
+
+        except requests.exceptions.RequestException as e:
+            table.add_row(token, cf_red(_tr("Error")), "N/A", "N/A", "N/A")
+
+    get_console().print(table)
+
+
+def generate_gradient_usage_bar(percentage, bar_length=20):
+    """
+    Generates a usage bar string with color gradient based on the percentage value.
+
+    Args:
+        percentage (float): The percentage of usage.
+        bar_length (int): The total length of the bar in characters.
+
+    Returns:
+        str: A string representing the gradient usage bar.
+    """
+    # Define the gradient range from green to red
+    gradient_range = [
+        "#00ff00",  # Green
+        "#40ff00",
+        "#80ff00",
+        "#bfff00",
+        "#ffff00",  # Yellow
+        "#ffbf00",
+        "#ff8000",
+        "#ff4000",
+        "#ff0000"  # Red
+    ]
+
+    # Calculate the index for the color based on the percentage
+    color_index = int((percentage / 100) * (len(gradient_range) - 1))
+    bar_color = gradient_range[color_index]
+
+    # Calculate the number of characters that should be filled
+    filled_length = int(round(bar_length * percentage / 100))
+
+    # Create the bar string
+    bar = f"[{bar_color}]" + "━" * filled_length + f"╸[grey53]" + "━" * (bar_length - filled_length) + f" [/grey53][{bar_color}]{percentage:.2f}%[/{bar_color}]"
+
+    return bar
