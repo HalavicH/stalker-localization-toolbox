@@ -148,7 +148,7 @@ def parse_args():
     parser_tr.add_argument('paths', nargs='*', help=_tr('Paths to files or directories'))
     parser_tr.add_argument('--from', dest='from_lang', help=_tr('Source language (auto-detect if missing)'))
     parser_tr.add_argument('--to', dest='to_lang', required=True, help=_tr('Target language'))
-    parser_tr.add_argument('--api-key', required=True, help=_tr('API key for translation service'))
+    parser_tr.add_argument('--api-key', help=_tr("API key for translation service. If absent Google Translation be used (it sucks)"))
     add_git_override_arguments(parser_tr)
 
     # analyze-patterns | ap

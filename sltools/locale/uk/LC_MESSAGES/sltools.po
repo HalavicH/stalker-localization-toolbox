@@ -54,8 +54,8 @@ msgstr "Мова джерела (автоматичне виявлення, як
 msgid "Target language"
 msgstr "Мова призначення"
 
-msgid "API key for translation service"
-msgstr "API-ключ для сервісу перекладу"
+msgid "API key for translation service. If absent free DeepLX will be used (it's slow)"
+msgstr "API-ключ для сервісу перекладу. Якщо відсутній - переклад буде через DeepLX (а він дуууже повільний)"
 
 msgid "Analyze patterns in a file or directory"
 msgstr "Аналізувати шаблони у файлі або папці з файлами"

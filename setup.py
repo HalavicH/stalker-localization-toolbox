@@ -44,6 +44,7 @@ setup(
         "Flask",
         "flask_CORS",
         "watchdog",
+        "googletrans~=4.0.0rc1",
     ],
     include_package_data=True,
     python_requires='>=3.8',

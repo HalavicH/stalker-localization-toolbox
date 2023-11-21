@@ -1,4 +1,7 @@
+import time
+
 import requests
+from googletrans import Translator
 from langdetect import LangDetectException
 
 from sltools.commands.common import get_xml_files_and_log, process_files_with_progress
@@ -14,6 +17,16 @@ from sltools.utils.lang_utils import _tr
 
 class AccessDeniedException(Exception):
     pass
+
+
+translator = Translator()
+
+
+def translate_google(text, target_language, src_language):
+    if src_language:
+        return translator.translate(text, src=src_language, dest=target_language).text
+    else:
+        return translator.translate(text, dest=target_language).text
 
 
 def translate_deepl(text, target_language, api_key, src_language=None):
@@ -99,9 +112,14 @@ def process_string_translation(args, lang_from, lang_to, string_tag):
     log.always(_tr("Translating text with id '%s'") % string_id)
     try:
         # Translated the text fragment
-        translated = translate_deepl(prepared_text, lang_to, args.api_key, lang_from)
+        if args.api_key:
+            translated = translate_deepl(prepared_text, lang_to, args.api_key, lang_from)
+        else:
+            translated = translate_google(prepared_text, lang_to, lang_from)
     except AccessDeniedException:
         raise
+    # except TooManyRequestsException as e:
+    #     raise Exception
     except Exception as e:
         log.error(_tr("Can't translate: '%s'. Error: %s" % (orig_text, interpret_error(e))))
         return
