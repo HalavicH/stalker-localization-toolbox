@@ -15,6 +15,8 @@ import sys
 import time
 import traceback
 
+from importlib.metadata import version
+
 from sltools.command_processor import process_command
 from sltools.config import *
 from sltools.utils.colorize import *
@@ -86,7 +88,7 @@ def add_git_override_arguments(parser):
 
 def parse_args():
     parser = ExtendedHelpParser(description=_tr("app_description"), formatter_class=CustomHelpFormatter)
-    parser.add_argument('--version', action='version', version='%(prog)s 0.1.2')
+    parser.add_argument('--version', action='version', version=version('sltools'))
 
     subparsers = parser.add_subparsers(dest='command', help=_tr('Sub-commands available:'))
 
