@@ -54,8 +54,8 @@ msgstr "Мова джерела (автоматичне виявлення, як
 msgid "Target language"
 msgstr "Мова призначення"
 
-msgid "API key for translation service. If absent free DeepLX will be used (it's slow)"
-msgstr "API-ключ для сервісу перекладу. Якщо відсутній - переклад буде через DeepLX (а він дуууже повільний)"
+msgid "API key for translation service. If absent Google Translation be used (it sucks)"
+msgstr "API-ключ для сервісу перекладу. Якщо відсутній, використовується Google Перекладач (він відстійний)"
 
 msgid "Analyze patterns in a file or directory"
 msgstr "Аналізувати шаблони у файлі або папці з файлами"
@@ -737,4 +737,46 @@ msgstr "Використано %"
 
 msgid "DeepL Token Usage"
 msgstr "Статистика використання токенів [blue]DeepL[/blue]"
+
+###################
+# MO2 translation #
+###################
+msgid "Commands for managing and processing Mod Organizer 2 (MO2) mods"
+msgstr "Команди для керування та обробки модів Mod Organizer 2 (MO2)"
+
+msgid "Map VFS file tree to physical file paths for MO2 mods"
+msgstr "Перетворює дерево файлів VFS (віртуальна файлова система MO2) в дерево реальних шляхів до файлів модів MO2"
+
+msgid "Path to the VFS file tree report from MO2"
+msgstr "Шлях до звіту дерева файлів VFS з MO2"
+
+msgid "File to output the mapped physical file paths to"
+msgstr "Файл для куди зберігати результат перетворення"
+
+msgid "Combine all mod files into a single directory, mimicking the VFS structure."
+msgstr "Об'єднати всі файли модів в один каталог, імітуючи структуру VFS."
+
+msgid "Exclude files or mods matching these patterns (separate multiple patterns with \"|\")"
+msgstr "Виключити файли або модифікації, що відповідають цим шаблонам (розділити декілька шаблонів за допомогою \"|\")"
+
+msgid "Include only files or mods matching these patterns (separate multiple patterns with \"|\")"
+msgstr "Включити лише файли або модифікації, що відповідають цим шаблонам (розділи декілька шаблонів за допомогою \"|\")"
+
+msgid "Create a physical copy of the MO2 VFS using a list of real file paths"
+msgstr "Створити фізичну копію MO2 VFS, використовуючи список реальних шляхів до файлів"
+
+msgid "Path to the file containing real paths of the VFS (output from vfs-map command)"
+msgstr "Шлях до файлу, що містить реальні шляхи файлів, що використовуються в VFS (файл-резутьтат команди vfs-map)"
+
+msgid "Path to the base directory of Mod Organizer 2"
+msgstr "Шлях до кореневої директорії Mod Organizer 2"
+
+msgid "Directory where the physical copy of the VFS will be created"
+msgstr "Директорія, де буде створено фізичну копію VFS"
+
+msgid "Merge all files into a single directory, replicating the unified VFS view"
+msgstr "Об'єднати усі файли у єдиний каталог, відтворивши VFS в на реальній файловій системі"
+
+msgid "Retain the original mod directory structure in the output, useful for identifying file sources"
+msgstr "Зберегти оригінальну структуру папок модів, що може бути корисним для ідентифікації джерел файлів"
 
