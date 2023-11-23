@@ -780,3 +780,27 @@ msgstr "Об'єднати усі файли у єдиний каталог, ві
 msgid "Retain the original mod directory structure in the output, useful for identifying file sources"
 msgstr "Зберегти оригінальну структуру папок модів, що може бути корисним для ідентифікації джерел файлів"
 
+msgid "Running command '%s'"
+msgstr "Запуск команди '%s'"
+
+msgid "Mapping MO2 VFS paths to real"
+msgstr "Відображення MO2 VFS шляхів у реальні"
+
+msgid "Converted file paths saved to: %s"
+msgstr "Перетворені шляхи до файлів збережено в: %s"
+
+msgid "Processed: %d file entries. Included: %d, excluded: %d"
+msgstr "Оброблено: %d файлів. Включено: %d, скіпнуто: %d"
+
+msgid "\tFile with mappings: %s"
+msgstr "\tФайл з VFS мапінгами: %s"
+
+msgid "\tResulting file: %s"
+msgstr "\tФайл з результатами: %s"
+
+msgid "\tInclude: %s"
+msgstr "\tВключити: %s"
+
+msgid "\tExclude: %s"
+msgstr "\tВиключити: %s"
+
