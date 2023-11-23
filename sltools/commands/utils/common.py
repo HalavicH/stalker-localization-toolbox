@@ -46,3 +46,11 @@ def format_filename_for_display(file, max_file_width):
         return "..." + file[-(max_file_width - 5):]
     else:
         return file.ljust(max_file_width)
+
+
+def map_alias_to_command(args, cmd_attr_name, aliases):
+    for cmd in aliases:
+        command = getattr(args, cmd_attr_name)
+        if command in aliases[cmd]:
+            setattr(args, cmd_attr_name,  cmd)
+

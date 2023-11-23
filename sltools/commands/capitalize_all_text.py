@@ -1,6 +1,6 @@
 from rich import get_console
 
-from sltools.commands.common import get_xml_files_and_log, process_files_with_progress
+from sltools.commands.utils.common import get_xml_files_and_log, process_files_with_progress
 from sltools.log_config_loader import log
 from sltools.utils.colorize import cf_cyan
 from sltools.utils.file_utils import read_xml, save_xml

@@ -14,25 +14,17 @@ import os
 import sys
 import time
 import traceback
-
 from importlib.metadata import version
-
-from sltools.command_processor import process_command
-from sltools.config import *
-from sltools.utils.colorize import *
-from sltools.log_config_loader import log
-from sltools.utils.lang_utils import _tr
-from sltools.config_file_manager import ConfigFileManager, file_config
 
 from rich_argparse import RichHelpFormatter
 
+from sltools.command_processor import process_command
+from sltools.config import *
+from sltools.config_file_manager import ConfigFileManager, file_config
+from sltools.log_config_loader import log
+from sltools.utils.colorize import *
+from sltools.utils.lang_utils import _tr
 from sltools.utils.misc import check_for_update, check_deepl_tokens_usage
-
-
-def map_alias_to_command(args):
-    for cmd in CMD_TO_ALIASES:
-        if args.command in CMD_TO_ALIASES[cmd]:
-            args.command = cmd
 
 
 class CustomHelpFormatter(RichHelpFormatter):
@@ -107,8 +99,6 @@ def parse_args():
     args = parser.parse_args()
     log.debug(f"Args: {args}")
 
-    map_alias_to_command(args)
-
     if args.command is None:
         cmd_name = sys.argv[0].split("/")[-1] + " -h"
         log.always(_tr(f"Please provide args. Use {cf_green(cmd_name)} for help"))
@@ -122,10 +112,10 @@ def init_mo2_actions_subparser(formatter_class, subparsers):
     mo2_subparsers = subparsers.add_parser('mo2',
                                            formatter_class=formatter_class,
                                            help=_tr('Commands for managing and processing Mod Organizer 2 (MO2) mods'))
-    mo2_subparsers = mo2_subparsers.add_subparsers(dest='command', help=_tr('Sub-commands available:'))
+    mo2_subparsers = mo2_subparsers.add_subparsers(dest='subcommand', help=_tr('Sub-commands available:'))
 
     # Add VFS mapping subparser
-    vfs_map_parser = mo2_subparsers.add_parser('vfs-map',
+    vfs_map_parser = mo2_subparsers.add_parser(VFS_MAP, aliases=MO2_CMD_TO_ALIASES[VFS_MAP],
                                                formatter_class=formatter_class,
                                                help=_tr('Map VFS file tree to physical file paths for MO2 mods'))
     vfs_map_parser.add_argument('--vfs-file', required=True, dest="vfs_file",
@@ -140,7 +130,7 @@ def init_mo2_actions_subparser(formatter_class, subparsers):
                                 help=_tr('Include only files or mods matching these patterns (separate multiple patterns with "|")'))
 
     # Add VFS copy subparser
-    vfs_copy_parser = mo2_subparsers.add_parser('vfs-copy',
+    vfs_copy_parser = mo2_subparsers.add_parser(VFS_COPY, aliases=MO2_CMD_TO_ALIASES[VFS_COPY],
                                                 formatter_class=formatter_class,
                                                 help=_tr('Create a physical copy of the MO2 VFS using a list of real file paths'))
 
@@ -169,23 +159,23 @@ def init_text_actions_parser(formatter_class, subparsers):
     parser_config.add_argument('--show-stacktrace', action=BooleanAction, type=str, default=None,
                                help=_tr('Enable/Disable showing error stack trace (Available: True/False)'))
     # validate-encoding | ve
-    parser_ve = subparsers.add_parser(VALIDATE_ENCODING, aliases=CMD_TO_ALIASES[VALIDATE_ENCODING],
+    parser_ve = subparsers.add_parser(VALIDATE_ENCODING, aliases=COMMON_CMD_TO_ALIASES[VALIDATE_ENCODING],
                                       formatter_class=formatter_class,
                                       help=_tr('Validate encoding of a file or directory'))
     parser_ve.add_argument('paths', nargs='*', help=_tr('Paths to files or directories'))
     # fix-encoding | fe
     fe_help = _tr('Fix UTF-8 encoding of a file or directory (Warning: may break encoding if detected wrongly)')
-    parser_fe = subparsers.add_parser(FIX_ENCODING, aliases=CMD_TO_ALIASES[FIX_ENCODING],
+    parser_fe = subparsers.add_parser(FIX_ENCODING, aliases=COMMON_CMD_TO_ALIASES[FIX_ENCODING],
                                       formatter_class=formatter_class, help=fe_help)
     parser_fe.add_argument('paths', nargs='*', help=_tr('Paths to files or directories'))
     add_git_override_arguments(parser_fe)
     # validate-xml | vx
-    parser_vx = subparsers.add_parser(VALIDATE_XML, aliases=CMD_TO_ALIASES[VALIDATE_XML],
+    parser_vx = subparsers.add_parser(VALIDATE_XML, aliases=COMMON_CMD_TO_ALIASES[VALIDATE_XML],
                                       formatter_class=formatter_class,
                                       help=_tr('Validate XML of a file or directory'))
     parser_vx.add_argument('paths', nargs='*', help=_tr('Paths to files or directories'))
     # format-xml | fx
-    parser_fx = subparsers.add_parser(FORMAT_XML, aliases=CMD_TO_ALIASES[FORMAT_XML],
+    parser_fx = subparsers.add_parser(FORMAT_XML, aliases=COMMON_CMD_TO_ALIASES[FORMAT_XML],
                                       formatter_class=formatter_class,
                                       help=_tr('Format XML of a file or directory'))
     parser_fx.add_argument('paths', nargs='*', help=_tr('Paths to files or directories'))
@@ -195,7 +185,7 @@ def init_text_actions_parser(formatter_class, subparsers):
                            help=_tr('Format <text> tag contents to resemble in-game appearance'))
     add_git_override_arguments(parser_fx)
     # check-primary-lang | cpl
-    parser_cpl = subparsers.add_parser(CHECK_PRIMARY_LANG, aliases=CMD_TO_ALIASES[CHECK_PRIMARY_LANG],
+    parser_cpl = subparsers.add_parser(CHECK_PRIMARY_LANG, aliases=COMMON_CMD_TO_ALIASES[CHECK_PRIMARY_LANG],
                                        formatter_class=formatter_class,
                                        help=_tr('Check primary language of a file or directory'))
     parser_cpl.add_argument('paths', nargs='*', help=_tr('Paths to files or directories'))
@@ -204,7 +194,7 @@ def init_text_actions_parser(formatter_class, subparsers):
     parser_cpl.add_argument('--detailed', action='store_true',
                             help=_tr('Show detailed report with language occurrences per file'))
     # translate | tr
-    parser_tr = subparsers.add_parser(TRANSLATE, aliases=CMD_TO_ALIASES[TRANSLATE],
+    parser_tr = subparsers.add_parser(TRANSLATE, aliases=COMMON_CMD_TO_ALIASES[TRANSLATE],
                                       formatter_class=formatter_class,
                                       help=_tr('Translate text in a file or directory'))
     parser_tr.add_argument('paths', nargs='*', help=_tr('Paths to files or directories'))
@@ -213,7 +203,7 @@ def init_text_actions_parser(formatter_class, subparsers):
     parser_tr.add_argument('--api-key', help=_tr("API key for translation service. If absent Google Translation be used (it sucks)"))
     add_git_override_arguments(parser_tr)
     # analyze-patterns | ap
-    parser_ap = subparsers.add_parser(ANALYZE_PATTERNS, aliases=CMD_TO_ALIASES[ANALYZE_PATTERNS],
+    parser_ap = subparsers.add_parser(ANALYZE_PATTERNS, aliases=COMMON_CMD_TO_ALIASES[ANALYZE_PATTERNS],
                                       formatter_class=formatter_class,
                                       help=_tr('Analyze patterns in a file or directory'))
     parser_ap.add_argument('paths', nargs='*', help=_tr('Paths to files or directories'))
@@ -229,14 +219,14 @@ def init_text_actions_parser(formatter_class, subparsers):
     # add_git_override_arguments(parser_fbp)
     # capitalize-text | ct
     ct_help = _tr('Capitalize first letter [cyan](a->A)[/cyan] in all text entries in a file or directory')
-    parser_ct = subparsers.add_parser(CAPITALIZE_TEXT, aliases=CMD_TO_ALIASES[CAPITALIZE_TEXT],
+    parser_ct = subparsers.add_parser(CAPITALIZE_TEXT, aliases=COMMON_CMD_TO_ALIASES[CAPITALIZE_TEXT],
                                       formatter_class=formatter_class, help=ct_help)
     parser_ct.add_argument('paths', nargs='*', help=_tr('Paths to files or directories'))
     add_git_override_arguments(parser_ct)
     # find-string-dups | fsd
     fsd_help = _tr(
         "Looks for duplicates of [green]'<string id=\"...\">'[/green] to eliminate unwanted conflicts/overrides. Provides filecentric report by default")
-    parser_fsd = subparsers.add_parser(FIND_STRING_DUPLICATES, aliases=CMD_TO_ALIASES[FIND_STRING_DUPLICATES],
+    parser_fsd = subparsers.add_parser(FIND_STRING_DUPLICATES, aliases=COMMON_CMD_TO_ALIASES[FIND_STRING_DUPLICATES],
                                        formatter_class=formatter_class, help=fsd_help)
     parser_fsd.add_argument('--per-string-report', action='store_true', default=False,
                             help=_tr('Display detailed report with string text'))
@@ -246,7 +236,7 @@ def init_text_actions_parser(formatter_class, subparsers):
                             help=_tr('Save filecentric report as JSON'))
     parser_fsd.add_argument('paths', nargs='*', help=_tr('Paths to files or directories'))
     # find-string-dups | fsd
-    parser_sfwd = subparsers.add_parser(SORT_FILES_WITH_DUPLICATES, aliases=CMD_TO_ALIASES[SORT_FILES_WITH_DUPLICATES],
+    parser_sfwd = subparsers.add_parser(SORT_FILES_WITH_DUPLICATES, aliases=COMMON_CMD_TO_ALIASES[SORT_FILES_WITH_DUPLICATES],
                                         formatter_class=formatter_class,
                                         help=_tr("Sorts strings in files alphabetically placing duplicates on top"))
     parser_sfwd.add_argument('--sort-duplicates-only', action='store_true', default=False,

@@ -1,10 +1,8 @@
-import time
-
 import requests
 from googletrans import Translator
 from langdetect import LangDetectException
 
-from sltools.commands.common import get_xml_files_and_log, process_files_with_progress
+from sltools.commands.utils.common import get_xml_files_and_log, process_files_with_progress
 from sltools.utils.colorize import cf_blue
 from sltools.utils.error_utils import interpret_error
 from sltools.utils.file_utils import read_xml, save_xml

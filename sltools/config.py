@@ -5,7 +5,9 @@ from sltools.utils.lang_utils import _tr
 
 PRIMARY_ENCODING = 'windows-1251'
 
-# Constants for command names
+#######################################
+# Constants for common commands names #
+#######################################
 VALIDATE_ENCODING = 'validate-encoding'
 FIX_ENCODING = 'fix-encoding'
 VALIDATE_XML = 'validate-xml'
@@ -18,7 +20,9 @@ FIND_STRING_DUPLICATES = 'find-string-duplicates'
 SORT_FILES_WITH_DUPLICATES = 'sort-files-with-duplicates'
 FIX_KNOWN_BROKEN_PATTERNS = 'fix-known-broken-patterns'
 
-CMD_TO_ALIASES = {
+PROCESS_MO2 = 'mo2'
+
+COMMON_CMD_TO_ALIASES = {
     VALIDATE_ENCODING: ['ve'],
     FIX_ENCODING: ['fe'],
     VALIDATE_XML: ['vx'],
@@ -31,6 +35,18 @@ CMD_TO_ALIASES = {
     FIND_STRING_DUPLICATES: ['fsd'],
     SORT_FILES_WITH_DUPLICATES: ['sfwd'],
 }
+
+####################################
+# Constants for MO2 commands names #
+####################################
+VFS_MAP = 'vfs-map'
+VFS_COPY = 'vfs-copy'
+
+MO2_CMD_TO_ALIASES = {
+    VFS_MAP: ['vm'],
+    VFS_COPY: ['vc'],
+}
+
 
 # CONSTANTS
 UNKNOWN_LANG = _tr("Unknown")

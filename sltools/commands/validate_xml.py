@@ -1,7 +1,6 @@
-from colorama import Fore
 from lxml.etree import XMLSyntaxError
 
-from sltools.commands.common import get_xml_files_and_log, process_files_with_progress
+from sltools.commands.utils.common import get_xml_files_and_log, process_files_with_progress
 from sltools.utils.colorize import cf_green
 from sltools.utils.file_utils import read_xml
 from sltools.utils.xml_utils import *

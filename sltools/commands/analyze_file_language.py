@@ -1,6 +1,6 @@
 from langdetect import LangDetectException
 
-from sltools.commands.common import process_files_with_progress, get_xml_files_and_log
+from sltools.commands.utils.common import process_files_with_progress, get_xml_files_and_log
 from sltools.config import UNKNOWN_LANG, TOO_LITTLE_DATA, min_recognizable_text_length
 from sltools.utils.colorize import *
 from sltools.utils.error_utils import interpret_error
