@@ -4,6 +4,7 @@ from importlib.metadata import version
 
 from langdetect import detect_langs
 
+from sltools.log_config_loader import log
 from sltools.utils.plain_text_utils import fold_text
 
 import requests
@@ -55,19 +56,23 @@ def exception_originates_from(func_name, exception):
 
 
 def check_for_update():
-    current_version = version('sltools')
-    response = requests.get('https://pypi.org/pypi/sltools/json')
-    if response.ok:
-        latest_version = response.json()['info']['version']
-        if current_version < latest_version:
-            return (trn("\n☢️\\[[blue]notice[/blue]] A new release of [cyan]sltools[/cyan] is available: "
-                        "[red]%s[/red] -> [green]%s[/green]. "
-                        "To upgrade run [green]pip install sltools --upgrade[/green]") % (
-                        current_version, latest_version))
+    try:
+        current_version = version('sltools')
+        response = requests.get('https://pypi.org/pypi/sltools/json')
+        if response.ok:
+            latest_version = response.json()['info']['version']
+            if current_version < latest_version:
+                return (trn("\n☢️\\[[blue]notice[/blue]] A new release of [cyan]sltools[/cyan] is available: "
+                            "[red]%s[/red] -> [green]%s[/green]. "
+                            "To upgrade run [green]pip install sltools --upgrade[/green]") % (
+                            current_version, latest_version))
+            else:
+                return trn('[bright_black]You are using the latest version of sltools.[/bright_black]') + " " + current_version
         else:
-            return trn('[bright_black]You are using the latest version of sltools.[/bright_black]') + " " + current_version
-    else:
-        return trn('Failed to check for updates: %s') % response.text
+            return trn('Failed to check for updates: %s') % response.text
+    except Exception as e:
+        log.debug(trn("Can't check the updates: %s") % e)
+        return cf_br_black(trn("Can't check of sltools updates. It seems you have no internet connection"))
 
 
 def set_default(obj):

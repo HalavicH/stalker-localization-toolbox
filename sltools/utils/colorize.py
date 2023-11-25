@@ -21,6 +21,10 @@ def cf_black(obj):
     return cf(obj, "black")
 
 
+def cf_br_black(obj):
+    return cf(obj, "bright_black")
+
+
 def cf_red(obj):
     return cf(obj, "red")
 
