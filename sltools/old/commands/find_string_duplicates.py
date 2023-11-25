@@ -3,7 +3,7 @@ import json
 import sys
 from collections import defaultdict
 
-from sltools.commands.utils.common import get_xml_files_and_log, process_files_with_progress
+from sltools.old.commands.utils.common import get_xml_files_and_log, process_files_with_progress
 from sltools.log_config_loader import log
 from sltools.utils.colorize import cf_yellow, cf_cyan
 from sltools.utils.error_utils import interpret_error

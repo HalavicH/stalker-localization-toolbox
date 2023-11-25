@@ -3,7 +3,7 @@ import textwrap
 
 from colorama import Fore
 
-from sltools.config import text_wrap_width
+from sltools.old.config import text_wrap_width
 from sltools.log_config_loader import log
 from collections import Counter
 from sltools.utils.lang_utils import trn

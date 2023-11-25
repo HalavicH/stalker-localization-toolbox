@@ -12,8 +12,8 @@ import requests
 from flask import Flask, render_template, request, jsonify
 from flask_cors import CORS
 
-from sltools.commands.sort_strings_in_files import sort_files_with_duplicates
-from sltools.config import file_changes_msg_queue, DefaultArgs
+from sltools.old.commands.sort_strings_in_files import sort_files_with_duplicates
+from sltools.old.config import file_changes_msg_queue, DefaultArgs
 from sltools.log_config_loader import log
 from sltools.utils.misc import set_default
 from sltools.utils.watch_files_for_change import thread_watch_directories

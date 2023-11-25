@@ -1,19 +1,19 @@
 from argparse import Namespace
 
-from sltools.commands.analyze_file_language import check_primary_lang
-from sltools.commands.analyze_patterns import analyze_patterns
-from sltools.commands.capitalize_all_text import capitalize_all_text
-from sltools.commands.find_string_duplicates import find_string_duplicates
-from sltools.commands.fix_encoding import fix_encoding
-from sltools.commands.format_xml import format_xml
-from sltools.commands.mo2.process_mo2 import process_mo2
-from sltools.commands.utils.common import map_alias_to_command
-from sltools.commands.utils.process_generic_cmd import process_generic_cmd
-from sltools.commands.sort_strings_in_files import sort_files_with_duplicates
-from sltools.commands.translate import translate
-from sltools.commands.validate_encoding import validate_encoding
-from sltools.commands.validate_xml import validate_xml
-from sltools.config import *
+from sltools.old.commands.analyze_file_language import check_primary_lang
+from sltools.old.commands.analyze_patterns import analyze_patterns
+from sltools.old.commands.capitalize_all_text import capitalize_all_text
+from sltools.old.commands.find_string_duplicates import find_string_duplicates
+from sltools.old.commands.fix_encoding import fix_encoding
+from sltools.old.commands.format_xml import format_xml
+from sltools.old.commands.mo2.process_mo2 import process_mo2
+from sltools.old.commands.utils.common import map_alias_to_command
+from sltools.old.commands.utils.process_generic_cmd import process_generic_cmd
+from sltools.old.commands.sort_strings_in_files import sort_files_with_duplicates
+from sltools.old.commands import translate
+from sltools.old.commands.validate_encoding import validate_encoding
+from sltools.old.commands.validate_xml import validate_xml
+from sltools.old.config import *
 from sltools.utils.error_utils import *
 
 

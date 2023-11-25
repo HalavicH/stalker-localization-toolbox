@@ -1,5 +1,5 @@
-from sltools.config import PRIMARY_ENCODING
-from sltools.commands.validate_encoding import validate_encoding
+from sltools.old.config import PRIMARY_ENCODING
+from sltools.old.commands.validate_encoding import validate_encoding
 from sltools.log_config_loader import log
 from sltools.utils.colorize import cf_yellow, cf_green, cf_red, cf_cyan
 from sltools.utils.error_utils import log_and_save_error, display_encoding_error_details

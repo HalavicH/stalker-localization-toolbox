@@ -1,9 +1,7 @@
 import os
 import shutil
 
-from rich import get_console
-
-from sltools.commands.utils.common import process_files_with_progress
+from sltools.old.commands.utils.common import process_files_with_progress
 from sltools.log_config_loader import log
 from sltools.utils.lang_utils import trn  # Ensure this import is included for _tr function
 

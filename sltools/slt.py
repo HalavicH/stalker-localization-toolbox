@@ -19,8 +19,8 @@ from importlib.metadata import version
 from rich_argparse import RichHelpFormatter
 
 from sltools.baseline.root_command import RootCommand
-from sltools.command_processor import process_command
-from sltools.config import *
+from sltools.old.command_processor import process_command
+from sltools.old.config import *
 from sltools.config_file_manager import ConfigFileManager, file_config
 from sltools.log_config_loader import log
 from sltools.utils.colorize import *
@@ -274,7 +274,7 @@ def handle_misc_command(args):
 
 
 def main():
-    new_main()
+    # new_main()
 
     start_time = time.process_time()
     try:
