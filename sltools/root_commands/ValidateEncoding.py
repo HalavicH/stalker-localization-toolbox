@@ -1,9 +1,10 @@
 from argparse import Namespace
+
 from rich import get_console
 
 from sltools.baseline.command_baseline import AbstractCommand
 from sltools.log_config_loader import log
-from sltools.old.commands.utils.common import get_xml_files_and_log, process_files_with_progress
+from sltools.old.commands.utils.common import get_xml_files_and_log
 from sltools.utils.colorize import cf_green, cf_red
 from sltools.utils.encoding_utils import detect_encoding, is_file_content_win1251_compatible
 from sltools.utils.lang_utils import trn
@@ -27,17 +28,17 @@ class ValidateEncoding(AbstractCommand):
 
     # Execution
     ###########
-    def _process_file(self, file, results: dict, args):
-        with open(file, 'rb') as f:
+    def _process_file(self, file_path, results: dict, args):
+        with open(file_path, 'rb') as f:
             binary_text = f.read()
 
         encoding = detect_encoding(binary_text)
         compatible, comment = is_file_content_win1251_compatible(binary_text, encoding)
         if compatible:
-            log.debug(trn("File %s is ok. Encoding: %s") % (file, encoding))
+            log.debug(trn("File %s is ok. Encoding: %s") % (file_path, encoding))
             return
 
-        results["report"].append((file, encoding, comment))
+        results["report"].append((file_path, encoding, comment))
 
     def execute(self, args: Namespace) -> dict:
         files = get_xml_files_and_log(args.paths, trn("Validating encoding for"))

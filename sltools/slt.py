@@ -25,7 +25,9 @@ from sltools.old.config import *
 from sltools.config_file_manager import ConfigFileManager, file_config
 from sltools.log_config_loader import log
 from sltools.root_commands.FixEncoding import FixEncoding
+from sltools.root_commands.FormatXml import FormatXml
 from sltools.root_commands.ValidateEncoding import ValidateEncoding
+from sltools.root_commands.ValidateXml import ValidateXml
 from sltools.utils.colorize import *
 from sltools.utils.lang_utils import trn
 from sltools.utils.misc import check_for_update, check_deepl_tokens_usage
@@ -263,7 +265,9 @@ def new_main():
         parser = ExtendedHelpParser(description=trn("app_description"), formatter_class=CustomHelpFormatter)
         root = CommandProcessor([
             ValidateEncoding(),
-            FixEncoding()
+            FixEncoding(),
+            ValidateXml(),
+            FormatXml(),
         ])
         root.setup(parser)
 

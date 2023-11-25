@@ -1,17 +1,12 @@
-from rich import get_console
-
 from sltools.baseline.command_baseline import AbstractCommand
 from sltools.log_config_loader import log
 from sltools.old.commands.fix_encoding import change_file_encoding
-from sltools.old.commands.utils.common import process_files_with_progress
 from sltools.old.config import PRIMARY_ENCODING
 from sltools.root_commands.ValidateEncoding import ValidateEncoding
 from sltools.utils.colorize import cf_green, cf_red, cf_yellow, cf_cyan
-from sltools.utils.encoding_utils import detect_encoding, is_file_content_win1251_compatible
 from sltools.utils.error_utils import log_and_save_error, display_encoding_error_details
 from sltools.utils.file_utils import read_xml
 from sltools.utils.lang_utils import trn
-from sltools.utils.misc import create_table
 
 
 class FixEncoding(AbstractCommand):
@@ -32,9 +27,9 @@ class FixEncoding(AbstractCommand):
 
     # Execution
     ###########
-    def _process_file(self, file, results: dict, args):
-        file_name = file
-        encoding = args.custom[file]
+    def _process_file(self, file_path, results: dict, args):
+        file_name = file_path
+        encoding = args.custom[file_path]
         processed = 0
 
         if encoding.lower() == "utf-8":
@@ -74,7 +69,7 @@ class FixEncoding(AbstractCommand):
 
         self.process_files_with_progressbar(args, list(args.custom.keys()), results, False)
 
-        log.info(trn("Total processed files: %d") % results["total_processed"])
+        log.info(trn("Files with fixed encoding: %d") % results["total_processed"])
         return results
 
     # Displaying

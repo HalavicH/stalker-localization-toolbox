@@ -41,6 +41,8 @@ def process_files_with_progress(files: list, process_func, results: dict, args: 
             log.debug(trn("Processing file [green]#%03d[/] with name [green]%s[/]") % (i, file_path))
             process_func(file_path, results, args)
 
+    log.info(trn("Total processed files: %d") % len(files))
+
 
 def format_filename_for_display(file, max_file_width):
     if len(file) > max_file_width:

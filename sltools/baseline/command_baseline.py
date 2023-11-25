@@ -66,7 +66,7 @@ class AbstractCommand(Command, ABC):
 
     # Processing
     @abstractmethod
-    def _process_file(self, file, results: dict, args):
+    def _process_file(self, file_path, results: dict, args):
         pass
 
     def process_files_with_progressbar(self, args: Namespace, files: list, results: dict, is_read_only: bool):
