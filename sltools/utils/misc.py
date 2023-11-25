@@ -10,7 +10,7 @@ import requests
 from rich.table import Table
 
 from sltools.utils.colorize import *
-from sltools.utils.lang_utils import _tr
+from sltools.utils.lang_utils import trn
 
 
 def get_term_width():
@@ -60,20 +60,20 @@ def check_for_update():
     if response.ok:
         latest_version = response.json()['info']['version']
         if current_version < latest_version:
-            return (_tr("\n☢️\\[[blue]notice[/blue]] A new release of [cyan]sltools[/cyan] is available: "
+            return (trn("\n☢️\\[[blue]notice[/blue]] A new release of [cyan]sltools[/cyan] is available: "
                         "[red]%s[/red] -> [green]%s[/green]. "
                         "To upgrade run [green]pip install sltools --upgrade[/green]") % (
                         current_version, latest_version))
         else:
-            return _tr('[bright_black]You are using the latest version of sltools.[/bright_black]') + " " + current_version
+            return trn('[bright_black]You are using the latest version of sltools.[/bright_black]') + " " + current_version
     else:
-        return _tr('Failed to check for updates: %s') % response.text
+        return trn('Failed to check for updates: %s') % response.text
 
 
 def set_default(obj):
     if isinstance(obj, set):
         return list(obj)
-    raise TypeError(_tr("%s is not instance of set. Don't know how to default it") % obj)
+    raise TypeError(trn("%s is not instance of set. Don't know how to default it") % obj)
 
 
 def check_paths_exist(paths):
@@ -99,8 +99,8 @@ def create_equal_length_comment_line(text, char='='):
 
 ### Misc command
 def check_deepl_tokens_usage(token_list):
-    columns = [_tr("Token"), _tr("Plan"), _tr("Used"), _tr("Available"), _tr("Used %")]
-    table = create_table(columns, title=_tr("DeepL Token Usage"), border_style="blue")
+    columns = [trn("Token"), trn("Plan"), trn("Used"), trn("Available"), trn("Used %")]
+    table = create_table(columns, title=trn("DeepL Token Usage"), border_style="blue")
 
     api_url = 'https://api-free.deepl.com/v2/usage'
 
@@ -125,10 +125,10 @@ def check_deepl_tokens_usage(token_list):
                     generate_gradient_usage_bar(used_percentage, 30)
                 )
             else:
-                table.add_row(token, cf_red(_tr("Error")), "N/A", "N/A", "N/A")
+                table.add_row(token, cf_red(trn("Error")), "N/A", "N/A", "N/A")
 
         except requests.exceptions.RequestException as e:
-            table.add_row(token, cf_red(_tr("Error")), "N/A", "N/A", "N/A")
+            table.add_row(token, cf_red(trn("Error")), "N/A", "N/A", "N/A")
 
     get_console().print(table)
 

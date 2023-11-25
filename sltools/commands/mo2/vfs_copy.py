@@ -5,7 +5,7 @@ from rich import get_console
 
 from sltools.commands.utils.common import process_files_with_progress
 from sltools.log_config_loader import log
-from sltools.utils.lang_utils import _tr  # Ensure this import is included for _tr function
+from sltools.utils.lang_utils import trn  # Ensure this import is included for _tr function
 
 
 def copy_file(source, destination):
@@ -20,12 +20,12 @@ def copy_file(source, destination):
     """
     try:
         if not os.path.exists(source):
-            log.warning(_tr("Source file not found: %s") % source)
+            log.warning(trn("Source file not found: %s") % source)
             return False
         shutil.copy2(source, destination)
         return True
     except Exception as e:
-        log.error(_tr("Error copying file from %s to %s: %s") % (source, destination, str(e)))
+        log.error(trn("Error copying file from %s to %s: %s") % (source, destination, str(e)))
         return False
 
 
@@ -55,19 +55,19 @@ def vfs_copy(args, is_read_only):
         file_paths = file.readlines()
 
     if os.path.exists(args.output_dir) and os.listdir(args.output_dir) and not is_read_only:
-        user_response = input(_tr("Output directory '%s' already exists. Do you want to override it? [y/N]: ") % args.output_dir)
+        user_response = input(trn("Output directory '%s' already exists. Do you want to override it? [y/N]: ") % args.output_dir)
         if user_response.lower() != 'y':
-            log.always(_tr("Operation cancelled by user."))
+            log.always(trn("Operation cancelled by user."))
             return
 
     results = {'copied_files': 0, 'skipped_files': 0}
     process_files_with_progress(file_paths, process_file, results, args, is_read_only)
 
-    log.always(_tr("Processed file tree from '%s' to '%s'.\nTotal files copied: %d\nTotal files skipped: %d") %
+    log.always(trn("Processed file tree from '%s' to '%s'.\nTotal files copied: %d\nTotal files skipped: %d") %
                (args.real_paths_file, args.output_dir, results['copied_files'], results['skipped_files']))
 
     # Log results
-    log.always(_tr("Processed file tree from '%s' to '%s'.\nTotal files copied: %d\nTotal files skipped: %d") %
+    log.always(trn("Processed file tree from '%s' to '%s'.\nTotal files copied: %d\nTotal files skipped: %d") %
                (args.real_paths_file, args.output_dir, results['copied_files'], results['skipped_files']))
 
 # Example usage

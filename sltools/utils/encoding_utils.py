@@ -3,7 +3,7 @@ import chardet
 from sltools.config import PRIMARY_ENCODING
 from sltools.log_config_loader import log
 from sltools.utils.colorize import cf_green, cf_yellow, cf_red
-from sltools.utils.lang_utils import _tr
+from sltools.utils.lang_utils import trn
 
 # Constants
 ALLOWED_ENCODINGS = [PRIMARY_ENCODING, 'ascii']
@@ -14,7 +14,7 @@ def is_ascii(binary_text, file_path=""):
         binary_text.decode('ascii')
         return True
     except UnicodeDecodeError as e:
-        log.debug(_tr("Can't decode file %s as ascii. Error %s") % (file_path, e))
+        log.debug(trn("Can't decode file %s as ascii. Error %s") % (file_path, e))
         return False
 
 
@@ -30,7 +30,7 @@ def is_windows_1251_decodable(binary_text, file_path=""):
         binary_text.decode(PRIMARY_ENCODING)
         return True  # Successfully decoded with windows-1251
     except UnicodeDecodeError as e:
-        log.debug(_tr("Can't decode file %s as windows-1251. Error %s") % (file_path, e))
+        log.debug(trn("Can't decode file %s as windows-1251. Error %s") % (file_path, e))
         return False  # Decoding error occurred, not compatible with windows-1251
 
 

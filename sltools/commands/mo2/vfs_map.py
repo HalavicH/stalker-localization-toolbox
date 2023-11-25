@@ -1,7 +1,7 @@
 import os
 
 from sltools.log_config_loader import log
-from sltools.utils.lang_utils import _tr
+from sltools.utils.lang_utils import trn
 
 STATS = {
     'total': 0,
@@ -69,13 +69,13 @@ def vfs_map(args, is_read_only):
     input_file = args.vfs_file
     output_path = args.output_file
 
-    log.always(_tr("Mapping MO2 VFS paths to real"))
-    log.always(_tr("\tFile with mappings: %s") % input_file)
-    log.always(_tr("\tResulting file: %s") % output_path)
-    log.always(_tr("\tInclude: %s") % include_patterns)
-    log.always(_tr("\tExclude: %s") % exclude_patterns)
+    log.always(trn("Mapping MO2 VFS paths to real"))
+    log.always(trn("\tFile with mappings: %s") % input_file)
+    log.always(trn("\tResulting file: %s") % output_path)
+    log.always(trn("\tInclude: %s") % include_patterns)
+    log.always(trn("\tExclude: %s") % exclude_patterns)
 
     process_file_tree(input_file, output_path, include_patterns, exclude_patterns)
 
-    log.always(_tr("Converted file paths saved to: %s") % output_path)
-    log.always(_tr("Processed: %d file entries. Included: %d, excluded: %d") % (STATS['excluded'], STATS['included'], STATS['total']))
+    log.always(trn("Converted file paths saved to: %s") % output_path)
+    log.always(trn("Processed: %d file entries. Included: %d, excluded: %d") % (STATS['excluded'], STATS['included'], STATS['total']))

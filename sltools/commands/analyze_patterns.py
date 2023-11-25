@@ -11,7 +11,7 @@ from sltools.utils.colorize import *
 from sltools.utils.file_utils import read_xml
 from sltools.utils.plain_text_utils import check_placeholders, analyze_patterns_in_text
 from sltools.utils.xml_utils import parse_xml_root
-from sltools.utils.lang_utils import _tr
+from sltools.utils.lang_utils import trn
 
 # Dictionary keys
 META_DATA_KEY = "meta_data"
@@ -139,7 +139,7 @@ def add_meta_data(current_analysis):
 
 
 def analyze_patterns(args, is_read_only):
-    files = get_xml_files_and_log(args.paths, _tr("Analyzing patterns usage and errors"))
+    files = get_xml_files_and_log(args.paths, trn("Analyzing patterns usage and errors"))
 
     results = {}
     results = add_meta_data(results)
@@ -149,40 +149,40 @@ def analyze_patterns(args, is_read_only):
     process_files_with_progress(files, process_file, per_file_results, args, is_read_only)
     results = add_summary(results)
 
-    log.info(_tr("Total processed files: %s") % len(files))
+    log.info(trn("Total processed files: %s") % len(files))
 
     display_report(results)
 
     if args.save:
         filename = build_file_name()
-        log.always(_tr("Saving the report at [cyan]%s[/cyan]") % rich_guard(filename))
+        log.always(trn("Saving the report at [cyan]%s[/cyan]") % rich_guard(filename))
         serialize_analysis(results, filename)
 
 
 def display_report(results):
-    log.always(_tr("Displaying report"))
-    log.always(_tr("Summary:"))
+    log.always(trn("Displaying report"))
+    log.always(trn("Summary:"))
 
     patterns_report = results[SUMMARY_KEY][PATTERNS_KEY]
     errors = results[SUMMARY_KEY][PATTERN_ERRORS_KEY]
-    log.always(_tr("Patterns:"))
+    log.always(trn("Patterns:"))
     for pattern_type, patterns in patterns_report.items():
-        log.always(_tr("\t%s:") % cf_yellow(pattern_type))
+        log.always(trn("\t%s:") % cf_yellow(pattern_type))
         for pattern, cnt in patterns.items():
-            log.always(_tr("\t\t%s: %s") % (cf_green(pattern), cf_cyan(cnt)))
+            log.always(trn("\t\t%s: %s") % (cf_green(pattern), cf_cyan(cnt)))
 
     if len(errors) == 0:
-        log.always(cf_green(_tr("No pattern syntax errors detected")))
+        log.always(cf_green(trn("No pattern syntax errors detected")))
         return
 
     log.always(cf_red("#" * 80))
-    log.always(cf_red(_tr("Errors:")))
+    log.always(cf_red(trn("Errors:")))
     log.always(cf_red("#" * 80))
     for filename, file_report in errors.items():
-        log.always(_tr("[cyan]In file:[/cyan] %s:") % cf_yellow(filename))
+        log.always(trn("[cyan]In file:[/cyan] %s:") % cf_yellow(filename))
 
         for string, string_report in file_report.items():
-            log.always(_tr("[cyan]In string with id:[/cyan] '%s'") % cf_green(string))
+            log.always(trn("[cyan]In string with id:[/cyan] '%s'") % cf_green(string))
 
             for error in string_report:
                 row = error['position']['row']
@@ -190,12 +190,12 @@ def display_report(results):
                 cause = error['type']
                 snippet_lines = error['snippet'].split("\n")
 
-                log.always(cf_red(_tr("Error: %s")) % cause + _tr(". Row: %s, column %s") % (row, col))
+                log.always(cf_red(trn("Error: %s")) % cause + trn(". Row: %s, column %s") % (row, col))
                 for line in snippet_lines:
-                    log.always(_tr("[grey53]%s") % line)
+                    log.always(trn("[grey53]%s") % line)
                 log.always("")
 
-    log.always(_tr("Meta-data:"))
+    log.always(trn("Meta-data:"))
     pretty.pprint(results[META_DATA_KEY])
 
 
@@ -216,9 +216,9 @@ def compare_analyses(previous_analysis, current_analysis, PATTERNS):
     missing_files = previous_file_names - current_file_names
     extra_files = current_file_names - previous_file_names
     if missing_files:
-        log.always(_tr("Missing files in current analysis: %s") % ', '.join(missing_files))
+        log.always(trn("Missing files in current analysis: %s") % ', '.join(missing_files))
     if extra_files:
-        log.always(_tr("Extra files in current analysis: %s") % ', '.join(extra_files))
+        log.always(trn("Extra files in current analysis: %s") % ', '.join(extra_files))
 
     # Only compare files that are present in both analyses
     common_files = previous_file_names.intersection(current_file_names)
@@ -261,34 +261,34 @@ def compare_analyses(previous_analysis, current_analysis, PATTERNS):
 
     if mismatched_files:
         log.always(cf_yellow("#" * 80))
-        log.always(cf_yellow(_tr("###### Mismatch in reports detected! ######")))
+        log.always(cf_yellow(trn("###### Mismatch in reports detected! ######")))
         log.always(cf_yellow("#" * 80))
-        log.always(cf_blue("#" * 10 + _tr(" Total missmatch: ") + "#" * 10))
+        log.always(cf_blue("#" * 10 + trn(" Total missmatch: ") + "#" * 10))
         for pattern in PATTERNS:
             prev_count = total_patterns_prev[pattern]
             curr_count = total_patterns_curr[pattern]
             change = total_patterns_change[pattern]
             if change != 0:
-                log.always(cf_blue(_tr("Pattern: '%s', %d %s than before. Before %d after %d") % (pattern, abs(change), get_action(change), prev_count, curr_count)))
+                log.always(cf_blue(trn("Pattern: '%s', %d %s than before. Before %d after %d") % (pattern, abs(change), get_action(change), prev_count, curr_count)))
 
-        log.always(cf_magenta("\t" + "#" * 10 + _tr(" Mismatched files: ") + "#" * 10))
+        log.always(cf_magenta("\t" + "#" * 10 + trn(" Mismatched files: ") + "#" * 10))
         for file, file_mismatches, text_tag_mismatches in mismatched_files:
-            log.always(cf_magenta(_tr("File: '%s'") % file))
+            log.always(cf_magenta(trn("File: '%s'") % file))
             for pattern, counts in file_mismatches.items():
                 prev_count, curr_count, change = counts
-                log.always(cf_magenta(_tr("Pattern: '%s', %d %s than before. Before %d after %d") % (pattern, abs(change), get_action(change), prev_count, curr_count)))
+                log.always(cf_magenta(trn("Pattern: '%s', %d %s than before. Before %d after %d") % (pattern, abs(change), get_action(change), prev_count, curr_count)))
 
-            log.always(cf_magenta("\t" + "#" * 10 + _tr(" Mismatched strings: ") + "#" * 10))
+            log.always(cf_magenta("\t" + "#" * 10 + trn(" Mismatched strings: ") + "#" * 10))
             for string_id, tag_mismatches in text_tag_mismatches.items():
-                log.always("\t" + _tr("String: '%s'") % string_id)
+                log.always("\t" + trn("String: '%s'") % string_id)
                 for pattern, counts in tag_mismatches.items():
                     prev_count, curr_count, change = counts
-                    log.always(cf_green(_tr("Pattern: '%s', %d %s than before. Before %d after %d") % (pattern, abs(change), get_action(change), prev_count, curr_count)))
+                    log.always(cf_green(trn("Pattern: '%s', %d %s than before. Before %d after %d") % (pattern, abs(change), get_action(change), prev_count, curr_count)))
     else:
         log.always(cf_green("#" * 30))
-        log.always(cf_green(_tr("Versions match! Jolly good!")))
+        log.always(cf_green(trn("Versions match! Jolly good!")))
         log.always(cf_green("#" * 30))
 
 
 def get_action(change):
-    return _tr('more') if change > 0 else _tr('less')
+    return trn('more') if change > 0 else trn('less')

@@ -1,7 +1,7 @@
 import queue
 
 from sltools.config_file_manager import ConfigFileManager
-from sltools.utils.lang_utils import _tr
+from sltools.utils.lang_utils import trn
 
 PRIMARY_ENCODING = 'windows-1251'
 
@@ -49,8 +49,8 @@ MO2_CMD_TO_ALIASES = {
 
 
 # CONSTANTS
-UNKNOWN_LANG = _tr("Unknown")
-TOO_LITTLE_DATA = _tr("Too little data")
+UNKNOWN_LANG = trn("Unknown")
+TOO_LITTLE_DATA = trn("Too little data")
 
 min_recognizable_text_length = 30
 text_wrap_width = 80

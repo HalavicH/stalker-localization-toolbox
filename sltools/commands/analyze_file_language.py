@@ -8,7 +8,7 @@ from sltools.utils.file_utils import read_xml
 from sltools.utils.misc import create_table, color_lang, detect_language
 from sltools.utils.plain_text_utils import *
 from sltools.utils.xml_utils import parse_xml_root, extract_text_from_xml
-from sltools.utils.lang_utils import _tr
+from sltools.utils.lang_utils import trn
 
 
 def process_file(file_path, results: list, args):
@@ -33,7 +33,7 @@ def process_file(file_path, results: list, args):
                 continue
 
             if language in exclude_langs:
-                log.debug(_tr("Lang %s is in excludes. Skipping") % language)
+                log.debug(trn("Lang %s is in excludes. Skipping") % language)
                 continue
 
             stats[language] = stats.get(language, 0) + 1
@@ -48,7 +48,7 @@ def process_file(file_path, results: list, args):
             main_lang = TOO_LITTLE_DATA
     except LangDetectException as e:
         log.debug(interpret_error(e))
-        log.info(_tr("Can't detect language for the whole file. Probably it's empty"))
+        log.info(trn("Can't detect language for the whole file. Probably it's empty"))
         main_lang = TOO_LITTLE_DATA
 
     results.append((file_path, stats, main_lang))
@@ -57,23 +57,23 @@ def process_file(file_path, results: list, args):
 def check_primary_lang(args, is_read_only):
     exclude_langs = (args.exclude or "").split("+")
     args.exclude_langs = exclude_langs
-    files = get_xml_files_and_log(args.paths, _tr("Analyzing primary language for"))
+    files = get_xml_files_and_log(args.paths, trn("Analyzing primary language for"))
     results = []
     process_files_with_progress(files, process_file, results, args, is_read_only)
-    log.info(_tr("Total processed files: %s") % len(files))
+    log.info(trn("Total processed files: %s") % len(files))
     display_report(results, args.detailed)
 
 
 def display_report(report, detailed):
     if len(report) == 0:
-        log.info(cf_green(_tr("No files detected!. Nothing to show")))
+        log.info(cf_green(trn("No files detected!. Nothing to show")))
         return
 
     report = list(filter(lambda tup: tup[2] is not None, report))
     report = sorted(report, key=lambda tup: tup[2])
 
-    table_title = cf_cyan(_tr("Short report on language. Total: %s files") % len(report))
-    column_names = [_tr("Filename"), _tr("Main Lang")]
+    table_title = cf_cyan(trn("Short report on language. Total: %s files") % len(report))
+    column_names = [trn("Filename"), trn("Main Lang")]
     table = create_table(column_names)
 
     for filename, _, lang in report:
@@ -91,14 +91,14 @@ def display_report(report, detailed):
 
 
 def display_detailed_report(report):
-    table_title = cf_cyan(_tr("Detailed report (per each string). Total: %s files") % len(report))
-    column_names = [_tr("Filename"), _tr("Language"), _tr("Count")]
+    table_title = cf_cyan(trn("Detailed report (per each string). Total: %s files") % len(report))
+    column_names = [trn("Filename"), trn("Language"), trn("Count")]
     table = create_table(column_names)
     longest = max(len(filename) for filename, _, _ in report)
 
     for filename, stats, _ in report:
-        table.add_row("─" * longest, "─" * len(_tr("Too little data")), "─" * len(_tr("Count")))
-        table.add_row(cf_cyan(filename), cf_cyan(_tr("Language")), cf_cyan(_tr("Count")))
+        table.add_row("─" * longest, "─" * len(trn("Too little data")), "─" * len(trn("Count")))
+        table.add_row(cf_cyan(filename), cf_cyan(trn("Language")), cf_cyan(trn("Count")))
         sorted_keys = sorted(stats.keys())
 
         for lang in sorted_keys:

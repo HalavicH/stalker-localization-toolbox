@@ -27,5 +27,5 @@ except FileNotFoundError:
 
 lang.install()
 
-_tr = lang.gettext
+trn = lang.gettext
 

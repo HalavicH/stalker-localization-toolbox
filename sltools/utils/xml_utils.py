@@ -7,7 +7,7 @@ from sltools.config import PRIMARY_ENCODING
 from sltools.log_config_loader import log
 from sltools.utils.colorize import cf_yellow, cf_red
 from sltools.utils.error_utils import log_and_save_error, interpret_error
-from sltools.utils.lang_utils import _tr
+from sltools.utils.lang_utils import trn
 
 declaration_str = "<?xml version='1.0' encoding='WINDOWS-1251'?>"
 
@@ -19,7 +19,7 @@ def remove_xml_declaration(xml_string, file_path, log_and_save_err=True):
     xml_string_without_declaration = re.sub(pattern, string_was_here, xml_string)
 
     if string_was_here not in xml_string_without_declaration:
-        message = cf_yellow(_tr("Warning: File %s doesn't have encoding header in it") % file_path)
+        message = cf_yellow(trn("Warning: File %s doesn't have encoding header in it") % file_path)
         if log_and_save_err:
             log_and_save_error(file_path, message, level='warning')
         return xml_string_without_declaration, False
@@ -44,13 +44,13 @@ def is_valid_doc_info(doc_info, file_path=None, log_and_save_err=None):
     version = doc_info.xml_version
     encoding_lower = doc_info.encoding.lower()
     if version != '1.0' or encoding_lower != PRIMARY_ENCODING:
-        message = _tr("Warning: File %s has invalid header in it") % cf_yellow(file_path)
+        message = trn("Warning: File %s has invalid header in it") % cf_yellow(file_path)
         if log_and_save_err:
             log_and_save_error(file_path, message, level='warning')
         else:
-            version_message = _tr("Expected version='1.0' got '%s'") % cf_red(version) if version != '1.0' else ""
-            encoding_message = _tr("Expected encoding='%s' got '%s'") % (PRIMARY_ENCODING, cf_red(encoding_lower)) if encoding_lower != PRIMARY_ENCODING else ""
-            raise ValueError(_tr("Wrong XML declaration. %s %s") % (version_message, encoding_message))
+            version_message = trn("Expected version='1.0' got '%s'") % cf_red(version) if version != '1.0' else ""
+            encoding_message = trn("Expected encoding='%s' got '%s'") % (PRIMARY_ENCODING, cf_red(encoding_lower)) if encoding_lower != PRIMARY_ENCODING else ""
+            raise ValueError(trn("Wrong XML declaration. %s %s") % (version_message, encoding_message))
         return False
 
     return True
@@ -58,7 +58,7 @@ def is_valid_doc_info(doc_info, file_path=None, log_and_save_err=None):
 
 def parse_xml_root(xml_string):
     if isinstance(xml_string, str):
-        log.debug(_tr("Provided plain string. Encoding to ") + PRIMARY_ENCODING)
+        log.debug(trn("Provided plain string. Encoding to ") + PRIMARY_ENCODING)
         xml_string = xml_string.encode(PRIMARY_ENCODING)
 
     parser = etree.XMLParser(remove_blank_text=True)
@@ -95,11 +95,11 @@ def analyze_xml_parser_error(error, file=None, string=None):
     hyphen_within_comment = "Double hyphen within comment"
     err_str = str(error)
     if hyphen_within_comment in err_str:
-        return True, _tr("XML file has '--' within comment. First occurrence at: %s") % err_str.replace(hyphen_within_comment, "")
+        return True, trn("XML file has '--' within comment. First occurrence at: %s") % err_str.replace(hyphen_within_comment, "")
     elif "Document is empty" in err_str:
-        return True, _tr("XML file is empty which is not allowed")
+        return True, trn("XML file is empty which is not allowed")
     else:
-        return True, _tr("Can't parse root tag. Error: %s") % interpret_error(error)
+        return True, trn("Can't parse root tag. Error: %s") % interpret_error(error)
 
 
 # Formatting utils
@@ -223,13 +223,13 @@ def fix_ampersand_misuse(xml_string):
 
 
 def fix_possible_errors(xml_string, file_path):
-    log.debug(_tr("Try to detect and fix comments"))
+    log.debug(trn("Try to detect and fix comments"))
     fixed_comments = fix_illegal_comments(xml_string)
-    log.debug(_tr("Try to detect and fix ampersand issues"))
+    log.debug(trn("Try to detect and fix ampersand issues"))
     fixed_ampersand = fix_ampersand_misuse(fixed_comments)
-    log.debug(_tr("Try to detect and resolve includes"))
+    log.debug(trn("Try to detect and resolve includes"))
     resolved_includes = resolve_xml_includes(fixed_ampersand)
-    log.debug(_tr("Try to detect and fix XML declaration"))
+    log.debug(trn("Try to detect and fix XML declaration"))
     fixed_declaration = fix_xml_declaration(resolved_includes, file_path)
-    log.debug(_tr("Done with fixing"))
+    log.debug(trn("Done with fixing"))
     return fixed_declaration

@@ -7,7 +7,7 @@ from watchdog.events import FileSystemEventHandler
 
 from sltools.commands.utils.common import get_xml_files_and_log
 from sltools.config import file_changes_msg_queue
-from sltools.utils.lang_utils import _tr
+from sltools.utils.lang_utils import trn
 
 
 class MyHandler(FileSystemEventHandler):
@@ -17,19 +17,19 @@ class MyHandler(FileSystemEventHandler):
 
     def on_modified(self, event):
         if event.src_path.endswith('.xml'):
-            self.q.put({'file_path': event.src_path, 'action': _tr('modified')})
+            self.q.put({'file_path': event.src_path, 'action': trn('modified')})
 
     def on_created(self, event):
         if event.src_path.endswith('.xml'):
-            self.q.put({'file_path': event.src_path, 'action': _tr('created')})
+            self.q.put({'file_path': event.src_path, 'action': trn('created')})
 
     def on_deleted(self, event):
         if event.src_path.endswith('.xml'):
-            self.q.put({'file_path': event.src_path, 'action': _tr('deleted')})
+            self.q.put({'file_path': event.src_path, 'action': trn('deleted')})
 
 
 def watch_directories(paths, q):
-    all_files = get_xml_files_and_log(paths, _tr("Monitoring"))
+    all_files = get_xml_files_and_log(paths, trn("Monitoring"))
     unique_directories = {os.path.dirname(file) for file in all_files}
     event_handler = MyHandler(q)
     observer = Observer()

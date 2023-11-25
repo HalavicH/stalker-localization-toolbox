@@ -4,7 +4,7 @@ import os
 
 from sltools.config import PRIMARY_ENCODING
 from sltools.log_config_loader import log
-from sltools.utils.lang_utils import _tr
+from sltools.utils.lang_utils import trn
 
 
 def find_xml_files(path):
@@ -15,10 +15,10 @@ def find_xml_files(path):
 
     xml_files = set(glob.glob(glob_pattern, recursive=True))
     if len(xml_files) == 0:
-        raise ValueError(_tr("No XML file found under path: '%s'.\nPlease provide path which contains xml files") % path)
+        raise ValueError(trn("No XML file found under path: '%s'.\nPlease provide path which contains xml files") % path)
 
-    log.debug(_tr("Found following glob files: %s") % xml_files)
-    log.info(_tr("Input files number: %s") % len(xml_files))
+    log.debug(trn("Found following glob files: %s") % xml_files)
+    log.info(trn("Input files number: %s") % len(xml_files))
 
     return xml_files
 

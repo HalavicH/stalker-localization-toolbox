@@ -11,7 +11,7 @@ from sltools.utils.file_utils import read_xml
 from sltools.utils.flask_server import run_flask_server
 from sltools.utils.misc import set_default
 from sltools.utils.xml_utils import parse_xml_root
-from sltools.utils.lang_utils import _tr  # Ensure this import is included for _tr function
+from sltools.utils.lang_utils import trn  # Ensure this import is included for _tr function
 
 
 def process_file(file_path, results, args):
@@ -31,12 +31,12 @@ def process_file(file_path, results, args):
             }
 
             if string_id in results:
-                log.warning(_tr("Found duplicate of '%s' in '%s'") % (string_id, file_path))
+                log.warning(trn("Found duplicate of '%s' in '%s'") % (string_id, file_path))
                 results[string_id].append(data_obj)
             else:
                 results[string_id] = [data_obj]
     except Exception as e:
-        log.error(_tr("Can't process strings for file: '%s'. Error: %s") % (file_path, interpret_error(e)))
+        log.error(trn("Can't process strings for file: '%s'. Error: %s") % (file_path, interpret_error(e)))
 
 
 def list_strings_from_all_files(files):
@@ -50,7 +50,7 @@ def list_strings_from_all_files(files):
                 strings[string_tag.get("id")] = hash(string_tag.find("text").text.strip())
             results[file] = strings
         except Exception as e:
-            log.error(_tr("Can't get strings for file: '%s'. Error: %s") % (file, interpret_error(e)))
+            log.error(trn("Can't get strings for file: '%s'. Error: %s") % (file, interpret_error(e)))
 
     return results
 
@@ -178,7 +178,7 @@ def find_string_duplicates(args, is_read_only):
 
     if args.save_report:
         timestamp = datetime.datetime.now()
-        with open(_tr("duplicates-report-%s.json") % timestamp, 'w', encoding='utf-8') as f:
+        with open(trn("duplicates-report-%s.json") % timestamp, 'w', encoding='utf-8') as f:
             json.dump(visualization_data, f, default=set_default, ensure_ascii=False, indent=4)
 
     if args.per_string_report:
@@ -188,11 +188,11 @@ def find_string_duplicates(args, is_read_only):
 
 
 def find_and_prepare_duplicates_report(args, is_read_only):
-    files = get_xml_files_and_log(args.paths, _tr("Analyzing patterns for"))
+    files = get_xml_files_and_log(args.paths, trn("Analyzing patterns for"))
 
     results = {}
     process_files_with_progress(files, process_file, results, args, is_read_only)
-    log.info(_tr("Total processed files: %d") % len(files))
+    log.info(trn("Total processed files: %d") % len(files))
     overlaps = analyze_file_overlaps(results)
     visualization_data = {
         "overlaps_report": overlaps,
