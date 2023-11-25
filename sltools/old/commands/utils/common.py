@@ -1,3 +1,4 @@
+from argparse import Namespace
 from rich import get_console
 from rich.progress import Progress
 
@@ -10,7 +11,7 @@ from sltools.utils.lang_utils import trn  # Ensure this import is included for _
 
 
 # 1. Get the list of XML files and log the number of files
-def get_xml_files_and_log(paths, action_msg):
+def get_xml_files_and_log(paths: list, action_msg: str) -> list:
     all_files = []
     for path in paths:
         all_files.extend(find_xml_files(path))
@@ -25,7 +26,7 @@ def get_max_file_width_for_display():
 
 
 # 3. Process each file with progress indication
-def process_files_with_progress(files, process_func, results, args, is_read_only):
+def process_files_with_progress(files: list, process_func, results: dict, args: Namespace, is_read_only: bool):
     max_file_width = get_max_file_width_for_display()
     with Progress(console=get_console()) as progress:
         task = progress.add_task("", total=len(files))

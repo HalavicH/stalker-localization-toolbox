@@ -1,3 +1,4 @@
+from argparse import Namespace
 from rich import get_console
 
 from sltools.baseline.command_baseline import AbstractCommand
@@ -10,6 +11,8 @@ from sltools.utils.misc import create_table
 
 
 class ValidateEncoding(AbstractCommand):
+    # Metadata
+    ##########
     def get_name(self) -> str:
         return "validate-encoding"
 
@@ -22,17 +25,9 @@ class ValidateEncoding(AbstractCommand):
     def _setup_parser_args(self, parser):
         parser.add_argument('paths', nargs='*', help=trn('Paths to files or directories'))
 
-    def execute(self, args) -> dict:
-        files = get_xml_files_and_log(args.paths, trn("Validating encoding for"))
-
-        results = {"report": []}
-        process_files_with_progress(files, self.process_file, results, args, True)
-
-        log.info(trn("Total processed files: %d") % len(files))
-        return results
-
-    @staticmethod
-    def process_file(file, results: dict, args):
+    # Execution
+    ###########
+    def _process_file(self, file, results: dict, args):
         with open(file, 'rb') as f:
             binary_text = f.read()
 
@@ -44,7 +39,18 @@ class ValidateEncoding(AbstractCommand):
 
         results["report"].append((file, encoding, comment))
 
-    def display_result(self, result: {}):
+    def execute(self, args: Namespace) -> dict:
+        files = get_xml_files_and_log(args.paths, trn("Validating encoding for"))
+
+        results = {"report": []}
+        self.process_files_with_progressbar(args, files, results, True)
+
+        log.info(trn("Total processed files: %d") % len(files))
+        return results
+
+    # Displaying
+    ############
+    def display_result(self, result: dict):
         report = result["report"]
 
         if len(report) == 0:
