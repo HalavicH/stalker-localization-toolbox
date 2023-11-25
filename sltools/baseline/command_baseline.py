@@ -10,7 +10,7 @@ class Command(ABC):
         return []
 
     @abstractmethod
-    def append_parser(self, parser):
+    def setup(self, parser):
         pass
 
     @abstractmethod

@@ -4,7 +4,7 @@ from sltools.utils.lang_utils import trn
 from importlib.metadata import version
 
 
-class RootCommand(Command):
+class CommandProcessor(Command):
 
     def __init__(self, commands: []):
         self.commands = commands
@@ -21,13 +21,13 @@ class RootCommand(Command):
     def get_name(self):
         return "root"
 
-    def append_parser(self, parser):
+    def setup(self, parser):
         parser.add_argument('--version', action='version', version=version('sltools'))
         subparsers = parser.add_subparsers(dest='command', help=trn('Sub-commands available:'))
 
         for cmd in self._registry.values():
             log.debug("Processing: " + cmd.get_name())
-            cmd.append_parser(subparsers)
+            cmd.setup(subparsers)
 
     def execute(self, args) -> {}:
         for cmd_names in self._registry:

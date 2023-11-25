@@ -18,7 +18,7 @@ from importlib.metadata import version
 
 from rich_argparse import RichHelpFormatter
 
-from sltools.baseline.root_command import RootCommand
+from sltools.baseline.command_processor import CommandProcessor
 from sltools.old.command_processor import process_command
 from sltools.old.config import *
 from sltools.config_file_manager import ConfigFileManager, file_config
@@ -309,8 +309,8 @@ def new_main():
     try:
         log.debug(trn("Start"))
         parser = ExtendedHelpParser(description=trn("app_description"), formatter_class=CustomHelpFormatter)
-        root = RootCommand([])
-        root.append_parser(parser)
+        root = CommandProcessor([])
+        root.setup(None, parser)
 
         args = parser.parse_args()
         log.debug(f"Args: {args}")
