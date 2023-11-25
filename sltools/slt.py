@@ -24,8 +24,14 @@ from sltools.old.command_processor import process_command
 from sltools.old.config import *
 from sltools.config_file_manager import ConfigFileManager, file_config
 from sltools.log_config_loader import log
+from sltools.root_commands.AnalyzePatterns import AnalyzePatterns
+from sltools.root_commands.CapitalizeText import CapitalizeText
+from sltools.root_commands.CheckPrimaryLanguage import CheckPrimaryLanguage
+from sltools.root_commands.FindStringDuplicates import FindStringDuplicates
 from sltools.root_commands.FixEncoding import FixEncoding
 from sltools.root_commands.FormatXml import FormatXml
+from sltools.root_commands.SortFilesWithDuplicates import SortFilesWithDuplicates
+from sltools.root_commands.Translate import Translate
 from sltools.root_commands.ValidateEncoding import ValidateEncoding
 from sltools.root_commands.ValidateXml import ValidateXml
 from sltools.utils.colorize import *
@@ -268,6 +274,12 @@ def new_main():
             FixEncoding(),
             ValidateXml(),
             FormatXml(),
+            CheckPrimaryLanguage(),
+            Translate(),
+            AnalyzePatterns(),
+            CapitalizeText(),
+            FindStringDuplicates(),
+            SortFilesWithDuplicates()
         ])
         root.setup(parser)
 

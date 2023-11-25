@@ -151,7 +151,7 @@ def worker():
 
 
 def check_endpoint_and_open_browser():
-    url = "http://127.0.0.1:5000/"
+    url = "http://127.0.0.1:5555/"
     while True:
         try:
             response = requests.get(url)
@@ -174,4 +174,4 @@ def run_flask_server(args, get_report_callback):
 
     Timer(0, check_endpoint_and_open_browser).start()
     CORS(app, resources={r"/*": {"origins": "*"}})
-    app.run()
+    app.run(port=5555)

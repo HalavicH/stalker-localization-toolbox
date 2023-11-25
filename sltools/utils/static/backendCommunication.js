@@ -14,12 +14,12 @@ export async function sortEntriesInFiles(file1, file2) {
 }
 
 export async function getReportData() {
-    const url = "http://127.0.0.1:5000/report";
+    const url = "http://127.0.0.1:5555/report";
     return await executeGetRequest("/report");
 }
 
 export async function executePostRequest(endpoint, params) {
-    const url = "http://127.0.0.1:5000" + endpoint;
+    const url = "http://127.0.0.1:5555" + endpoint;
     console.log(
         "Executing POST request with:"
         + "\n\turl: " + url
@@ -72,7 +72,7 @@ async function getError(response) {
 }
 
 export async function executeGetRequest(endpoint) {
-    const url = "http://127.0.0.1:5000" + endpoint;
+    const url = "http://127.0.0.1:5555" + endpoint;
     console.log(
         "Executing GET request with:"
         + "\n\turl: " + url
