@@ -18,6 +18,7 @@ from importlib.metadata import version
 
 from rich_argparse import RichHelpFormatter
 
+from sltools.baseline.root_command import RootCommand
 from sltools.command_processor import process_command
 from sltools.config import *
 from sltools.config_file_manager import ConfigFileManager, file_config
@@ -273,6 +274,8 @@ def handle_misc_command(args):
 
 
 def main():
+    new_main()
+
     start_time = time.process_time()
     try:
         log.debug(trn("Start"))
@@ -299,6 +302,42 @@ def main():
     elapsed_time = end_time - start_time
     log.always(trn("Done! Total time: %s") % cf_green("%.3fs" % elapsed_time))
     get_console().print(check_for_update())
+
+
+def new_main():
+    start_time = time.process_time()
+    try:
+        log.debug(trn("Start"))
+        parser = ExtendedHelpParser(description=trn("app_description"), formatter_class=CustomHelpFormatter)
+        root = RootCommand([])
+        root.append_parser(parser)
+
+        args = parser.parse_args()
+        log.debug(f"Args: {args}")
+
+        if args.command is None:
+            cmd_name = sys.argv[0].split("/")[-1] + " -h"
+            log.always(trn(f"Please provide args. Use {cf_green(cmd_name)} for help"))
+            sys.exit()
+
+        root.execute(args)
+
+    except Exception as e:
+        show_stack_trace = file_config.general.show_stacktrace or False
+        if os.environ.get("PY_ST"):
+            show_stack_trace = os.environ.get("PY_ST").lower() == 'true'
+
+        if show_stack_trace:
+            log.fatal(trn("Failed to perform actions. Error: %s") % traceback.format_exc())
+        else:
+            log.fatal(trn("Failed to perform actions. Error: %s") % e)
+
+    end_time = time.process_time()
+    elapsed_time = end_time - start_time
+    log.always(trn("Done! Total time: %s") % cf_green("%.3fs" % elapsed_time))
+
+    get_console().print(check_for_update())
+    sys.exit(0)
 
 
 if __name__ == '__main__':
