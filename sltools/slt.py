@@ -31,11 +31,14 @@ from sltools.root_commands.Config import Config
 from sltools.root_commands.FindStringDuplicates import FindStringDuplicates
 from sltools.root_commands.FixEncoding import FixEncoding
 from sltools.root_commands.FormatXml import FormatXml
+from sltools.root_commands.MO2CommandProcessor import MO2CommandProcessor
 from sltools.root_commands.Misc import Misc
 from sltools.root_commands.SortFilesWithDuplicates import SortFilesWithDuplicates
 from sltools.root_commands.Translate import Translate
 from sltools.root_commands.ValidateEncoding import ValidateEncoding
 from sltools.root_commands.ValidateXml import ValidateXml
+from sltools.root_commands.mo2_commands.VfsCopy import VfsCopy
+from sltools.root_commands.mo2_commands.VfsMap import VfsMap
 from sltools.utils.colorize import *
 from sltools.utils.lang_utils import trn
 from sltools.utils.misc import check_for_update, check_deepl_tokens_usage
@@ -283,7 +286,11 @@ def new_main():
             CapitalizeText(),
             FindStringDuplicates(),
             SortFilesWithDuplicates(),
-            Misc()
+            MO2CommandProcessor([
+                VfsMap(),
+                VfsCopy(),
+            ]),
+            Misc(),
         ])
         root.setup(parser)
 
