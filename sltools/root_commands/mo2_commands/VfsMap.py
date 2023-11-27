@@ -1,12 +1,7 @@
 import os
 
-from rich import get_console
-
 from sltools.baseline.command_baseline import AbstractCommand
-from sltools.baseline.parser_definitions import BooleanAction
-from sltools.config_file_manager import ConfigFileManager
 from sltools.log_config_loader import log
-from sltools.utils.colorize import cf_cyan
 from sltools.utils.lang_utils import trn
 
 STATS = {

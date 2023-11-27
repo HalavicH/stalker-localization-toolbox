@@ -1,21 +1,18 @@
 import requests
 from googletrans import Translator
 from langdetect import LangDetectException
-from rich import get_console
 
 from sltools.baseline.command_baseline import AbstractCommand
 from sltools.log_config_loader import log
-from sltools.old.commands.format_xml import error_str, format_xml_text_entries, to_yes_no
-from sltools.old.commands.utils.common import get_xml_files_and_log, process_files_with_progress
-from sltools.utils.colorize import cf_green, cf_red, cf_yellow, cf_cyan, cf_blue
-from sltools.utils.error_utils import log_and_save_error, interpret_error
+from sltools.old.commands.utils.common import get_xml_files_and_log
+from sltools.utils.colorize import cf_blue
+from sltools.utils.error_utils import interpret_error
 from sltools.utils.file_utils import read_xml, save_xml
 from sltools.utils.lang_utils import trn
-from sltools.utils.misc import create_table, exception_originates_from, color_lang, detect_language
+from sltools.utils.misc import color_lang, detect_language
 from sltools.utils.plain_text_utils import tabwidth, format_text_entry, unguard_placeholders, unguard_colors, replace_new_line_with_n_sym, \
     replace_n_sym_with_newline, guard_colors, guard_placeholders, purify_text
-from sltools.utils.xml_utils import fix_possible_errors, format_xml_string, parse_xml_root, indent, to_utf_string_with_proper_declaration, \
-    add_blank_line_before_comments
+from sltools.utils.xml_utils import format_xml_string, parse_xml_root, to_utf_string_with_proper_declaration
 
 
 class AccessDeniedException(Exception):

@@ -1,7 +1,6 @@
-from sltools.baseline.command_baseline import Command, AbstractCommand
+from sltools.baseline.command_baseline import AbstractCommand
 from sltools.log_config_loader import log
 from sltools.utils.lang_utils import trn
-from importlib.metadata import version
 
 
 class MO2CommandProcessor(AbstractCommand):

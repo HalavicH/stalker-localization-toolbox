@@ -3,22 +3,16 @@ import subprocess
 import time
 from datetime import datetime
 
-from langdetect import LangDetectException
-from rich import get_console, pretty
+from rich import pretty
 
 from sltools.baseline.command_baseline import AbstractCommand
 from sltools.log_config_loader import log
-from sltools.old.commands.format_xml import error_str, format_xml_text_entries, to_yes_no
 from sltools.old.commands.utils.common import get_xml_files_and_log
-from sltools.old.config import UNKNOWN_LANG, TOO_LITTLE_DATA, min_recognizable_text_length
 from sltools.utils.colorize import cf_green, cf_red, cf_yellow, cf_cyan, rich_guard, cf_blue, cf_magenta
-from sltools.utils.error_utils import log_and_save_error, interpret_error
-from sltools.utils.file_utils import read_xml, save_xml
+from sltools.utils.file_utils import read_xml
 from sltools.utils.lang_utils import trn
-from sltools.utils.misc import create_table, exception_originates_from, detect_language
-from sltools.utils.plain_text_utils import tabwidth, format_text_entry, purify_text, analyze_patterns_in_text, check_placeholders
-from sltools.utils.xml_utils import fix_possible_errors, format_xml_string, parse_xml_root, indent, to_utf_string_with_proper_declaration, \
-    add_blank_line_before_comments, extract_text_from_xml
+from sltools.utils.plain_text_utils import analyze_patterns_in_text, check_placeholders
+from sltools.utils.xml_utils import parse_xml_root
 
 # JUNK
 # Dictionary keys
