@@ -27,9 +27,11 @@ from sltools.log_config_loader import log
 from sltools.root_commands.AnalyzePatterns import AnalyzePatterns
 from sltools.root_commands.CapitalizeText import CapitalizeText
 from sltools.root_commands.CheckPrimaryLanguage import CheckPrimaryLanguage
+from sltools.root_commands.Config import Config
 from sltools.root_commands.FindStringDuplicates import FindStringDuplicates
 from sltools.root_commands.FixEncoding import FixEncoding
 from sltools.root_commands.FormatXml import FormatXml
+from sltools.root_commands.Misc import Misc
 from sltools.root_commands.SortFilesWithDuplicates import SortFilesWithDuplicates
 from sltools.root_commands.Translate import Translate
 from sltools.root_commands.ValidateEncoding import ValidateEncoding
@@ -270,6 +272,7 @@ def new_main():
         log.debug(trn("Start"))
         parser = ExtendedHelpParser(description=trn("app_description"), formatter_class=CustomHelpFormatter)
         root = CommandProcessor([
+            Config(),
             ValidateEncoding(),
             FixEncoding(),
             ValidateXml(),
@@ -279,7 +282,8 @@ def new_main():
             AnalyzePatterns(),
             CapitalizeText(),
             FindStringDuplicates(),
-            SortFilesWithDuplicates()
+            SortFilesWithDuplicates(),
+            Misc()
         ])
         root.setup(parser)
 

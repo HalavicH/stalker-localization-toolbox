@@ -6,7 +6,7 @@ from importlib.metadata import version
 
 class CommandProcessor(Command):
 
-    def __init__(self, commands: []):
+    def __init__(self, commands: list):
         self.commands = commands
         self._registry = {}
 
@@ -22,7 +22,7 @@ class CommandProcessor(Command):
         parser.add_argument('--version', action='version', version=version('sltools'))
         subparsers = parser.add_subparsers(dest='command', help=trn('Sub-commands available:'))
 
-        for cmd in set(self._registry.values()):
+        for cmd in self.commands:
             log.debug("Processing: " + cmd.get_name())
             cmd.setup(subparsers)
 
