@@ -32,6 +32,8 @@ class CheckPrimaryLanguage(AbstractCommand):
         parser.add_argument('--exclude', dest='exclude', help=cpl_help)
         parser.add_argument('--detailed', action='store_true',
                             help=trn('Show detailed report with language occurrences per file'))
+        parser.add_argument('--list-files-as-string', '--lfas', action='store_true', dest='list_files',
+                            help=trn("Output all matching files as 1 string (convenient for passing them to translation cmd)"))
 
     # Execution
     ###########
@@ -81,8 +83,14 @@ class CheckPrimaryLanguage(AbstractCommand):
     def execute(self, args) -> dict:
         exclude_langs = (args.exclude or "").split("+")
         args.exclude_langs = exclude_langs
+
         files = get_xml_files_and_log(args.paths, trn("Analyzing primary language for"))
-        results = {"report": [], "detailed": args.detailed}
+        results = {
+            "report": [],
+            "detailed": args.detailed,
+            "list_files": args.list_files
+        }
+
         self.process_files_with_progressbar(args, files, results, True)
         log.info(trn("Total processed files: %s") % len(files))
 
@@ -93,6 +101,8 @@ class CheckPrimaryLanguage(AbstractCommand):
     def display_result(self, result: dict):
         report: list = result["report"]
         detailed: list = result["detailed"]
+        list_files: list = result["list_files"]
+
         if len(report) == 0:
             log.info(cf_green(trn("No files detected!. Nothing to show")))
             return
@@ -116,6 +126,14 @@ class CheckPrimaryLanguage(AbstractCommand):
 
         if detailed:
             self.display_detailed_report(report)
+
+        if list_files:
+            log.always(trn("List all matching files as one string:"))
+            files = []
+            for filename, _, _ in report:
+                files.append(filename)
+
+            log.always(" ".join(files))
 
     @staticmethod
     def display_detailed_report(report):
