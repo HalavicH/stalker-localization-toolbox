@@ -104,8 +104,7 @@ class FindStringDuplicates(AbstractCommand):
         return ['fsd']
 
     def _get_help(self) -> str:
-        return trn(
-            "Looks for duplicates of [green]'<string id=\"...\">'[/green] to eliminate unwanted conflicts/overrides. Provides filecentric report by default")
+        return trn("Looks for duplicates of [green]'<string id=\"...\">'[/green] to eliminate unwanted conflicts. Provides filecentric report by default")
 
     def _setup_parser_args(self, parser):
         parser.add_argument('--per-string-report', action='store_true', default=False,
@@ -175,7 +174,7 @@ class FindStringDuplicates(AbstractCommand):
     ############
     def display_result(self, result: dict):
         if result == {}:
-            log.always("Nothing to report")
+            log.always(trn("Nothing to report"))
             return
 
         per_string_report = result["per_string_report"]
@@ -194,23 +193,24 @@ class FindStringDuplicates(AbstractCommand):
         # Print duplicate counts and details
         for string_id, data_list in results.items():
             if len(data_list) > 1:
-                msg = f"For string '{string_id}' found {len(data_list)} duplicates:"
-                log.always(cf_yellow(len(msg) * "#"))
-                log.always(f"For string '{string_id}' found {len(data_list)} duplicates:")
-                log.always(cf_yellow(len(msg) * "#"))
+                msg = trn("For string '%s' found %s duplicates:") % (string_id, len(data_list))
+                len_msg = len(msg) * "#"
+                log.always(cf_yellow(len_msg))
+                log.always(msg)
+                log.always(cf_yellow(len_msg))
                 for i, candidate in enumerate(data_list, 1):
                     file_path = candidate['file_path']
                     line = candidate['line']
                     text = candidate['text']
-                    log.always(cf_cyan(f"Candidate #{i}:"))
-                    log.always(f"File: '{file_path}', line: {line}")
-                    log.always(f"Text: '{cf_yellow(text)}'\n")
+                    log.always(cf_cyan(trn("Candidate #d:") % i))
+                    log.always(trn("File: '%s', line: %s") % (file_path, line))
+                    log.always(trn("Text: '%s'\n") % cf_yellow(text))
 
         # Print memory footprint
         memory_size = sys.getsizeof(results)
         for data_list in results.values():
             memory_size += sum(sys.getsizeof(i) for i in data_list)
-        print(f"\nMemory footprint of the dictionary: {memory_size / 1024:.2f} KB")
+        log.log(trn("\nMemory footprint of the report for the dictionary: %.2d KB") % (memory_size / 1024))
 
     @staticmethod
     def __display_per_file_overlaps(overlaps, show_unique=False):
@@ -222,21 +222,20 @@ class FindStringDuplicates(AbstractCommand):
         for i, (file, matched_files) in enumerate(overlaps.items()):
             main_file_ids_cnt = matched_files["total_id_cnt"]
 
-            log.always(f"Duplicates in files:")
-            log.always(f"file #{i + 1}: {file} (Total IDs: {main_file_ids_cnt}):")
+            log.always(trn("Duplicates in files:"))
+            log.always(trn("file #%d: %s (Total IDs: %d):") % (i + 1, file, main_file_ids_cnt))
 
             for matched_file, data in matched_files["overlaps"].items():
                 file_ids_cnt = data['total_id_cnt']
                 percentage_match = (data['match_count'] / file_ids_cnt) * 100
-                log.always(
-                    f"file: '{matched_file}', overlapping IDs: {cf_yellow(data['match_count'])}/[cyan]{file_ids_cnt} [bright_black]({percentage_match:.2f}%)[/bright_black]")
+                log.always(trn("file: '%s', overlapping IDs: %s/%s (%.2f%%)") % (matched_file, cf_yellow(data['match_count']), file_ids_cnt, percentage_match))
 
                 overlapping_ids = "\n\t".join(list(data['overlapping_ids']))
-                log.always(f"Overlapping ids:\n\t{cf_yellow(overlapping_ids)}")
+                log.always(trn("Overlapping ids:\n\t%s") % cf_yellow(overlapping_ids))
 
                 if show_unique:
                     unique_ids = set(data['overlapping_ids']) - set(overlaps[matched_file].keys())
-                    unique_ids_str = "\n\t".join(list(unique_ids))
-                    log.always(f"Unique ids in {file} (not in {matched_file}):\n\t{cf_yellow(unique_ids_str)}")
+                unique_ids_str = "\n\t".join(list(unique_ids))
+                log.always(trn("Unique ids in %s (not in %s):\n\t%s") % (file, matched_file, cf_yellow(unique_ids_str)))
 
-            log.always()
+                log.always()

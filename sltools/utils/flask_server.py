@@ -147,7 +147,7 @@ def worker():
             CTX[LAST_REPORT_KEY] = report
             CTX[LAST_REPORT_HASH_KEY] = calc_report_hash(report)
         else:
-            log.info("Files are the same")
+            log.info(trn("Files are the same"))
 
 
 def check_endpoint_and_open_browser():

@@ -182,24 +182,24 @@ def compare_analyses(previous_analysis, current_analysis, PATTERNS):
             curr_count = total_patterns_curr[pattern]
             change = total_patterns_change[pattern]
             if change != 0:
-                log.always(cf_blue(
-                    trn("Pattern: '%s', %d %s than before. Before %d after %d") % (pattern, abs(change), get_action(change), prev_count, curr_count)))
+                log.always(cf_blue(trn("Pattern: '%s', %d %s than before. Before %d after %d")
+                                   % (pattern, abs(change), get_action(change), prev_count, curr_count)))
 
         log.always(cf_magenta("\t" + "#" * 10 + trn(" Mismatched files: ") + "#" * 10))
         for file, file_mismatches, text_tag_mismatches in mismatched_files:
             log.always(cf_magenta(trn("File: '%s'") % file))
             for pattern, counts in file_mismatches.items():
                 prev_count, curr_count, change = counts
-                log.always(cf_magenta(
-                    trn("Pattern: '%s', %d %s than before. Before %d after %d") % (pattern, abs(change), get_action(change), prev_count, curr_count)))
+                log.always(cf_magenta(trn("Pattern: '%s', %d %s than before. Before %d after %d")
+                                      % (pattern, abs(change), get_action(change), prev_count, curr_count)))
 
             log.always(cf_magenta("\t" + "#" * 10 + trn(" Mismatched strings: ") + "#" * 10))
             for string_id, tag_mismatches in text_tag_mismatches.items():
                 log.always("\t" + trn("String: '%s'") % string_id)
                 for pattern, counts in tag_mismatches.items():
                     prev_count, curr_count, change = counts
-                    log.always(cf_green(
-                        trn("Pattern: '%s', %d %s than before. Before %d after %d") % (pattern, abs(change), get_action(change), prev_count, curr_count)))
+                    log.always(cf_green(trn("Pattern: '%s', %d %s than before. Before %d after %d")
+                                        % (pattern, abs(change), get_action(change), prev_count, curr_count)))
     else:
         log.always(cf_green("#" * 30))
         log.always(cf_green(trn("Versions match! Jolly good!")))

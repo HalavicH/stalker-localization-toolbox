@@ -23,7 +23,7 @@ def parse_po_file(po_file_path):
 
 def find_and_update_keys(directory, po_file_path):
     # Corrected pattern to match both single and double-quoted strings
-    pattern = re.compile(r"_tr\('([^']*)'|_tr\(\"([^\"]*)\"\)")
+    pattern = re.compile(r"trn\('([^']*)'|trn\(\"([^\"]*)\"\)")
     _, existing_keys = parse_po_file(po_file_path)
     all_keys = []
     new_keys = {}

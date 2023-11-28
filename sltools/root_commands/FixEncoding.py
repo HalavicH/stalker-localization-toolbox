@@ -45,7 +45,6 @@ class FixEncoding(AbstractCommand):
     def _process_file(self, file_path, results: dict, args):
         file_name = file_path
         encoding = args.custom[file_path]
-        processed = 0
 
         if encoding.lower() == "utf-8":
             if not self.is_allowed_to_continue(file_name, args):

@@ -93,7 +93,7 @@ msgstr "Не вдалося виконати дії. Помилка: %s"
 msgid "Done! Total time: %s"
 msgstr "Готово! Зайняло часу: %s"
 
-msgid "Looks for duplicates of [green]'<string id=\"...\">'[/green] to eliminate unwanted conflicts/overrides. Provides filecentric report by default"
+msgid "Looks for duplicates of [green]'<string id=\"...\">'[/green] to eliminate unwanted conflicts. Provides filecentric report by default"
 msgstr "Шукає дублікати [green]'<string id=\"...\">'[/green] для усунення небажаних конфліктів/перевизначень. За замовчуванням надає файло-орієнтований звіт"
 
 msgid "Sorts strings in files alphabetically placing duplicates on top"
@@ -105,17 +105,8 @@ msgstr "Невідомо"
 msgid "Too little data"
 msgstr "Замало даних для аналізу"
 
-msgid "Processing command: %s"
-msgstr "Обробка команди: %s"
-
-msgid "Command '%s' is not implemented"
-msgstr "Команда '%s' не реалізована"
-
 msgid "Git is not available on this system. It's vital to have files in a git repo to prevent potential file damage. Please install Git."
 msgstr "Git недоступний в цій системі. Важливо мати файли в git-репозиторії, щоб запобігти потенційному пошкодженню файлів. Будь ласка, встановіть Git."
-
-msgid "Running command '%s' on paths: '%s'"
-msgstr "Виконую команду '%s' для шляхів: %s"
 
 msgid "Can't log error due to fucking rich formatter. Fixme."
 msgstr "Не можу залогувати помилку через клятий форматтер. Убийте мене."
@@ -333,7 +324,7 @@ msgstr "Успішно!"
 msgid "Can't encode from %s to %s"
 msgstr "Не вдається перекодувати з %s в %s"
 
-msgid "File %s possibly has %s encoding. But maybe no, so won't do anything"
+msgid "File %s possibly has %s encoding. But I'm not sure, so I won't do anything"
 msgstr "Файл %s, можливо, має кодування %s. Але може і ні, тому нічого не буде зроблено"
 
 msgid "%s %s files"
@@ -780,9 +771,6 @@ msgstr "Об'єднати усі файли у єдиний каталог, ві
 msgid "Retain the original mod directory structure in the output, useful for identifying file sources"
 msgstr "Зберегти оригінальну структуру папок модів, що може бути корисним для ідентифікації джерел файлів"
 
-msgid "Running command '%s'"
-msgstr "Запуск команди '%s'"
-
 msgid "Mapping MO2 VFS paths to real"
 msgstr "Відображення MO2 VFS шляхів у реальні"
 
@@ -804,3 +792,104 @@ msgstr "\tВключити: %s"
 msgid "\tExclude: %s"
 msgstr "\tВиключити: %s"
 
+msgid "Args: %s"
+msgstr "Аргументи: %s"
+
+msgid "Processing: %s"
+msgstr "В процесі: %s"
+
+msgid "Executing command: %s"
+msgstr "Виконання команди: %s"
+
+msgid "Command not found: %s"
+msgstr "Команду не знайдено: %s"
+
+msgid "The method should not be used on the root command obj"
+msgstr "Метод не слід використовувати на кореневій команді"
+
+msgid "Can't check the updates: %s"
+msgstr "Не вдається перевірити оновлення: %s"
+
+msgid "Can't check of sltools updates. It seems you have no internet connection"
+msgstr "Не вдається перевірити оновлення sltools. Здається, у вас немає з'єднання з інтернетом"
+
+msgid "Files are the same"
+msgstr "Файли однакові"
+
+msgid "Detected: %s"
+msgstr "Виявлено: %s"
+
+msgid "The XML declaration is incorrect. Fixing..."
+msgstr "Неправильно вказано XML-декларацію. Виправлення..."
+
+msgid "Misused '&' at line:%s, column:%s. Replacing & with &amp;"
+msgstr "Неправильно використано '&' у рядку:%s, стовпці:%s. Заміна & на &amp;"
+
+msgid "Files with fixed encoding: %d"
+msgstr "Файли з виправленим кодуванням: %d"
+
+msgid "Output all matching files as 1 string (convenient for passing them to translation cmd)"
+msgstr "Виводити всі файли, що збігаються, в один рядок (зручно для передачі в команду 'translate')"
+
+msgid "List all matching files as one string:"
+msgstr "Виведення всіх файлів, що збігаються, одним рядком:"
+
+msgid "Nothing to report"
+msgstr "Нічого не знайдено"
+
+msgid "No duplicates found! Great news"
+msgstr "Дублікатів не знайдено! Чудова новина"
+
+msgid "For string '%s' found %s duplicates:"
+msgstr "Для рядка '%s' знайдено %s повторів:"
+
+msgid "Candidate #d:"
+msgstr "Кандидат #d:"
+
+msgid "File: '%s', line: %s"
+msgstr "Файл: '%s', рядок: %s"
+
+msgid "Text: '%s'\n"
+msgstr "Текст: '%s'\n"
+
+msgid "\nMemory footprint of the report for the dictionary: %.2d KB"
+msgstr "\nЗайнятий обсяг пам'яті звіту для словника: %.2d KB"
+
+msgid "No duplicates found"
+msgstr "Дублікатів не знайдено"
+
+msgid "Duplicates in files:"
+msgstr "Дублікати у файлах:"
+
+msgid "file #%d: %s (Total IDs: %d):"
+msgstr "файл #%d: %s (Всього айдішок: %d):"
+
+msgid "file: '%s', overlapping IDs: %s/%s (%.2f%%)"
+msgstr "file: '%s', ідентифікатори, що дублюються: %s/%s (%.2f%%)"
+
+msgid "Overlapping ids:\n\t%s"
+msgstr "Ідентифікатори, що дублюються:\n\t%s"
+
+msgid "Unique ids in %s (not in %s):\n\t%s"
+msgstr "Унікальні ідентифікатори в %s (котрих нема в %s):\n\t%s"
+
+msgid "Skipping: %s"
+msgstr "Пропускаю: %s"
+
+msgid "Including: %s"
+msgstr "Включаючи: %s"
+
+msgid "Source file not found: %s"
+msgstr "Вихідний файл не знайдено: %s"
+
+msgid "Error copying file from %s to %s: %s"
+msgstr "Помилка копіювання файлу з %s до %s: %s"
+
+msgid "Output directory '%s' already exists. Do you want to override it? [y/N]: "
+msgstr "Кінцева директорія '%s' вже існує. Ви хочете замінити її? [так/ні]:"
+
+msgid "Operation cancelled by user."
+msgstr "Операцію скасовано користувачем."
+
+msgid "Processed file tree from '%s' to '%s'.\nTotal files copied: %d\nTotal files skipped: %d"
+msgstr "Опрацьовано дерево файлів з '%s' до '%s'.\nВсього скопійовано файлів: %d\nВсього пропущено файлів: %d"

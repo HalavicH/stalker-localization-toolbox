@@ -191,8 +191,7 @@ def fix_xml_declaration(xml_string, file_path):
     no_decl, is_valid_decl = remove_xml_declaration(xml_string, file_path)
 
     if not is_valid_decl:
-        msg = "The XML declaration is incorrect. Fixing..."
-        log.info(msg)
+        log.info(trn("The XML declaration is incorrect. Fixing..."))
 
     return declaration_str + no_decl
 
@@ -212,8 +211,7 @@ def fix_ampersand_misuse(xml_string):
                     corrected_line += line[column_number - 1:entity_end]
                     column_number = entity_end
                 else:
-                    message = cf_yellow(
-                        f"Misused '&' at line:{line_number}, column:{column_number}. Replacing & with &amp;")
+                    message = cf_yellow(trn("Misused '&' at line:%s, column:%s. Replacing & with &amp;") % (line_number, column_number))
                     log.info(message)
                     corrected_line += '&amp;'
             else:

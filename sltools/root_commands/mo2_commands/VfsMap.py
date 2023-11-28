@@ -58,10 +58,10 @@ class VfsMap(AbstractCommand):
                 match = False
 
         if not match:
-            log.debug("Skipping: " + path.strip())
+            log.debug(trn("Skipping: %s") % path.strip())
             STATS['excluded'] += 1
         else:
-            log.debug("Including: " + path.strip())
+            log.debug(trn("Including: %s") % path.strip())
             STATS['included'] += 1
 
         STATS['total'] += 1

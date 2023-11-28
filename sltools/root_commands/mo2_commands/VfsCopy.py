@@ -93,10 +93,6 @@ class VfsCopy(AbstractCommand):
         log.always(trn("Processed file tree from '%s' to '%s'.\nTotal files copied: %d\nTotal files skipped: %d") %
                    (args.real_paths_file, args.output_dir, results['copied_files'], results['skipped_files']))
 
-        # Log results
-        log.always(trn("Processed file tree from '%s' to '%s'.\nTotal files copied: %d\nTotal files skipped: %d") %
-                   (args.real_paths_file, args.output_dir, results['copied_files'], results['skipped_files']))
-
         return {}
 
     # Displaying

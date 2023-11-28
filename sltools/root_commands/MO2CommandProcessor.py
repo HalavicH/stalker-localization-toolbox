@@ -35,7 +35,7 @@ class MO2CommandProcessor(AbstractCommand):
         subparsers = parser.add_subparsers(dest='subcommand', help=trn('Sub-commands available:'))
 
         for cmd in self.commands:
-            log.debug("Processing: " + cmd.get_name())
+            log.debug(trn("Processing: %s") % cmd.get_name())
             cmd.setup(subparsers)
 
     def execute(self, args) -> {}:
@@ -43,10 +43,10 @@ class MO2CommandProcessor(AbstractCommand):
         command = self._registry.get(command_name)
 
         if command:
-            log.debug(f"Executing command: {command_name}")
+            log.debug(trn("Executing command: %s") % command_name)
             result = command.execute(args)
             command.display_result(result)
             return result
         else:
-            log.error(f"Command not found: {command_name}")
+            log.error(trn("Command not found: %s") % command_name)
             return {}

@@ -274,7 +274,7 @@ def check_placeholders(text, xml_string):
                 'content': error_content
             }
             errors.append(error)
-            log.debug(f"Detected: {error}")
+            log.debug(trn("Detected: %s") % error)
     return errors
 
 

@@ -64,7 +64,7 @@ def main():
         root.setup(parser)
 
         args = parser.parse_args()
-        log.debug(f"Args: {args}")
+        log.debug(trn("Args: %s") % str(args))
 
         if args.command is None:
             cmd_name = sys.argv[0].split("/")[-1] + " -h"
