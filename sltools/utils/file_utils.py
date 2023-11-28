@@ -2,7 +2,7 @@ import codecs
 import glob
 import os
 
-from sltools.old.config import PRIMARY_ENCODING
+from sltools.baseline.config import PRIMARY_ENCODING
 from sltools.log_config_loader import log
 from sltools.utils.lang_utils import trn
 

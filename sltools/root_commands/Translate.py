@@ -4,7 +4,7 @@ from langdetect import LangDetectException
 
 from sltools.baseline.command_baseline import AbstractCommand
 from sltools.log_config_loader import log
-from sltools.old.commands.utils.common import get_xml_files_and_log
+from sltools.baseline.common import get_xml_files_and_log
 from sltools.utils.colorize import cf_blue
 from sltools.utils.error_utils import interpret_error
 from sltools.utils.file_utils import read_xml, save_xml

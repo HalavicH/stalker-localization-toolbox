@@ -3,7 +3,7 @@ import os
 import re
 from lxml import etree
 from lxml.etree import _Element
-from sltools.old.config import PRIMARY_ENCODING
+from sltools.baseline.config import PRIMARY_ENCODING
 from sltools.log_config_loader import log
 from sltools.utils.colorize import cf_yellow, cf_red
 from sltools.utils.error_utils import log_and_save_error, interpret_error

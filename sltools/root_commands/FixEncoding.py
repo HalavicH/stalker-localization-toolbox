@@ -1,12 +1,26 @@
 from sltools.baseline.command_baseline import AbstractCommand
 from sltools.log_config_loader import log
-from sltools.old.commands.fix_encoding import change_file_encoding
-from sltools.old.config import PRIMARY_ENCODING
+from sltools.baseline.config import PRIMARY_ENCODING
 from sltools.root_commands.ValidateEncoding import ValidateEncoding
 from sltools.utils.colorize import cf_green, cf_red, cf_yellow, cf_cyan
 from sltools.utils.error_utils import log_and_save_error, display_encoding_error_details
 from sltools.utils.file_utils import read_xml
 from sltools.utils.lang_utils import trn
+
+def change_file_encoding(file_name, e_from, e_to):
+    with open(file_name, 'r', encoding=e_from) as file:
+        data = file.read()
+
+    try:
+        with open(file_name, 'w', encoding=e_to) as file:
+            file.write(data)
+    except UnicodeEncodeError as e:
+        # Rollback
+        log.warning(trn("Can't change encoding for %s. Rolling back...") % file_name)
+        with open(file_name, 'w', encoding=e_from) as file:
+            file.write(data)
+        # Rethrow
+        raise e
 
 
 class FixEncoding(AbstractCommand):

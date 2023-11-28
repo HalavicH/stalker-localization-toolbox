@@ -1,6 +1,6 @@
 import chardet
 
-from sltools.old.config import PRIMARY_ENCODING
+from sltools.baseline.config import PRIMARY_ENCODING
 from sltools.log_config_loader import log
 from sltools.utils.colorize import cf_green, cf_yellow, cf_red
 from sltools.utils.lang_utils import trn

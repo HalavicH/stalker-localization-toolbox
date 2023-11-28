@@ -18,8 +18,8 @@ class Misc(AbstractCommand):
 
     def _setup_parser_args(self, parser):
         parser.add_argument('--check-deepl-tokens-usage',
-                                 nargs='+',  # '+' means "at least one"
-                                 help=trn('Checks DeepL tokens quota (provide token list separated by the space'))
+                            nargs='+',  # '+' means "at least one"
+                            help=trn('Checks DeepL tokens quota (provide token list separated by the space'))
 
     # Execution
     ###########
@@ -27,7 +27,7 @@ class Misc(AbstractCommand):
         pass
 
     @staticmethod
-    def check_deepl_tokens_usage(token_list):
+    def _check_deepl_tokens_usage(token_list):
         columns = [trn("Token"), trn("Plan"), trn("Used"), trn("Available"), trn("Used %")]
         table = create_table(columns, title=trn("DeepL Token Usage"), border_style="blue")
 
@@ -63,7 +63,7 @@ class Misc(AbstractCommand):
 
     def execute(self, args) -> dict:
         if args.check_deepl_tokens_usage is not None:
-            self.check_deepl_tokens_usage(args.check_deepl_tokens_usage)
+            self._check_deepl_tokens_usage(args.check_deepl_tokens_usage)
 
         return {}
 

@@ -12,9 +12,9 @@ import requests
 from flask import Flask, render_template, request, jsonify
 from flask_cors import CORS
 
-from sltools.old.commands.sort_strings_in_files import sort_files_with_duplicates
-from sltools.old.config import file_changes_msg_queue, DefaultArgs
+from sltools.baseline.config import file_changes_msg_queue, DefaultArgs
 from sltools.log_config_loader import log
+from sltools.root_commands.SortFilesWithDuplicates import SortFilesWithDuplicates
 from sltools.utils.misc import set_default
 from sltools.utils.watch_files_for_change import thread_watch_directories
 from sltools.utils.lang_utils import trn
@@ -90,7 +90,7 @@ def sort__duplicates_in_files():
     args.sort_duplicates_only = True
 
     try:
-        sort_files_with_duplicates(args, False)
+        SortFilesWithDuplicates().execute(args)
         return jsonify({"message": trn("Command executed successfully!")}), 200
     except Exception as e:
         log.error(trn("Can't sort files: %s") % e)

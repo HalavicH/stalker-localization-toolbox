@@ -3,7 +3,7 @@ from abc import abstractmethod, ABC
 from argparse import ArgumentParser, Namespace
 
 from sltools.baseline.parser_definitions import CustomHelpFormatter
-from sltools.old.commands.utils.common import process_files_with_progress
+from sltools.baseline.common import process_files_with_progress
 from sltools.utils.git_utils import is_allowed_to_continue
 from sltools.utils.lang_utils import trn
 

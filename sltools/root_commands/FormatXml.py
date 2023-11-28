@@ -2,8 +2,7 @@ from rich import get_console
 
 from sltools.baseline.command_baseline import AbstractCommand
 from sltools.log_config_loader import log
-from sltools.old.commands.format_xml import error_str, format_xml_text_entries, to_yes_no
-from sltools.old.commands.utils.common import get_xml_files_and_log
+from sltools.baseline.common import get_xml_files_and_log
 from sltools.utils.colorize import cf_green, cf_red, cf_yellow, cf_cyan
 from sltools.utils.error_utils import log_and_save_error
 from sltools.utils.file_utils import read_xml, save_xml
@@ -12,6 +11,36 @@ from sltools.utils.misc import create_table, exception_originates_from
 from sltools.utils.plain_text_utils import tabwidth, format_text_entry
 from sltools.utils.xml_utils import fix_possible_errors, format_xml_string, parse_xml_root, indent, to_utf_string_with_proper_declaration, \
     add_blank_line_before_comments
+
+error_str = cf_red(trn("Error"))
+
+
+def format_xml_text_entries(text_formatted_xml, indent_level) -> (str, bool):
+    was_formatted = False
+
+    root = parse_xml_root(text_formatted_xml)
+    for string_elem in root:
+        for text_elem in string_elem:
+            orig_text = text_elem.text
+            text_elem.text = format_text_entry(orig_text, indent_level)
+            if orig_text != text_elem.text:
+                str_id = cf_cyan(string_elem.attrib.get("id"))
+                log.info(trn("Text of '%s' was formatted") % str_id)
+                was_formatted = True
+
+    indent(root)
+
+    # Convert the XML tree to a string
+    formatted_xml = to_utf_string_with_proper_declaration(root)
+
+    # Add a blank line before comments
+    updated_xml_str = add_blank_line_before_comments(formatted_xml)
+
+    return updated_xml_str.strip() + "\n", was_formatted
+
+
+def to_yes_no(b: bool) -> str:
+    return cf_green(trn("Yes")) if b else trn("No")
 
 
 class FormatXml(AbstractCommand):
@@ -169,4 +198,3 @@ class FormatXml(AbstractCommand):
             for file in failed_files:
                 log.always("\t%s" % cf_yellow(file))
             log.always(cf_cyan(trn("Run command with --fix option to try to fix errors automatically\n")))
-
