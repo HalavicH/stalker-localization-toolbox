@@ -4,8 +4,8 @@ from collections import defaultdict
 from datetime import datetime
 
 from sltools.baseline.command_baseline import AbstractCommand
-from sltools.log_config_loader import log
 from sltools.baseline.common import get_xml_files_and_log
+from sltools.log_config_loader import log
 from sltools.utils.colorize import cf_yellow, cf_cyan
 from sltools.utils.error_utils import interpret_error
 from sltools.utils.file_utils import read_xml
@@ -92,8 +92,6 @@ def analyze_file_overlaps(indexed_data):
     # Sort the overlaps
     sorted_overlaps = sort_overlaps(overlaps_data)
     return filter_sorted_data(sorted_overlaps)
-
-
 
 
 class FindStringDuplicates(AbstractCommand):
@@ -242,4 +240,3 @@ class FindStringDuplicates(AbstractCommand):
                     log.always(f"Unique ids in {file} (not in {matched_file}):\n\t{cf_yellow(unique_ids_str)}")
 
             log.always()
-

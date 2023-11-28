@@ -2,8 +2,8 @@ import os
 import threading
 import time
 
-from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler
+from watchdog.observers import Observer
 
 from sltools.baseline.common import get_xml_files_and_log
 from sltools.baseline.config import file_changes_msg_queue

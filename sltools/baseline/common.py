@@ -1,4 +1,5 @@
 from argparse import Namespace
+
 from rich import get_console
 from rich.progress import Progress
 
@@ -6,8 +7,8 @@ from sltools.log_config_loader import log
 from sltools.utils.colorize import cf_green
 from sltools.utils.file_utils import find_xml_files
 from sltools.utils.git_utils import is_allowed_to_continue
-from sltools.utils.misc import get_term_width
 from sltools.utils.lang_utils import trn  # Ensure this import is included for _tr function
+from sltools.utils.misc import get_term_width
 
 
 # 1. Get the list of XML files and log the number of files
@@ -55,5 +56,4 @@ def map_alias_to_command(args, cmd_attr_name, aliases):
     for cmd in aliases:
         command = getattr(args, cmd_attr_name)
         if command in aliases[cmd]:
-            setattr(args, cmd_attr_name,  cmd)
-
+            setattr(args, cmd_attr_name, cmd)

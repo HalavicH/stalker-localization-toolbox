@@ -1,11 +1,12 @@
 from sltools.baseline.command_baseline import AbstractCommand
-from sltools.log_config_loader import log
 from sltools.baseline.config import PRIMARY_ENCODING
+from sltools.log_config_loader import log
 from sltools.root_commands.ValidateEncoding import ValidateEncoding
 from sltools.utils.colorize import cf_green, cf_red, cf_yellow, cf_cyan
 from sltools.utils.error_utils import log_and_save_error, display_encoding_error_details
 from sltools.utils.file_utils import read_xml
 from sltools.utils.lang_utils import trn
+
 
 def change_file_encoding(file_name, e_from, e_to):
     with open(file_name, 'r', encoding=e_from) as file:

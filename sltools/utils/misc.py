@@ -2,16 +2,14 @@ import os
 import traceback
 from importlib.metadata import version
 
-from langdetect import detect_langs
-
-from sltools.log_config_loader import log
-from sltools.utils.plain_text_utils import fold_text
-
 import requests
+from langdetect import detect_langs
 from rich.table import Table
 
+from sltools.log_config_loader import log
 from sltools.utils.colorize import *
 from sltools.utils.lang_utils import trn
+from sltools.utils.plain_text_utils import fold_text
 
 
 def get_term_width():

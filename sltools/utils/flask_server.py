@@ -15,9 +15,9 @@ from flask_cors import CORS
 from sltools.baseline.config import file_changes_msg_queue, DefaultArgs
 from sltools.log_config_loader import log
 from sltools.root_commands.SortFilesWithDuplicates import SortFilesWithDuplicates
+from sltools.utils.lang_utils import trn
 from sltools.utils.misc import set_default
 from sltools.utils.watch_files_for_change import thread_watch_directories
-from sltools.utils.lang_utils import trn
 
 app = Flask(__name__)
 

@@ -40,7 +40,6 @@ class VfsMap(AbstractCommand):
     def _process_file(self, file_path, results: dict, args):
         pass
 
-
     @staticmethod
     def filter_lines(path, include_patterns, exclude_patterns):
         match = True if len(include_patterns) == 0 and len(exclude_patterns) == 0 else False

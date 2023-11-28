@@ -1,4 +1,5 @@
 import argparse
+
 from rich_argparse import RichHelpFormatter
 
 from sltools.utils.lang_utils import trn
@@ -54,4 +55,3 @@ def add_git_override_arguments(parser):
                         help=trn('Allow operations on dirty Git repositories'))
     parser.add_argument('--allow-not-tracked', action='store_true', default=False,
                         help=trn('Allow operations on untracked by Git files'))
-

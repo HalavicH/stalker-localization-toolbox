@@ -2,9 +2,9 @@ from langdetect import LangDetectException
 from rich import get_console
 
 from sltools.baseline.command_baseline import AbstractCommand
-from sltools.log_config_loader import log
 from sltools.baseline.common import get_xml_files_and_log
 from sltools.baseline.config import UNKNOWN_LANG, TOO_LITTLE_DATA, min_recognizable_text_length
+from sltools.log_config_loader import log
 from sltools.utils.colorize import cf_green, cf_red, cf_cyan
 from sltools.utils.error_utils import interpret_error
 from sltools.utils.file_utils import read_xml

@@ -1,17 +1,17 @@
 from lxml.etree import XMLSyntaxError
 
 from sltools.baseline.command_baseline import AbstractCommand
-from sltools.log_config_loader import log
 from sltools.baseline.common import get_xml_files_and_log
 from sltools.baseline.config import PRIMARY_ENCODING
+from sltools.log_config_loader import log
 from sltools.utils.colorize import cf_green, cf_red, cf_yellow
 from sltools.utils.error_utils import interpret_error
 from sltools.utils.file_utils import read_xml
 from sltools.utils.lang_utils import trn
 from sltools.utils.xml_utils import remove_xml_declaration, analyze_xml_parser_error, EmptyXmlDocError, is_include_present, resolve_xml_includes, parse_xml_root
 
-
 include_example = cf_red(trn('#include "some/other/file.xml"'))
+
 
 class ValidateXml(AbstractCommand):
     # Metadata

@@ -1,7 +1,8 @@
+from importlib.metadata import version
+
 from sltools.baseline.command_baseline import Command
 from sltools.log_config_loader import log
 from sltools.utils.lang_utils import trn
-from importlib.metadata import version
 
 
 class CommandProcessor(Command):
@@ -47,4 +48,3 @@ class CommandProcessor(Command):
 
     def get_aliases(self) -> []:
         NotImplemented(trn("The method should not be used on the root command obj"))
-

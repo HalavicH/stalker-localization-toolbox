@@ -1,14 +1,13 @@
 import re
 import textwrap
+from collections import Counter
 
 from colorama import Fore
 
 from sltools.baseline.config import text_wrap_width
 from sltools.log_config_loader import log
-from collections import Counter
-from sltools.utils.lang_utils import trn
-
 from sltools.utils.colorize import rich_guard
+from sltools.utils.lang_utils import trn
 
 tabwidth = "    "
 

@@ -3,8 +3,8 @@ from argparse import Namespace
 from rich import get_console
 
 from sltools.baseline.command_baseline import AbstractCommand
-from sltools.log_config_loader import log
 from sltools.baseline.common import get_xml_files_and_log
+from sltools.log_config_loader import log
 from sltools.utils.colorize import cf_green, cf_red
 from sltools.utils.encoding_utils import detect_encoding, is_file_content_win1251_compatible
 from sltools.utils.lang_utils import trn

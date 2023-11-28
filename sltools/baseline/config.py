@@ -1,6 +1,5 @@
 import queue
 
-from sltools.config_file_manager import ConfigFileManager
 from sltools.utils.lang_utils import trn
 
 PRIMARY_ENCODING = 'windows-1251'

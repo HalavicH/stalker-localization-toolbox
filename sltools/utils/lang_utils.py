@@ -1,6 +1,5 @@
-import os.path
-
 import gettext
+import os.path
 
 from sltools.config_file_manager import file_config
 
@@ -28,4 +27,3 @@ except FileNotFoundError:
 lang.install()
 
 trn = lang.gettext
-
