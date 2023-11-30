@@ -38,7 +38,7 @@ Text:
 - [x] Capitalize text entries
 - [ ] Grammar and typos checkup
 - [x] Capitalization of the text blocks
-- [ ] Automatic scraping for files you need to translate (if you just start translating) with
+- [x] Automatic scraping for files you need to translate (if you just start translating) with
     integration with **Mod Organizer 2** mod priority (if you want to translate
     a modpack with all at once)
 
@@ -61,6 +61,14 @@ recommended to make git repository out of your mod, and commit changes before
 each script use (or at least commit often)
 
 ## Changelog
+### v0.2.2
+#### New Features and Enhancements
+- **Command Design Refactoring**: Transitioned project from procedural to OOP command design, improving command processing and parser functionality.
+- **New MO2 Commands**: Introduced VFS map and copy commands for working with virtual FS of the MO2.
+- **Translation Enhancements**: Updated logs localization.
+- **Integrate Google Translator**.
+- **Code and Architecture Optimization**: Code reformatting, updated existing architecture for streamlined structure.
+
 ### v0.2.1
 ##### New Features and Enhancements
 - **Add error explanation**: Add error explanation (ukrainian only)
@@ -74,7 +82,7 @@ each script use (or at least commit often)
 - **Download Button**: Implemented a user-friendly download button in the interface.
 - **Highlight Duplicates**: Frontend now highlights duplicate contents for better visibility.
 
-##### Bug Fixes and Improvements
+##### Bug Fixes and Improvemen
 - **Translation Fixes**: Multiple updates to improve translation accuracy.
 - **Locale Check Function**: Developed a function for better handling of language settings.
 - **Version Check Mechanism Update**: Enhanced the mechanism for more reliable version checking.
