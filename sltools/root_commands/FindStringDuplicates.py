@@ -9,7 +9,7 @@ from sltools.log_config_loader import log
 from sltools.utils.colorize import cf_yellow, cf_cyan
 from sltools.utils.error_utils import interpret_error
 from sltools.utils.file_utils import read_xml
-from sltools.utils.flask_server import run_flask_server
+from sltools.web_server.flask_server import run_flask_server
 from sltools.utils.lang_utils import trn
 from sltools.utils.misc import set_default
 from sltools.utils.xml_utils import parse_xml_root

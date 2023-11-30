@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <title>D3.js File Overlaps Visualization</title>
     <!--    <link rel="stylesheet" href="styles.css">-->
-    <script src="https://d3js.org/d3.v5.min.js"></script>
+    <script src="/static/js/d3.v5.min.js"></script>
     <link href="{{ url_for('static', filename='styles.css') }}" rel="stylesheet">
 </head>
 <body>
@@ -80,16 +80,16 @@
 
 <div class="loading-message">
     <div class="loading-symbol">
-        <img alt="" class="radiation-symbol" src="/static/radiation.svg"/>
+        <img alt="" class="radiation-symbol" src="/static/assets/radiation.svg"/>
     </div>
     <p>Loading...</p>
 </div>
 
 <div class="shutdown-container">
-    <img alt="" class="shutdown-img" src="/static/shutdown.svg">
+    <img alt="" class="shutdown-img" src="/static/assets/shutdown.svg">
 </div>
 
 <div class="tooltip" id="tooltip"></div>
-<script src="/static/script.js" type="module"></script>
+<script src="/static/js/script.js" type="module"></script>
 </body>
 </html>
