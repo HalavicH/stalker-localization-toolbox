@@ -21,6 +21,7 @@ from sltools.log_config_loader import log
 from sltools.root_commands.AnalyzePatterns import AnalyzePatterns
 from sltools.root_commands.CapitalizeText import CapitalizeText
 from sltools.root_commands.CheckPrimaryLanguage import CheckPrimaryLanguage
+from sltools.root_commands.CompareTextLocalizations import CompareTextLocalizations
 from sltools.root_commands.Config import Config
 from sltools.root_commands.FindStringDuplicates import FindStringDuplicates
 from sltools.root_commands.FixEncoding import FixEncoding
@@ -55,6 +56,7 @@ def main():
             CapitalizeText(),
             FindStringDuplicates(),
             SortFilesWithDuplicates(),
+            CompareTextLocalizations(),
             MO2CommandProcessor([
                 VfsMap(),
                 VfsCopy(),
