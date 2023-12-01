@@ -78,12 +78,3 @@ class AbstractCommand(Command, ABC):
     def is_allowed_to_continue(path, args):
         return is_allowed_to_continue(path, args.allow_no_repo, args.allow_dirty, args.allow_not_tracked)
 
-
-class WebUiCommand(ABC):
-    @abstractmethod
-    def get_endpoint(self) -> str:
-        pass
-
-    @abstractmethod
-    def web_worker(self, args) -> dict:
-        pass

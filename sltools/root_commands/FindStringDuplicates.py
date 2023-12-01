@@ -3,7 +3,7 @@ import sys
 from collections import defaultdict
 from datetime import datetime
 
-from sltools.baseline.command_baseline import AbstractCommand, WebUiCommand
+from sltools.baseline.command_baseline import AbstractCommand
 from sltools.baseline.common import get_xml_files_and_log
 from sltools.log_config_loader import log
 from sltools.utils.colorize import cf_yellow, cf_cyan
@@ -13,6 +13,7 @@ from sltools.web_server.flask_server import WebUiServer
 from sltools.utils.lang_utils import trn
 from sltools.utils.misc import set_default
 from sltools.utils.xml_utils import parse_xml_root
+from sltools.web_server.fsd_manager import FindStringDuplicatesManager
 
 
 def list_strings_from_all_files(files):
@@ -94,16 +95,7 @@ def analyze_file_overlaps(indexed_data):
     return filter_sorted_data(sorted_overlaps)
 
 
-class FindStringDuplicates(AbstractCommand, WebUiCommand):
-    def get_endpoint(self) -> str:
-        return "/find-string-duplicates"
-
-    def web_worker(self, args) -> dict:
-        self.find_and_prepare_duplicates_report(args)
-
-        return {}
-
-
+class FindStringDuplicates(AbstractCommand):
     # Metadata
     ##########
     def get_name(self) -> str:
@@ -163,11 +155,12 @@ class FindStringDuplicates(AbstractCommand, WebUiCommand):
         return results, visualization_data
 
     def execute(self, args) -> dict:
-        def fsd_wrapper_for_ws(_args, is_read_only):
+        def fsd_wrapper_for_ws(_args):
             return self.find_and_prepare_duplicates_report(_args)
 
         if args.web_visualizer:
-            WebUiServer(args, fsd_wrapper_for_ws).run()
+            manager = FindStringDuplicatesManager(args, fsd_wrapper_for_ws)
+            WebUiServer(manager).run()
             return {}
 
         report, visualization_data = self.find_and_prepare_duplicates_report(args)
