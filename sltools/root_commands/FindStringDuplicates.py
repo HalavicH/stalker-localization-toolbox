@@ -3,13 +3,13 @@ import sys
 from collections import defaultdict
 from datetime import datetime
 
-from sltools.baseline.command_baseline import AbstractCommand
+from sltools.baseline.command_baseline import AbstractCommand, WebUiCommand
 from sltools.baseline.common import get_xml_files_and_log
 from sltools.log_config_loader import log
 from sltools.utils.colorize import cf_yellow, cf_cyan
 from sltools.utils.error_utils import interpret_error
 from sltools.utils.file_utils import read_xml
-from sltools.web_server.flask_server import run_flask_server
+from sltools.web_server.flask_server import WebUiServer
 from sltools.utils.lang_utils import trn
 from sltools.utils.misc import set_default
 from sltools.utils.xml_utils import parse_xml_root
@@ -94,7 +94,16 @@ def analyze_file_overlaps(indexed_data):
     return filter_sorted_data(sorted_overlaps)
 
 
-class FindStringDuplicates(AbstractCommand):
+class FindStringDuplicates(AbstractCommand, WebUiCommand):
+    def get_endpoint(self) -> str:
+        return "/find-string-duplicates"
+
+    def web_worker(self, args) -> dict:
+        self.find_and_prepare_duplicates_report(args)
+
+        return {}
+
+
     # Metadata
     ##########
     def get_name(self) -> str:
@@ -158,7 +167,7 @@ class FindStringDuplicates(AbstractCommand):
             return self.find_and_prepare_duplicates_report(_args)
 
         if args.web_visualizer:
-            run_flask_server(args, fsd_wrapper_for_ws)
+            WebUiServer(args, fsd_wrapper_for_ws).run()
             return {}
 
         report, visualization_data = self.find_and_prepare_duplicates_report(args)
