@@ -1,5 +1,5 @@
 <!-- HTML -->
-<div class="status-bar" id="status-bar">
+<div class="status-bar" id="status-bar" on:click={handleClick} on:keydown={undefined} role="button" tabindex="0">
     <div id="status-content">
         <div class="status-label">{@html data}</div>
     </div>
@@ -8,12 +8,24 @@
 <!-- JS -->
 <script lang="ts">
     import {status} from "../store.js";
+    import {copyTextToClipboard} from "./misc";
 
     let data: string;
     status.subscribe((newStatus) => {
         console.log("Update statusbar with: ", newStatus);
         data = newStatus;
-    })
+    });
+
+    function handleClick(evt: Event) {
+        const t = evt.target as HTMLDivElement;
+        if (!t) {
+            return;
+        }
+
+        if (t.classList.contains("path")) {
+            copyTextToClipboard(t.innerText);
+        }
+    }
 </script>
 
 <!-- CSS -->

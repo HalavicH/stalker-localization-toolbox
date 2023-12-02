@@ -1,20 +1,23 @@
 <script lang="ts">
-    import { onMount } from 'svelte';
+    import {onMount} from 'svelte';
     import * as d3 from 'd3';
     import type {ReportData} from "../report";
     import {extractData} from "./render/parser";
-    import { status, details } from '../store';
+    import {status, details, tooltipData, tooltipPos} from '../store';
     import type {Link, Node} from "../report";
-    import {renderLinks, renderNodesWithLabels} from "./render/renderer";
+    import {copySelfToClipboard, displayLinkDetails, renderNodesWithLabels} from "./render/renderer";
+    import type {ScaleOrdinal} from "d3-scale";
 
     export let report: ReportData;
     export let showAllFiles: boolean;
-    let root: Element;
-    let {nodes, links} = extractData(report, showAllFiles);
 
     // D3 entities
-    let svg: d3.Selection<SVGGElement, any, HTMLElement, any>;
-    let zoom: any;// d3.ZoomBehavior<Element, any>;
+    let svg: d3.Selection<SVGGElement, unknown, HTMLElement, any>;
+    let color: ScaleOrdinal<string, unknown>;
+    let zoom: any;
+    let ret = extractData(report, showAllFiles);
+    let links: Link[] = ret.links;
+    let nodes: Node[] = ret.nodes;
 
     onMount(() => {
         console.log("Run graph render");
@@ -40,21 +43,21 @@
         status.set("Test");
         details.set("details");
 
-
         container.call(zoom);
     }
 
     export function renderGraph() {
-        const force = createForceSimulation(nodes, links, 800, 600);
+        const force = createForceSimulation(800, 600);
 
         // Create color scale
-        const color = d3.scaleOrdinal(d3.schemeCategory10);
+        color = d3.scaleOrdinal(d3.schemeCategory10);
+        console.log(color);
 
         // Render links within the SVG
-        renderLinks(svg, links, report);
+        renderLinks();
 
         // Render nodes with labels within the SVG
-        const nodesWithLabels = renderNodesWithLabels(svg, nodes, color, force);
+        // const nodesWithLabels = renderNodesWithLabels(svg, nodes, color, force);
 
         // Update positions on simulation "tick"
         force.on("tick", () => {
@@ -65,14 +68,14 @@
                 .attr("y2", (d: any) => d.target.y);
 
             // Update node and label positions
-            nodesWithLabels.attr("transform", (d: any) => `translate(${d.x},${d.y})`);
+            // nodesWithLabels.attr("transform", (d: any) => `translate(${d.x},${d.y})`);
         });
 
         // let stats = calculateStats(links, nodes);
         // displayStatistics(stats);
     }
 
-    function createForceSimulation(nodes: Node[], links: Link[], width: number, height: number) {
+    function createForceSimulation(width: number, height: number) {
         return d3.forceSimulation(nodes)
             .force("link", d3.forceLink(links)
                 .distance(link => (1 / link.duplicateKeysCnt) * 100 + 100)
@@ -80,6 +83,46 @@
             )
             .force("charge", d3.forceManyBody())
             .force("center", d3.forceCenter(width / 2, height / 2));
+    }
+
+    export function renderLinks() {
+        // Render links within the SVG
+        const multiplier = 1;
+        const linkElements = svg.selectAll(".link")
+            .data(links)
+            .enter().append("line")
+            .attr("class", "link")
+            .style("stroke", d => d.color) // Use the color defined in the link
+            .attr("stroke-width", d => Math.sqrt(d.duplicateKeysCnt) * multiplier + 1);
+
+        // Add a tooltip to show the number of duplicate keys when hovering over the link
+        linkElements
+            .on("mouseover", function (d) {
+                const header = `Duplicate Keys: (Total: ${d.duplicateKeysCnt})<br>`;
+                const ids = d.duplicateKeys.join("<br>")
+                tooltipData.set(header + ids);
+            })
+            .on("mousemove", function (event) {
+                let top = (event.pageY - 10) + "px";
+                let left = (event.pageX - 10) + "px";
+                tooltipPos.set(`top: ${top}; left: ${left}`);
+            })
+            .on("mouseout", function () {
+                tooltipData.set("");
+            })
+            .on("click", function (d) {
+                    status.set(`
+                <div class="status-label status-bar-label">Link From: </div>
+                <div class="path">${d.source.id}</div>
+                <div class="status-label status-bar-label">Link To: </div>
+                <div class="path">${d.target.id}</div>
+            `);
+
+                displayLinkDetails(d, report);
+                }
+            )
+        ;
+
     }
 
 </script>
@@ -92,4 +135,4 @@
     }
 </style>
 
-<div bind:this={root} id="graph-container"></div>
+<div id="graph-container"></div>

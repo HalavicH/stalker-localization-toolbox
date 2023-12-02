@@ -17,69 +17,6 @@ export function prepareDivsWithIds(node: any) {
     }
 }
 
-
-export function renderLinks(svg: d3.Selection<SVGElement, any, HTMLElement, any>, links: Link[], report: ReportData) {
-    // Render links within the SVG
-    const multiplier = 1;
-    const linkElements = svg.selectAll(".link")
-        .data(links)
-        .enter().append("line")
-        .attr("class", "link")
-        .style("stroke", d => d.color) // Use the color defined in the link
-        .attr("stroke-width", d => Math.sqrt(d.duplicateKeysCnt) * multiplier + 1);
-
-    // Add a tooltip to show the number of duplicate keys when hovering over the link
-    linkElements
-        .on("mouseover", function (d) {
-            const tooltip = d3.select("#tooltip");
-            const header = `Duplicate Keys: (Total: ${d.duplicateKeysCnt})<br>`;
-            const ids = d.duplicateKeys.join("<br>")
-            tooltip.html(header + ids);
-            tooltip.style("visibility", "visible");
-        })
-        .on("mousemove", function (event) {
-            const tooltip = d3.select("#tooltip");
-            tooltip.style("top", (event.pageY - 10) + "px")
-                .style("left", (event.pageX + 10) + "px");
-        })
-        .on("mouseout", function () {
-            const tooltip = d3.select("#tooltip");
-            tooltip.style("visibility", "hidden");
-        })
-        .on("click", function (d) {
-            const statusBar = document.getElementById("status-bar");
-            if (statusBar) {
-                statusBar.style.visibility = "visible";
-            }
-
-            // Example: Display link information in the status bar
-            const statusContent = document.getElementById("status-content");
-            if (statusContent) {
-                statusContent.innerHTML = `
-                <div class="status-label status-bar-label">Link From: </div>
-                <div class="path">${d.source.id}</div>
-                <div class="status-label status-bar-label">Link To: </div>
-                <div class="path">${d.target.id}</div>
-            `;
-
-                statusContent.addEventListener("click", evt => {
-                    const t = evt.target as HTMLDivElement;
-                    if (!t) {
-                        return;
-                    }
-
-                    if (t.classList.contains("path")) {
-                        copySelfToClipboard(evt.target);
-                    }
-                });
-            }
-
-            displayLinkDetails(d, report);
-        });
-
-}
-
-
 export function renderNodesWithLabels(svg: any, nodes: Node[], color: any, force: any) {
     // Determine the maximum total_id_cnt to scale the node size
     const maxTotalIdCount = d3.max(nodes, d => d.totalKeysCnt);
