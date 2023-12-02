@@ -1,12 +1,20 @@
 <!-- HTML -->
 <div class="status-bar" id="status-bar">
     <div id="status-content">
-        <div class="status-label">Status bar</div>
+        <div class="status-label">{@html data}</div>
     </div>
 </div>
 
 <!-- JS -->
+<script lang="ts">
+    import {status} from "../store.js";
 
+    let data: string;
+    status.subscribe((newStatus) => {
+        console.log("Update statusbar with: ", newStatus);
+        data = newStatus;
+    })
+</script>
 
 <!-- CSS -->
 <style>

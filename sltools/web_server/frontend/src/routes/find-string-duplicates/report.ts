@@ -19,7 +19,24 @@ type FileToStringMapping = {
     };
 };
 
-export type ReportData = {
+export interface ReportData {
     overlaps_report: OverlapsReport;
     file_to_string_mapping: FileToStringMapping;
 };
+
+//
+export interface Node {
+    id: string;
+    strings: string[];
+    index: number;
+    totalKeysCnt: number;
+    hasDuplicates: boolean;
+}
+
+export interface Link {
+    source: number;
+    target: number;
+    duplicateKeysCnt: number;
+    duplicateKeys: string[];
+    color: string;
+}

@@ -80,7 +80,7 @@ export function renderNodesWithLabels(svg, nodes, color, force, graph) {
             return nodeSizeScale(totalIdCnt);
         })
         .attr("data-node-id", d => d.id)
-        .attr("class", "circle")
+         .attr("class", "circle")
         .style("fill", d => {
             let folder = d.id.split("/").slice(-2, -1)[0];
             if (d.hasDuplicates) {

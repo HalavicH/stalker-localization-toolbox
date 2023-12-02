@@ -1,25 +1,10 @@
 import * as d3 from 'd3';
-import type { ReportData } from '../../report';
+import type {Link, Node, ReportData} from '../../report';
 import { hashCode } from '$lib/js/misc';
 
 // Define TypeScript types for nodes and links
-interface Node {
-    id: string;
-    strings: string[];
-    index: number;
-    totalKeysCnt: number;
-    hasDuplicates: boolean;
-}
 
-interface Link {
-    source: number;
-    target: number;
-    duplicateKeysCnt: number;
-    duplicateKeys: string[];
-    color: string;
-}
-
-export function extractData(report: ReportData, showAllFiles: boolean) {
+export function extractData(report: ReportData, showAllFiles: boolean): {nodes: Node[], links: Link[]} {
     const { nodes, nodeMap } = createNodesArray(report, showAllFiles);
     const links: Link[] = [];
 

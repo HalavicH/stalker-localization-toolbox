@@ -3,6 +3,7 @@
     import * as d3 from 'd3';
     import type {ReportData} from "../report";
     import {extractData} from "./render/parser";
+    import { status, details } from '../store';
 
     export let report: ReportData;
     export let showAllFiles: boolean;
@@ -11,9 +12,10 @@
 
     // D3 entities
     let svg: d3.Selection<SVGGElement, any, HTMLElement, any>;
-    let zoom: d3.ZoomBehavior<Element, any>;
+    let zoom: any;// d3.ZoomBehavior<Element, any>;
 
     onMount(() => {
+        console.log("Run graph render");
         createZoomableSVG();
     });
 
@@ -33,8 +35,10 @@
                 svg.attr('transform', d3.event.transform);
             });
 
+        status.set("Test");
         container.call(zoom);
     }
+
 </script>
 
 <style>
