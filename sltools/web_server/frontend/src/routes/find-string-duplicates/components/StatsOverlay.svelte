@@ -1,16 +1,4 @@
-<script lang="ts">
-    import Overlay from "$lib/components/Overlay.svelte";
-    import Label from "$lib/components/Label.svelte";
-
-    export let style = ""
-</script>
-
-<style>
-    td {
-        padding-right: 5px;
-    }
-</style>
-
+<!-- HTML -->
 <Overlay {style} title="Overall Stats">
     <table>
         <tbody>
@@ -29,3 +17,18 @@
         </tbody>
     </table>
 </Overlay>
+
+<!-- JS -->
+<script lang="ts">
+    import Overlay from "$lib/components/Overlay.svelte";
+    import Label from "$lib/components/Label.svelte";
+
+    export let style = ""
+</script>
+
+<!-- CSS -->
+<style>
+    td {
+        padding-right: 5px;
+    }
+</style>

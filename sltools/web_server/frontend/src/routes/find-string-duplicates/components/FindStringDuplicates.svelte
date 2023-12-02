@@ -1,3 +1,14 @@
+<!-- HTML -->
+<body>
+<LegendOverlay style="top: 0; left: 0;" on:height={handleLegendHeight}/>
+<StatsOverlay style="top: {legendHeight}px; left: 0;"/>
+<DetailsOverlay style="top: 0; right: 0; width: 25%; max-height: 91%;"/>
+<PageSpinner/>
+<Shutdown/>
+<StatusBar/>
+</body>
+
+<!-- JS -->
 <script lang="ts">
     import StatusBar from "./StatusBar.svelte";
     import StatsOverlay from "./StatsOverlay.svelte";
@@ -13,6 +24,7 @@
     }
 </script>
 
+<!-- CSS -->
 <style>
     body {
         width: 100%;
@@ -23,12 +35,3 @@
         background-color: #282c34; /* Obsidian background color */
     }
 </style>
-
-<body>
-<LegendOverlay style="top: 0; left: 0;" on:height={handleLegendHeight}/>
-<StatsOverlay style="top: {legendHeight}px; left: 0;"/>
-<DetailsOverlay style="top: 0; right: 0; width: 25%; max-height: 91%;"/>
-<PageSpinner/>
-<Shutdown/>
-<StatusBar/>
-</body>
