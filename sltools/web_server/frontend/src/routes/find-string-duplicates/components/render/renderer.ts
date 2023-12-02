@@ -1,49 +1,24 @@
 import * as d3 from "d3";
 import type {ReportData, Node, Link} from "../../report";
-import {copySelfToClipboard, displayLinkDetails, displayNodeDetails} from "$lib/js/infoProvider";
 import {dragEnded, dragged, dragStarted} from "./misc";
 
 
-export function renderGraph(report: ReportData, nodes: Node[], links: Link[], svg: d3.Selection<SVGElement, unknown, HTMLElement, any>) {
-    const force = createForceSimulation(nodes, links, 800, 600);
+export function getFileName(filePath: string) {
+    const parts = filePath.split("/");
+    return parts[parts.length - 1];
+}
 
-    // Create color scale
-    const color = d3.scaleOrdinal(d3.schemeCategory10);
-
-    // Render links within the SVG
-    renderLinks(svg, links, report);
-
-    // Render nodes with labels within the SVG
-    const nodesWithLabels = renderNodesWithLabels(svg, nodes, color, force);
-
-    // Update positions on simulation "tick"
-    force.on("tick", () => {
-        svg.selectAll(".link")
-            .attr("x1", (d: any) => d.source.x)
-            .attr("y1", (d: any) => d.source.y)
-            .attr("x2", (d: any) => d.target.x)
-            .attr("y2", (d: any) => d.target.y);
-
-        // Update node and label positions
-        nodesWithLabels.attr("transform", (d: any) => `translate(${d.x},${d.y})`);
-    });
-
-    // let stats = calculateStats(links, nodes);
-    // displayStatistics(stats);
+export function prepareDivsWithIds(node: any) {
+    const fileStringIds = node.strings;
+    if (fileStringIds && fileStringIds.length > 0) {
+        return `<div class="path">${fileStringIds.join("</div><div class='path''>")}</div>`;
+    } else {
+        return "No IDs found. Empty file";
+    }
 }
 
 
-function createForceSimulation(nodes: Node[], links: Link[], width: number, height: number) {
-    return d3.forceSimulation(nodes)
-        .force("link", d3.forceLink(links)
-            .distance(link => (1 / link.duplicateKeysCnt) * 100 + 100)
-            .strength(link => 1 / (link.duplicateKeysCnt + 1)) // Adjust the strength based on duplicate count
-        )
-        .force("charge", d3.forceManyBody())
-        .force("center", d3.forceCenter(width / 2, height / 2));
-}
-
-export function renderLinks(svg: d3.Selection<SVGElement, unknown, HTMLElement, any>, links: Link[], report: ReportData) {
+export function renderLinks(svg: d3.Selection<SVGElement, any, HTMLElement, any>, links: Link[], report: ReportData) {
     // Render links within the SVG
     const multiplier = 1;
     const linkElements = svg.selectAll(".link")
@@ -62,10 +37,10 @@ export function renderLinks(svg: d3.Selection<SVGElement, unknown, HTMLElement, 
             tooltip.html(header + ids);
             tooltip.style("visibility", "visible");
         })
-        .on("mousemove", function () {
+        .on("mousemove", function (event) {
             const tooltip = d3.select("#tooltip");
-            tooltip.style("top", (d3.event.pageY - 10) + "px")
-                .style("left", (d3.event.pageX + 10) + "px");
+            tooltip.style("top", (event.pageY - 10) + "px")
+                .style("left", (event.pageX + 10) + "px");
         })
         .on("mouseout", function () {
             const tooltip = d3.select("#tooltip");
@@ -296,4 +271,58 @@ export function displayLinkDetails(link: Link, graph: GraphData) {
 
     // Set visibility using Svelte store
     detailsOverlay.style.visibility = "visible";
+}
+
+
+export function copySelfToClipboard(element) {
+    const textToCopy = element.innerText;
+
+    const textArea = document.createElement("textarea");
+    textArea.value = textToCopy;
+    document.body.appendChild(textArea);
+
+    textArea.select();
+    document.execCommand("copy");
+
+    document.body.removeChild(textArea);
+
+    // Show a tooltip or feedback to indicate successful copying (optional)
+    showNotification(`
+        <div class="status-label">Path copied to clipboard: (Ctrl+V) to paste</div>
+        <div class="path">${textToCopy}</div>
+    `);
+}
+
+
+export function displayNodeDetails(node) {
+    const detailsOverlay = document.getElementById("details");
+    detailsOverlay.innerHTML = `
+        <h2>Details</h2>
+        <div class="legend-item">
+            <div class="status-label">File Name: </div>
+            <div class="overlay-data">${getFileName(node.id)}</div>
+        </div>
+            <div class="legend-item">
+            <div class="status-label">Total IDs:</div>
+            <div class="overlay-data">${node.totalKeysCnt}</div>
+        </div>
+        <div class="status-label">ID list:</div>
+        <div class="scrollable-list">
+            ${prepareDivsWithIds(node)}
+        </div>
+    `;
+
+    detailsOverlay.addEventListener("click", evt => {
+        if (evt.target.classList.contains("path")) {
+            copySelfToClipboard(evt.target);
+        }
+    });
+
+
+    detailsOverlay.style.visibility = "visible";
+}
+
+export function showNotification(html: any) {
+    const className = "notification";
+    // showBanner(html, className);
 }
