@@ -22,8 +22,8 @@
             <Label>Link color - uniq set of duplicates</Label>
         </Row>
         <Row>
+            <Switch bind:checked={showAllFilesFlag}/>
             <Label>
-                <input id="show-all-files" type="checkbox" bind:checked={showAllFilesFlag}/>
                 Show all files (even without dups)
             </Label>
         </Row>
@@ -45,6 +45,7 @@
     import Label from "$lib/components/Label.svelte";
     import {createEventDispatcher, onMount, onDestroy} from "svelte";
     import {storeShowAllFiles} from "$lib/store";
+    import Switch from "$lib/components/Switch.svelte";
 
     // Props
     export let style = "";

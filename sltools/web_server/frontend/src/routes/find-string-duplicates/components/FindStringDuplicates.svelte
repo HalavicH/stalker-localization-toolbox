@@ -4,7 +4,9 @@
 {#if (!loaded)}
     <PageSpinner/>
 {:else}
-    <GraphView {report} {showAllFiles}/>
+    {#key showAllFiles}
+        <GraphView {report} {showAllFiles}/>
+    {/key}
 {/if}
 
 <!-- Overlays -->
