@@ -1,17 +1,39 @@
 <!-- HTML -->
-{#if (data.length)}
-    <div class="tooltip" id="tooltip">{@html data}</div>
-{/if}
+<div class="tooltip" style={style} id="tooltip">{@html html}</div>
 
 <!-- JS -->
 <script lang="ts">
-    import {tooltipData} from "../store";
+    import {tooltip, type TooltipState} from "../store";
 
-    let data: string;
-    tooltipData.subscribe((html: string) => {
-        console.log("Update tooltip with: ", html);
-        data = html.trim();
-    })
+    let html: string;
+    let posX: number;
+    let posY: number;
+    let visibility: string;
+    let style: string;
+
+    $: {
+        style = `top: ${posY}px; left: ${posX}px; visibility: ${visibility}`;
+        console.log("New style: " + style);
+    }
+
+    tooltip.subscribe((tooltipState: Partial<TooltipState>) => {
+        if (!tooltipState) {
+            return;
+        }
+
+        if (tooltipState.html) {
+            html = tooltipState.html.trim();
+        }
+
+        if (tooltipState.posX && tooltipState.posY) {
+            posX = tooltipState.posX + 5;
+            posY = tooltipState.posY + 5;
+        }
+
+        if (tooltipState.visible !== undefined) {
+            visibility = tooltipState.visible ? "visible" : "hidden";
+        }
+    });
 </script>
 
 <!-- CSS -->

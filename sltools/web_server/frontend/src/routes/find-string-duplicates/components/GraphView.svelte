@@ -3,9 +3,9 @@
     import * as d3 from 'd3';
     import type {ReportData} from "../report";
     import {extractData} from "./render/parser";
-    import {status, details, tooltipData, tooltipPos} from '../store';
+    import {status, details, tooltip} from '../store';
     import type {Link, Node} from "../report";
-    import {copySelfToClipboard, displayLinkDetails, renderNodesWithLabels} from "./render/renderer";
+    import {displayLinkDetails, renderNodesWithLabels} from "./render/renderer";
     import type {ScaleOrdinal} from "d3-scale";
 
     export let report: ReportData;
@@ -97,32 +97,36 @@
 
         // Add a tooltip to show the number of duplicate keys when hovering over the link
         linkElements
-            .on("mouseover", function (d) {
-                const header = `Duplicate Keys: (Total: ${d.duplicateKeysCnt})<br>`;
-                const ids = d.duplicateKeys.join("<br>")
-                tooltipData.set(header + ids);
+            .on("mouseover", function (event: MouseEvent) {
+                const linkData: Link = event.target.__data__;
+
+                const header = `Duplicate Keys: (Total: ${linkData.duplicateKeysCnt})<br>`;
+                const ids = linkData.duplicateKeys.join("<br>")
+                tooltip.set({
+                    html: (header + ids),
+                    visible: true
+                });
             })
             .on("mousemove", function (event) {
-                let top = (event.pageY - 10) + "px";
-                let left = (event.pageX - 10) + "px";
-                tooltipPos.set(`top: ${top}; left: ${left}`);
+                let top = (event.pageY);
+                let left = (event.pageX);
+                tooltip.set({posX: left, posY: top});
             })
             .on("mouseout", function () {
-                tooltipData.set("");
+                tooltip.set({visible: false});
             })
-            .on("click", function (d) {
-                    status.set(`
-                <div class="status-label status-bar-label">Link From: </div>
-                <div class="path">${d.source.id}</div>
-                <div class="status-label status-bar-label">Link To: </div>
-                <div class="path">${d.target.id}</div>
-            `);
+            .on("click", function (link) {
+                    let html = `
+                        <div class="status-label status-bar-label">Link From: </div>
+                        <div class="path">${link.source.id}</div>
+                        <div class="status-label status-bar-label">Link To: </div>
+                        <div class="path">${link.target.id}</div>
+                    `;
+                    status.set(html);
 
-                displayLinkDetails(d, report);
+                    displayLinkDetails(link, report);
                 }
-            )
-        ;
-
+            );
     }
 
 </script>

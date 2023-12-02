@@ -15,6 +15,7 @@
 <!-- Misc -->
 <Shutdown/>
 <StatusBar/>
+<Tooltip/>
 </body>
 
 <!-- JS -->
@@ -28,6 +29,7 @@
     import GraphView from "./GraphView.svelte";
     import _report from "./report.json"
     import type {ReportData} from "../report";
+    import Tooltip from "./Tooltip.svelte";
 
     let legendHeight = -250;
     let loaded = false;
