@@ -237,7 +237,7 @@ class FindStringDuplicates(AbstractCommand):
 
                 if show_unique:
                     unique_ids = set(data['overlapping_ids']) - set(overlaps[matched_file].keys())
-                unique_ids_str = "\n\t".join(list(unique_ids))
-                log.always(trn("Unique ids in %s (not in %s):\n\t%s") % (file, matched_file, cf_yellow(unique_ids_str)))
+                    unique_ids_str = "\n\t".join(list(unique_ids))
+                    log.always(trn("Unique ids in %s (not in %s):\n\t%s") % (file, matched_file, cf_yellow(unique_ids_str)))
 
                 log.always()
