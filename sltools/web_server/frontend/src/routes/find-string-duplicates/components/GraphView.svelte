@@ -5,6 +5,7 @@
     import {extractData} from "./render/parser";
     import {details, type DetailsData, DetailsMode, status, tooltip} from '../store';
     import type {ScaleOrdinal} from "d3-scale";
+    import type {NumberValue, SimulationNodeDatum} from "d3";
 
     export let report: ReportData;
     export let showAllFiles: boolean;
@@ -16,6 +17,7 @@
     let ret = extractData(report, showAllFiles);
     let links: ReportLink[] = ret.links;
     let nodes: Node[] = ret.nodes;
+    let force: any;
 
     onMount(() => {
         console.log("Run graph render");
@@ -38,24 +40,17 @@
                 svg.attr('transform', event.transform);
             });
 
-        status.set("Test");
-        details.set("details");
-
         container.call(zoom);
     }
 
     export function renderGraph() {
-        const force = createForceSimulation(800, 600);
+        force = createForceSimulation(800, 600);
 
-        // Create color scale
         color = d3.scaleOrdinal(d3.schemeCategory10);
         console.log(color);
 
-        // Render links within the SVG
         renderLinks();
-
-        // Render nodes with labels within the SVG
-        // const nodesWithLabels = renderNodesWithLabels(svg, nodes, color, force);
+        const nodesWithLabels = renderNodesWithLabels();
 
         // Update positions on simulation "tick"
         force.on("tick", () => {
@@ -66,7 +61,7 @@
                 .attr("y2", (d: any) => d.target.y);
 
             // Update node and label positions
-            // nodesWithLabels.attr("transform", (d: any) => `translate(${d.x},${d.y})`);
+            nodesWithLabels.attr("transform", (d: any) => `translate(${d.x},${d.y})`);
         });
 
         // let stats = calculateStats(links, nodes);
@@ -170,6 +165,105 @@
         details.set(newDetails);
     }
 
+    // Drag handlers
+    // Define your drag handlers as functions
+    function dragStarted(event: any, d: any, force: any) {
+        if (!event.active) force.alphaTarget(0.3).restart();
+        d.fx = d.x || 0;
+        d.fy = d.y || 0;
+    }
+
+    function dragged(event: any, d: any) {
+        d.fx = event.x || 0;
+        d.fy = event.y || 0;
+    }
+
+    function dragEnded(event: any, d: any, force: any) {
+        if (!event.active) force.alphaTarget(0);
+        d.fx = null;
+        d.fy = null;
+    }
+
+    export function renderNodesWithLabels() {
+        const maxIdsInSingleFile = d3.max(nodes, node => node.totalKeysCnt) || 0;
+
+        // Create a scale function to map total_id_cnt to node size
+        const nodeSizeScale = d3.scaleLinear()
+            .domain([0, maxIdsInSingleFile] as Iterable<NumberValue>)
+            .range([3, maxIdsInSingleFile / 10] as Iterable<number>);
+
+        const nodesWithLabels = svg.selectAll(".node")
+            .data(nodes)
+            .enter()
+            .append("g")
+            .attr("class", "node");
+
+        // Append a circle for each node with dynamic radius
+        let drag = d3.drag<SVGCircleElement, SimulationNodeDatum>()
+            .on("start", (event, d) => dragStarted(event, d, force))
+            .on("drag", dragged)
+            .on("end", (event, d) => dragEnded(event, d, force));
+
+        nodesWithLabels.append("circle")
+            .attr("r", d => {
+                let totalIdCnt = d.totalKeysCnt;
+                return nodeSizeScale(totalIdCnt);
+            })
+            .attr("data-node-id", node => node.id)
+            .attr("class", "circle")
+            .style("fill", "#00000040")
+            .call(drag as any)
+            .on("mouseover", function (event: any) {
+                const node: any = event.target.__data__;
+
+                tooltip.set({
+                    html: (`"File: ${node.id}`),
+                    visible: true
+                });
+            })
+            .on("mousemove", function (event: any) {
+                let top = (event.pageY);
+                let left = (event.pageX);
+                tooltip.set({posX: left, posY: top});
+            })
+            .on("mouseout", function () {
+                tooltip.set({visible: false});
+            })
+            .on("click", function (event) {
+                const node: any = event.target.__data__;
+                status.set(`
+                <div class="status-label status-bar-label">File name: </div>
+                <div class="path">${node.id}</div>
+                <div class="status-label status-bar-label">Total ids: </div>
+                <div class="path">${node.totalKeysCnt}</div>
+            `);
+
+                displayNodeDetails(node);
+            });
+
+        return nodesWithLabels;
+    }
+
+    export function displayNodeDetails(node: Node) {
+        function prepareDivsWithIds(node: Node) {
+            const fileStringIds = node.strings;
+            if (fileStringIds && fileStringIds.length > 0) {
+                return `<div class="path">${fileStringIds.join("</div><div class='path''>")}</div>`;
+            } else {
+                return "No IDs found. Empty file";
+            }
+        }
+
+        let newDetails: DetailsData = {
+            mode: DetailsMode.NodeDetails,
+            data: {
+                filePath: node.id,
+                keysCnt: node.totalKeysCnt,
+                allKeysAsDivList: prepareDivsWithIds(node),
+            }
+        }
+        details.set(newDetails);
+    }
 </script>
 
 <style>

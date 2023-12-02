@@ -13,7 +13,19 @@
             {@html data.duplicatedKeyDivs.join("\n")}
         </div>
     {:else if (mode === DetailsMode.NodeDetails)}
-        <Label>Click on any node/link to see the details</Label>
+        <h2>Details</h2>
+        <Row>
+            <Label>File Name: </Label>
+            <div class="overlay-data">${getFileName(data.filePath)}</div>
+        </Row>
+        <Row>
+            <Label>Total IDs: </Label>
+            <div class="overlay-data">${data.keysCnt}</div>
+        </Row>
+        <Label>ID list: </Label>
+        <div class="scrollable-list">
+            ${@html data.allKeysAsDivList}
+        </div>
     {:else}
         <Label>Click on any node/link to see the details</Label>
     {/if}
@@ -23,7 +35,7 @@
 <script lang="ts">
     import Label from "$lib/components/Label.svelte";
     import Overlay from "$lib/components/Overlay.svelte";
-    import {type DetailsData, details, type LinkDetails, DetailsMode} from "../../store";
+    import {type DetailsData, details, type LinkDetails, DetailsMode, type NodeDetails} from "../../store";
     import {getFileName} from "../misc";
     import StalkerButton from "$lib/components/StalkerButton.svelte";
     import {showNotification} from "$lib/js/infoProvider";
@@ -33,7 +45,7 @@
     export let style = ""
 
     let mode: DetailsMode;
-    let data: LinkDetails;
+    let data: LinkDetails | NodeDetails;
 
     details.subscribe((newDetails: DetailsData) => {
         console.log("Update details with: ", newDetails);
