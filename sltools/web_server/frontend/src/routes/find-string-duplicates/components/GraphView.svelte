@@ -18,6 +18,8 @@
     let nodes: Node[] = ret.nodes;
     let force: any;
 
+    console.log("Loading Graphview!");
+
     onMount(() => {
         console.log("Run graph render");
         createZoomableSVG();

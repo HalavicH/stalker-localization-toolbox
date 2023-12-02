@@ -23,11 +23,11 @@
         </Row>
         <Row>
             <Label>
-                <input id="show-all-files" type="checkbox" bind:checked={yes}/>
+                <input id="show-all-files" type="checkbox" bind:checked={showAllFilesFlag}/>
                 Show all files (even without dups)
             </Label>
         </Row>
-        <Row style={showAllNodes}>
+        <Row style={noDupLineVisibility}>
             <svg>
                 <g class="node" transform="translate(12.5,10)">
                     <circle class="circle" r="7" style="fill: rgba(0,0,0,0.35);"></circle>
@@ -43,19 +43,23 @@
     import Overlay from "$lib/components/Overlay.svelte";
     import Row from "$lib/components/Row.svelte";
     import Label from "$lib/components/Label.svelte";
-    import { createEventDispatcher, onMount, onDestroy } from "svelte";
+    import {createEventDispatcher, onMount, onDestroy} from "svelte";
+    import {storeShowAllFiles} from "$lib/store";
 
     // Props
     export let style = "";
 
-    let yes = false;
-    $: showAllNodes = "display: " + (yes ? "block" : "none");
-
+    let showAllFilesFlag = false;
+    let noDupLineVisibility = "none";
+    $: {
+        noDupLineVisibility = "display: " + (showAllFilesFlag ? "block" : "none")
+        storeShowAllFiles.set(showAllFilesFlag);
+    }
     // Dynamic height
     let ref: HTMLDivElement;
     let height: number;
     const dispatch = createEventDispatcher();
-    let resizeObserver;
+    let resizeObserver: any;
 
     function updateHeight() {
         if (ref) {
@@ -79,6 +83,7 @@
             resizeObserver.disconnect();
         }
     });
+
 </script>
 
 <!-- CSS -->

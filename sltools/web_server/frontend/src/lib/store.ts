@@ -1,6 +1,7 @@
 // store.js
 import {type Writable, writable} from 'svelte/store';
 
+export const storeShowAllFiles: Writable<boolean> = writable(false);
 export const status: Writable<string> = writable("Status bar");
 
 // Details overlay

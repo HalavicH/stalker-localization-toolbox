@@ -4,7 +4,7 @@
 {#if (!loaded)}
     <PageSpinner/>
 {:else}
-    <GraphView {report} showAllFiles={true}/>
+    <GraphView {report} {showAllFiles}/>
 {/if}
 
 <!-- Overlays -->
@@ -30,21 +30,27 @@
     import _report from "../report.json"
     import type {ReportData} from "$lib/report";
     import Tooltip from "./Tooltip.svelte";
+    import {storeShowAllFiles} from "$lib/store";
 
     let legendHeight = -250;
     let loaded = false;
 
     let report: ReportData;
+    let showAllFiles: boolean;
 
     setInterval(() => {
         report = _report;
-        report.file_to_string_mapping
         loaded = true;
     }, 100)
 
     function handleLegendHeight(e: CustomEvent) {
-        legendHeight = e.detail
+        legendHeight = e.detail;
     }
+
+    storeShowAllFiles.subscribe((newValue: boolean) => {
+        console.log("Got update for show all files: " + newValue);
+        showAllFiles = newValue;
+    });
 </script>
 
 <!-- CSS -->
