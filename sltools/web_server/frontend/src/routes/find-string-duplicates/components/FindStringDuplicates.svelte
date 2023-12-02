@@ -2,6 +2,7 @@
     import StatusBar from "./StatusBar.svelte";
     import StatsOverlay from "./StatsOverlay.svelte";
     import LegendOverlay from "./LegendOverlay.svelte";
+    import DetailsOverlay from "./DetailsOverlay.svelte";
 </script>
 
 <style>
@@ -16,10 +17,11 @@
 </style>
 
 <body>
-<div>
-    test
-</div>
 <StatsOverlay/>
 <LegendOverlay/>
+<DetailsOverlay/>
+
+
+
 <StatusBar/>
 </body>

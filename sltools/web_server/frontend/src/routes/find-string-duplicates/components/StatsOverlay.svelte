@@ -1,11 +1,11 @@
 <script>
     import Overlay from "$lib/components/Overlay.svelte";
+    import Label from "$lib/components/Label.svelte";
 </script>
 
 <style>
-    .label {
-        font-weight: bold;
-        color: #999999;
+    td {
+        padding-right: 5px;
     }
 </style>
 
@@ -13,15 +13,21 @@
     <table>
         <tbody>
         <tr>
-            <td class="label">Nodes (Files):</td>
+            <td class="label">
+                <Label text="Nodes (Files):"/>
+            </td>
             <td>0</td>
         </tr>
         <tr>
-            <td class="label">Links (Duplicates):</td>
+            <td class="label">
+                <Label text="Links (Duplicates):"/>
+            </td>
             <td>0</td>
         </tr>
         <tr>
-            <td class="label">Total Duplicates:</td>
+            <td class="label">
+                <Label text="Total Duplicates:"/>
+            </td>
             <td>0</td>
         </tr>
         </tbody>

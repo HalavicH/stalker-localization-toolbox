@@ -9,21 +9,6 @@
     }
 </style>
 
-<Overlay style="top: 225px; left: 0;" title="Overall Stats">
-    <table>
-        <tbody>
-        <tr>
-            <td class="label">Nodes (Files):</td>
-            <td>0</td>
-        </tr>
-        <tr>
-            <td class="label">Links (Duplicates):</td>
-            <td>0</td>
-        </tr>
-        <tr>
-            <td class="label">Total Duplicates:</td>
-            <td>0</td>
-        </tr>
-        </tbody>
-    </table>
+<Overlay style="top: 0; right: 0; width: 25%; max-height: 91%;" title="Details">
+    <div class="label">Click on any node/link to see the details</div>
 </Overlay>
