@@ -1,5 +1,5 @@
-import {showNotification} from "./render/renderer";
-
+import Notiflix from "notiflix";
+export const notify = Notiflix.Notify;
 
 export function copyTextToClipboard(textToCopy: string) {
     const textArea = document.createElement("textarea");
@@ -12,10 +12,7 @@ export function copyTextToClipboard(textToCopy: string) {
     document.body.removeChild(textArea);
 
     // Show a tooltip or feedback to indicate successful copying (optional)
-    showNotification(`
-        <div class="status-label">Path copied to clipboard: (Ctrl+V) to paste</div>
-        <div class="path">${textToCopy}</div>
-    `);
+    notify.info("Path copied to clipboard. (Ctrl+V to paste). Text:" + textToCopy);
 }
 
 export function getFileName(filePath: string) {

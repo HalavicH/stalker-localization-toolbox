@@ -5,20 +5,19 @@ export async function getLastReportHash() {
     return await executeGetRequest("/report-hash");
 }
 
-export async function openDiffInVsCode(file1, file2) {
+export async function openDiffInVsCode(file1: string, file2: string) {
     return await executePostRequest("/diff", {file1, file2});
 }
 
-export async function sortEntriesInFiles(file1, file2) {
+export async function sortEntriesInFiles(file1: string, file2: string) {
     return await executePostRequest("/sort-duplicates-only", {file1, file2});
 }
 
 export async function getReportData() {
-    const url = "http://127.0.0.1:5555/report";
     return await executeGetRequest("/report");
 }
 
-export async function executePostRequest(endpoint, params) {
+export async function executePostRequest(endpoint: string, params: any) {
     const url = "http://127.0.0.1:5555" + endpoint;
     console.log(
         "Executing POST request with:"
@@ -37,7 +36,7 @@ export async function executePostRequest(endpoint, params) {
         });
 
         if (!response.ok) {
-            let error = await getError(response);
+            const error = await getError(response);
             notify.failure(`<div>Can't execute command.<br>Error: ${error}</div>`);
             console.error(response.status);
             responseObj = {error: response.status};
@@ -47,7 +46,7 @@ export async function executePostRequest(endpoint, params) {
             responseObj = {data};
         }
 
-    } catch (error) {
+    } catch (error: any) {
         console.error("Error calling the endpoint:", error);
         notify.failure(`<div>Can't call the server. Error: ${error}</div>`);
         responseObj = {error: error.toString()};
@@ -61,17 +60,16 @@ export async function executePostRequest(endpoint, params) {
 }
 
 
-async function getError(response) {
-    let error = undefined;
+async function getError(response: any) {
     try {
-        let data = await response.json();
+        const data: any = await response.json();
         return data.error || "Server returned: " + response.statusText;
     } catch (_) {
         return "Server returned: " + response.statusText;
     }
 }
 
-export async function executeGetRequest(endpoint) {
+export async function executeGetRequest(endpoint: string) {
     const url = "http://127.0.0.1:5555" + endpoint;
     console.log(
         "Executing GET request with:"
@@ -89,7 +87,7 @@ export async function executeGetRequest(endpoint) {
         });
 
         if (!response.ok) {
-            let error = await getError(response);
+            const error: string = await getError(response);
 
             notify.failure(`<div>Can't get fresh data.<br>Error: ${error}</div>`);
             console.error(response.status);
@@ -99,7 +97,7 @@ export async function executeGetRequest(endpoint) {
             responseObj = {data};
         }
 
-    } catch (error) {
+    } catch (error: any) {
         console.error("Error calling the endpoint:", error);
         notify.failure(`<div>Can't call the server. Error: ${error}</div>`);
         responseObj = {error: error.toString()};
