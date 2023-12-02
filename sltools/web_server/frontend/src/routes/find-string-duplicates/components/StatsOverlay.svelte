@@ -1,6 +1,8 @@
-<script>
+<script lang="ts">
     import Overlay from "$lib/components/Overlay.svelte";
     import Label from "$lib/components/Label.svelte";
+
+    export let style = ""
 </script>
 
 <style>
@@ -9,25 +11,19 @@
     }
 </style>
 
-<Overlay style="top: 225px; left: 0;" title="Overall Stats">
+<Overlay {style} title="Overall Stats">
     <table>
         <tbody>
         <tr>
-            <td class="label">
-                <Label text="Nodes (Files):"/>
-            </td>
+            <td><Label>Nodes (Files):</Label></td>
             <td>0</td>
         </tr>
         <tr>
-            <td class="label">
-                <Label text="Links (Duplicates):"/>
-            </td>
+            <td><Label>Links (Duplicates):</Label></td>
             <td>0</td>
         </tr>
         <tr>
-            <td class="label">
-                <Label text="Total Duplicates:"/>
-            </td>
+            <td><Label>Total Duplicates:</Label></td>
             <td>0</td>
         </tr>
         </tbody>

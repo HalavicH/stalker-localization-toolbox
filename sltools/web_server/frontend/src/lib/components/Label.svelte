@@ -1,12 +1,13 @@
 <script lang="ts">
-    export let text = "";
 </script>
 
 <style>
-    div {
+    label {
         font-weight: bold;
         color: #999999;
     }
 </style>
 
-<div>{text}</div>
+<label>
+    <slot></slot>
+</label>

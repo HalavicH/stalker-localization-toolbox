@@ -1,3 +1,6 @@
+<script>
+    export let style = "";
+</script>
 
 <style>
     div {
@@ -7,6 +10,6 @@
     }
 </style>
 
-<div>
+<div {style}>
     <slot></slot>
 </div>

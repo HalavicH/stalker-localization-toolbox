@@ -1,8 +1,14 @@
-<script>
+<script lang="ts">
     import StatusBar from "./StatusBar.svelte";
     import StatsOverlay from "./StatsOverlay.svelte";
     import LegendOverlay from "./LegendOverlay.svelte";
     import DetailsOverlay from "./DetailsOverlay.svelte";
+
+    let legendHeight = -250;
+
+    function handleLegendHeight(e: CustomEvent) {
+        legendHeight = e.detail
+    }
 </script>
 
 <style>
@@ -17,11 +23,9 @@
 </style>
 
 <body>
-<StatsOverlay/>
-<LegendOverlay/>
-<DetailsOverlay/>
-
-
+<LegendOverlay style="top: 0; left: 0;" on:height={handleLegendHeight}/>
+<StatsOverlay style="top: {legendHeight}px; left: 0;"/>
+<DetailsOverlay style="top: 0; right: 0; width: 25%; max-height: 91%;"/>
 
 <StatusBar/>
 </body>
