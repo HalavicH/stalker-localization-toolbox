@@ -1,6 +1,7 @@
 import * as d3 from "d3";
 import type {ReportData, Node, Link} from "../../report";
 import {dragEnded, dragged, dragStarted} from "./misc";
+import {details} from "../../store";
 
 
 export function getFileName(filePath: string) {
@@ -166,7 +167,7 @@ export function displayLinkDetails(link: Link, graph: GraphData) {
     });
 
     // Construct the details content using Svelte store
-    $details.set(`
+    details.set(`
     <h2>Details</h2>
     <div class="status-label">Duplicates in Files:</div>
     <div class="overlay-data">${getFileName(link.source.id)}, ${getFileName(link.target.id)}</div>

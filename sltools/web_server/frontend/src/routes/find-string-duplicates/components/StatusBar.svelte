@@ -1,7 +1,7 @@
 <!-- HTML -->
 <div class="status-bar" id="status-bar" on:click={handleClick} on:keydown={undefined} role="button" tabindex="0">
     <div id="status-content">
-        <div class="status-label">{@html data}</div>
+        {@html data}
     </div>
 </div>
 
@@ -54,4 +54,15 @@
         color: #999999;
         /*margin: 0 5px 0 5px;*/
     }
+
+    :global(.status-bar-label) {
+        margin: 0 5px 0 5px;
+    }
+
+    :global(.path) {
+        font-family: monospace;
+        color: #ff9c5a;
+        cursor: pointer;
+    }
+
 </style>

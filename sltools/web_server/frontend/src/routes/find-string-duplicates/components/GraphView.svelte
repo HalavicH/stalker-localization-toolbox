@@ -97,7 +97,7 @@
 
         // Add a tooltip to show the number of duplicate keys when hovering over the link
         linkElements
-            .on("mouseover", function (event: MouseEvent) {
+            .on("mouseover", function (event: any) {
                 const linkData: Link = event.target.__data__;
 
                 const header = `Duplicate Keys: (Total: ${linkData.duplicateKeysCnt})<br>`;
@@ -107,7 +107,7 @@
                     visible: true
                 });
             })
-            .on("mousemove", function (event) {
+            .on("mousemove", function (event: any) {
                 let top = (event.pageY);
                 let left = (event.pageX);
                 tooltip.set({posX: left, posY: top});
@@ -115,7 +115,9 @@
             .on("mouseout", function () {
                 tooltip.set({visible: false});
             })
-            .on("click", function (link) {
+            .on("click", function (event: any) {
+                const link: any = event.target.__data__;
+
                     let html = `
                         <div class="status-label status-bar-label">Link From: </div>
                         <div class="path">${link.source.id}</div>
