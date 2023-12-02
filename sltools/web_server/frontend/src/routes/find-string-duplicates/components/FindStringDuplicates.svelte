@@ -1,8 +1,14 @@
 <!-- HTML -->
 <body>
+<!-- D3 graph -->
+<GraphView/>
+
+<!-- Overlays -->
 <LegendOverlay style="top: 0; left: 0;" on:height={handleLegendHeight}/>
 <StatsOverlay style="top: {legendHeight}px; left: 0;"/>
 <DetailsOverlay style="top: 0; right: 0; width: 25%; max-height: 91%;"/>
+
+<!-- Misc -->
 <PageSpinner/>
 <Shutdown/>
 <StatusBar/>
@@ -11,11 +17,12 @@
 <!-- JS -->
 <script lang="ts">
     import StatusBar from "./StatusBar.svelte";
-    import StatsOverlay from "./StatsOverlay.svelte";
-    import LegendOverlay from "./LegendOverlay.svelte";
-    import DetailsOverlay from "./DetailsOverlay.svelte";
+    import StatsOverlay from "./overlays/StatsOverlay.svelte";
+    import LegendOverlay from "./overlays/LegendOverlay.svelte";
+    import DetailsOverlay from "./overlays/DetailsOverlay.svelte";
     import PageSpinner from "$lib/components/PageSpinner.svelte";
     import Shutdown from "$lib/components/Shutdown.svelte";
+    import GraphView from "./GraphView.svelte";
 
     let legendHeight = -250;
 
