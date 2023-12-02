@@ -16,9 +16,15 @@ export interface LinkDetails {
     duplicatedKeysCnt: number,
 }
 
+export interface NodeDetails {
+    filePath: string,
+    allKeysAsDivList: string,
+    keysCnt: number,
+}
+
 export interface DetailsData {
     mode: DetailsMode,
-    data: LinkDetails,
+    data: NodeDetails | LinkDetails,
 }
 
 export const details: Writable<DetailsData> = writable();
