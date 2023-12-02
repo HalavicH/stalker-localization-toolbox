@@ -17,3 +17,8 @@ export function copyTextToClipboard(textToCopy: string) {
         <div class="path">${textToCopy}</div>
     `);
 }
+
+export function getFileName(filePath: string) {
+    const parts = filePath.split("/");
+    return parts[parts.length - 1];
+}
