@@ -1,7 +1,13 @@
 <!-- HTML -->
+<!-- HTML -->
 <div on:click={handleClick} on:keydown={undefined} role="button" tabindex="0">
     <img alt="" {style} src="/common/shutdown.svg">
 </div>
+
+<!-- JS -->
+
+
+<!-- CSS -->
 
 <!-- JS -->
 <script lang="ts">

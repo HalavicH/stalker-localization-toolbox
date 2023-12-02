@@ -1,4 +1,15 @@
+<!-- HTML -->
+<div class="loading-message">
+    <div class="loading-symbol">
+        <img alt="" class="radiation-symbol" src="/common/radiation.svg"/>
+    </div>
+    <p>Loading...</p>
+</div>
 
+<!-- JS -->
+
+
+<!-- CSS -->
 <style>
     .loading-message {
         position: fixed;
@@ -45,10 +56,3 @@
         }
     }
 </style>
-
-<div class="loading-message">
-    <div class="loading-symbol">
-        <img alt="" class="radiation-symbol" src="/common/radiation.svg"/>
-    </div>
-    <p>Loading...</p>
-</div>

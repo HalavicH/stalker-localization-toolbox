@@ -1,7 +1,14 @@
+<!-- HTML -->
+<div {style}>
+    <slot></slot>
+</div>
+
+<!-- JS -->
 <script>
     export let style = "";
 </script>
 
+<!-- CSS -->
 <style>
     div {
         display: flex;
@@ -9,7 +16,3 @@
         vertical-align: center;
     }
 </style>
-
-<div {style}>
-    <slot></slot>
-</div>

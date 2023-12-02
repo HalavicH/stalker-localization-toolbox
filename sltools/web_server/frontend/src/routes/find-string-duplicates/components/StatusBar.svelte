@@ -1,4 +1,14 @@
+<!-- HTML -->
+<div class="status-bar" id="status-bar">
+    <div id="status-content">
+        <div class="status-label">Status bar</div>
+    </div>
+</div>
 
+<!-- JS -->
+
+
+<!-- CSS -->
 <style>
     /* Status Bar */
     .status-bar {
@@ -25,9 +35,3 @@
         /*margin: 0 5px 0 5px;*/
     }
 </style>
-
-<div class="status-bar" id="status-bar">
-    <div id="status-content">
-        <div class="status-label">Status bar</div>
-    </div>
-</div>

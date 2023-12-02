@@ -1,9 +1,17 @@
+<!-- HTML -->
+<div class="overlay" id="overall-stats" {style}>
+    <h2>{title}</h2>
+    <slot></slot>
+</div>
+
+<!-- JS -->
 <script lang="ts">
     export let style: string;
     export let title: string = "";
 
 </script>
 
+<!-- CSS -->
 <style>
     /* Overlay */
     .overlay {
@@ -33,8 +41,3 @@
     }
 
 </style>
-
-<div class="overlay" id="overall-stats" {style}>
-    <h2>{title}</h2>
-    <slot></slot>
-</div>
