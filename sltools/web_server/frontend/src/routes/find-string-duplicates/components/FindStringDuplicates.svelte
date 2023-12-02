@@ -4,6 +4,7 @@
     import LegendOverlay from "./LegendOverlay.svelte";
     import DetailsOverlay from "./DetailsOverlay.svelte";
     import PageSpinner from "$lib/components/PageSpinner.svelte";
+    import Shutdown from "$lib/components/Shutdown.svelte";
 
     let legendHeight = -250;
 
@@ -28,5 +29,6 @@
 <StatsOverlay style="top: {legendHeight}px; left: 0;"/>
 <DetailsOverlay style="top: 0; right: 0; width: 25%; max-height: 91%;"/>
 <PageSpinner/>
+<Shutdown/>
 <StatusBar/>
 </body>
