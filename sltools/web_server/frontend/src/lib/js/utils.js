@@ -1,4 +1,4 @@
-import {executePostRequest, openDiffInVsCode, sortEntriesInFiles} from "./backendCommunication.js";
+import {executePostRequest, openDiffInVsCode, sortEntriesInFiles} from "./api.js";
 import {showNotification} from "./infoProvider.js";
 
 export function getFileName(filePath) {

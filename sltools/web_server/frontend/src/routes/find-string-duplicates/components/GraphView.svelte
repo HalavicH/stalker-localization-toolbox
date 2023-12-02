@@ -1,13 +1,10 @@
 <script lang="ts">
     import {onMount} from 'svelte';
     import * as d3 from 'd3';
-    import type {D3Link, ReportData} from "../report";
+    import type {D3Link, Node, ReportData, ReportLink} from "../report";
     import {extractData} from "./render/parser";
-    import {status, details, tooltip} from '../store';
-    import type {ReportLink, Node} from "../report";
-    import {getFileName, renderNodesWithLabels} from "./render/renderer";
+    import {details, type DetailsData, DetailsMode, status, tooltip} from '../store';
     import type {ScaleOrdinal} from "d3-scale";
-    import {copyTextToClipboard} from "./misc";
 
     export let report: ReportData;
     export let showAllFiles: boolean;
@@ -161,45 +158,16 @@
         });
 
         // Construct the details content using Svelte store
-        details.set(`
-            <h2>Details</h2>
-            <div class="status-label">Duplicates in Files:</div>
-            <div class="overlay-data">${getFileName(link.source.id)}, ${getFileName(link.target.id)}</div>
-            <button id="diff" class="stalker-button" source_file="${link.source.id}" target_file="${link.target.id}">Open diff in VS Code</button>
-            <button id="sort" class="stalker-button" source_file="${link.source.id}" target_file="${link.target.id}">Sort duplicates with sltools</button>
-            <div class="legend-item">
-                <div class="status-label">Total Duplicated IDs: </div>
-                <div class="overlay-data">${link.duplicateKeysCnt}</div>
-            </div>
-            <div class="scrollable-list">
-                ${duplicatesDivs.join("\n")}
-            </div>
-        `);
-
-        // Attach event listeners using Svelte store
-        const handleDiffButton = () => {
-            // Your logic for handling the "Open diff in VS Code" button
-        };
-
-        const handleSortButton = () => {
-            // Your logic for handling the "Sort duplicates with sltools" button
-        };
-
-        const detailsOverlay = document.getElementById("details");
-
-        // Attach event listeners using Svelte store
-        detailsOverlay.querySelector("#diff").addEventListener("click", handleDiffButton);
-        detailsOverlay.querySelector("#sort").addEventListener("click", handleSortButton);
-
-        detailsOverlay.addEventListener("click", (evt) => {
-            let target: HTMLDivElement = evt.target;
-            if (target.classList.contains("path")) {
-                copyTextToClipboard(target.innerText);
+        let newDetails: DetailsData = {
+            mode: DetailsMode.LinkDetails,
+            data: {
+                sourceFilePath: link.source.id,
+                targetFilePath: link.target.id,
+                duplicatedKeysCnt: link.duplicateKeys.length,
+                duplicatedKeyDivs: duplicatesDivs,
             }
-        });
-
-        // Set visibility using Svelte store
-        detailsOverlay.style.visibility = "visible";
+        }
+        details.set(newDetails);
     }
 
 </script>

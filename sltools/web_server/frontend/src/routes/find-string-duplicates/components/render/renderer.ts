@@ -4,10 +4,6 @@ import {dragEnded, dragged, dragStarted} from "./misc";
 import {details} from "../../store";
 
 
-export function getFileName(filePath: string) {
-    const parts = filePath.split("/");
-    return parts[parts.length - 1];
-}
 
 export function prepareDivsWithIds(node: any) {
     const fileStringIds = node.strings;

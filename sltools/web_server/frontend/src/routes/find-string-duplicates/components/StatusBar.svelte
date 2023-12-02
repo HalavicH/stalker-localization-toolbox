@@ -49,12 +49,6 @@
         flex-direction: row;
     }
 
-    .status-label {
-        font-weight: bold;
-        color: #999999;
-        /*margin: 0 5px 0 5px;*/
-    }
-
     :global(.status-bar-label) {
         margin: 0 5px 0 5px;
     }
