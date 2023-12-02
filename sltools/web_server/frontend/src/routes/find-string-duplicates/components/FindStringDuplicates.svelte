@@ -1,7 +1,11 @@
 <!-- HTML -->
 <body>
 <!-- D3 graph -->
-<GraphView/>
+{#if (!loaded)}
+    <PageSpinner/>
+{:else}
+    <GraphView {report}/>
+{/if}
 
 <!-- Overlays -->
 <LegendOverlay style="top: 0; left: 0;" on:height={handleLegendHeight}/>
@@ -9,7 +13,6 @@
 <DetailsOverlay style="top: 0; right: 0; width: 25%; max-height: 91%;"/>
 
 <!-- Misc -->
-<PageSpinner/>
 <Shutdown/>
 <StatusBar/>
 </body>
@@ -23,8 +26,19 @@
     import PageSpinner from "$lib/components/PageSpinner.svelte";
     import Shutdown from "$lib/components/Shutdown.svelte";
     import GraphView from "./GraphView.svelte";
+    import _report from "./report.json"
+    import type {ReportData} from "../report";
 
     let legendHeight = -250;
+    let loaded = false;
+
+    let report: ReportData;
+
+    setInterval(() => {
+        report = _report;
+        report.file_to_string_mapping
+        loaded = true;
+    }, 200)
 
     function handleLegendHeight(e: CustomEvent) {
         legendHeight = e.detail
