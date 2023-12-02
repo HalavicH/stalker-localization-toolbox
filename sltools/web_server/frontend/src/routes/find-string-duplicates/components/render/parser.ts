@@ -1,12 +1,12 @@
 import * as d3 from 'd3';
-import type {Link, Node, ReportData} from '../../report';
+import type {ReportLink, Node, ReportData} from '../../report';
 import { hashCode } from '$lib/js/misc';
 
 // Define TypeScript types for nodes and links
 
-export function extractData(report: ReportData, showAllFiles: boolean): {nodes: Node[], links: Link[]} {
+export function extractData(report: ReportData, showAllFiles: boolean): {nodes: Node[], links: ReportLink[]} {
     const { nodes, nodeMap } = createNodesArray(report, showAllFiles);
-    const links: Link[] = [];
+    const links: ReportLink[] = [];
 
     for (const file in report.overlaps_report) {
         const sourceIndex = nodeMap[file];

@@ -33,9 +33,17 @@ export interface Node {
     hasDuplicates: boolean;
 }
 
-export interface Link {
+export interface ReportLink {
     source: number;
     target: number;
+    duplicateKeysCnt: number;
+    duplicateKeys: string[];
+    color: string;
+}
+
+export interface D3Link {
+    source: Node;
+    target: Node;
     duplicateKeysCnt: number;
     duplicateKeys: string[];
     color: string;
