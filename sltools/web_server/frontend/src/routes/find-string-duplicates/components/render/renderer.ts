@@ -1,6 +1,7 @@
 import * as d3 from "d3";
-import type {ReportData, Node, Link} from "../../report";
+import type {ReportData, Node, ReportLink} from "../../report";
 import {dragEnded, dragged, dragStarted} from "./misc";
+import {details} from "../../store";
 
 
 export function getFileName(filePath: string) {
@@ -135,79 +136,6 @@ export function renderNodesWithLabels(svg: any, nodes: Node[], color: any, force
     });
 
     return nodesWithLabels;
-}
-
-export function displayLinkDetails(link: Link, graph: GraphData) {
-    let duplicatesDivs: string[] = [];
-
-    link.duplicateKeys.forEach((dup) => {
-        let hash1 = graph.file_to_string_mapping[link.source.id][dup];
-        let hash2 = graph.file_to_string_mapping[link.target.id][dup];
-
-        console.log("hash1 " + hash1 + " hash2" + hash2);
-        if (hash1 === hash2) {
-            duplicatesDivs.push(`<div class="path same-content">${dup}</div>`);
-        } else {
-            duplicatesDivs.push(`<div class="path">${dup}</div>`);
-        }
-    });
-
-    duplicatesDivs.sort((a, b) => {
-        if (a.includes("same-content")) {
-            if (b.includes("same-content")) {
-                return 0;
-            }
-            return -1;
-        }
-        if (!b.includes("same-content")) {
-            return 1;
-        }
-        return 0;
-    });
-
-    // Construct the details content using Svelte store
-    $details.set(`
-    <h2>Details</h2>
-    <div class="status-label">Duplicates in Files:</div>
-    <div class="overlay-data">${getFileName(link.source.id)}, ${getFileName(link.target.id)}</div>
-    <button id="diff" class="stalker-button" source_file="${link.source.id}" target_file="${link.target.id}">Open diff in VS Code</button>
-    <button id="sort" class="stalker-button" source_file="${link.source.id}" target_file="${link.target.id}">Sort duplicates with sltools</button>
-    <div class="legend-item">
-        <div class="status-label">Total Duplicated IDs: </div>
-        <div class="overlay-data">${link.duplicateKeysCnt}</div>
-    </div>
-    <div class="scrollable-list">
-        ${duplicatesDivs.join("\n")}
-    </div>
-  `);
-
-    // Attach event listeners using Svelte store
-    const handleDiffButton = () => {
-        // Your logic for handling the "Open diff in VS Code" button
-    };
-
-    const handleSortButton = () => {
-        // Your logic for handling the "Sort duplicates with sltools" button
-    };
-
-    const copySelfToClipboard = (target: EventTarget) => {
-        // Your logic for copying to clipboard
-    };
-
-    const detailsOverlay = document.getElementById("details");
-
-    // Attach event listeners using Svelte store
-    detailsOverlay.querySelector("#diff").addEventListener("click", handleDiffButton);
-    detailsOverlay.querySelector("#sort").addEventListener("click", handleSortButton);
-
-    detailsOverlay.addEventListener("click", (evt) => {
-        if (evt.target.classList.contains("path")) {
-            copySelfToClipboard(evt.target);
-        }
-    });
-
-    // Set visibility using Svelte store
-    detailsOverlay.style.visibility = "visible";
 }
 
 
