@@ -1,14 +1,27 @@
 <!-- HTML -->
-<div class="overlay" id="overall-stats" {style}>
+<div class="overlay" id="overall-stats" {style} on:click={handleClick} on:keydown={undefined} role="button" tabindex="0">
     <h2>{title}</h2>
     <slot></slot>
 </div>
 
 <!-- JS -->
 <script lang="ts">
+    import {copyTextToClipboard} from "../misc";
+
     export let style: string;
     export let title: string = "";
 
+
+    function handleClick(evt: Event) {
+        const t = evt.target as HTMLDivElement;
+        if (!t) {
+            return;
+        }
+
+        if (t.classList.contains("path")) {
+            copyTextToClipboard(t.innerText);
+        }
+    }
 </script>
 
 <!-- CSS -->

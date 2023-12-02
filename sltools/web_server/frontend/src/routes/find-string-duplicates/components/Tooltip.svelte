@@ -3,7 +3,7 @@
 
 <!-- JS -->
 <script lang="ts">
-    import {tooltip, type TooltipState} from "../store";
+    import {tooltip, type TooltipState} from "$lib/store";
 
     let html: string;
     let posX: number;

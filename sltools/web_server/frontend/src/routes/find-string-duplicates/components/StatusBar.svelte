@@ -7,8 +7,8 @@
 
 <!-- JS -->
 <script lang="ts">
-    import {status} from "../store.js";
-    import {copyTextToClipboard} from "./misc";
+    import {status} from "$lib/store.js";
+    import {copyTextToClipboard} from "$lib/misc";
 
     let data: string;
     status.subscribe((newStatus) => {

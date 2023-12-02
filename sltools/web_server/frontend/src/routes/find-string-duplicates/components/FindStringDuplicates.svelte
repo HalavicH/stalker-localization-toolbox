@@ -27,8 +27,8 @@
     import PageSpinner from "$lib/components/PageSpinner.svelte";
     import Shutdown from "$lib/components/Shutdown.svelte";
     import GraphView from "./GraphView.svelte";
-    import _report from "./report.json"
-    import type {ReportData} from "../report";
+    import _report from "../report.json"
+    import type {ReportData} from "$lib/report";
     import Tooltip from "./Tooltip.svelte";
 
     let legendHeight = -250;
@@ -40,7 +40,7 @@
         report = _report;
         report.file_to_string_mapping
         loaded = true;
-    }, 200)
+    }, 100)
 
     function handleLegendHeight(e: CustomEvent) {
         legendHeight = e.detail

@@ -16,15 +16,15 @@
         <h2>Details</h2>
         <Row>
             <Label>File Name: </Label>
-            <div class="overlay-data">${getFileName(data.filePath)}</div>
+            <div class="overlay-data">{getFileName(data.filePath)}</div>
         </Row>
         <Row>
             <Label>Total IDs: </Label>
-            <div class="overlay-data">${data.keysCnt}</div>
+            <div class="overlay-data">{data.keysCnt}</div>
         </Row>
         <Label>ID list: </Label>
         <div class="scrollable-list">
-            ${@html data.allKeysAsDivList}
+            {@html data.allKeysAsDivList}
         </div>
     {:else}
         <Label>Click on any node/link to see the details</Label>
@@ -35,11 +35,11 @@
 <script lang="ts">
     import Label from "$lib/components/Label.svelte";
     import Overlay from "$lib/components/Overlay.svelte";
-    import {type DetailsData, details, type LinkDetails, DetailsMode, type NodeDetails} from "../../store";
-    import {getFileName} from "../misc";
+    import {type DetailsData, details, type LinkDetails, DetailsMode, type NodeDetails} from "$lib/store";
+    import {getFileName} from "$lib/misc";
     import StalkerButton from "$lib/components/StalkerButton.svelte";
-    import {showNotification} from "$lib/js/infoProvider";
-    import {openDiffInVsCode, sortEntriesInFiles} from "$lib/js/api";
+    import {notify} from "$lib/misc";
+    import {openDiffInVsCode, sortEntriesInFiles} from "$lib/api";
     import Row from "$lib/components/Row.svelte";
 
     export let style = ""
@@ -62,7 +62,7 @@
         sortEntriesInFiles(data.sourceFilePath, data.targetFilePath)
             .then(() => {
                 console.log(`Sorted entries successfully.`);
-                showNotification(`<div>Success!</div>`);
+                notify.info(`<div>Success!</div>`);
             })
             .catch((error) => {
                 console.error(`Error executing command: ${error}`);
