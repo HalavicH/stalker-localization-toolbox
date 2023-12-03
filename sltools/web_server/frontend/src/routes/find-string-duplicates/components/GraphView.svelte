@@ -45,13 +45,13 @@
     }
 
     export function renderGraph() {
-        force = createForceSimulation(800, 600);
+        force = createForceSimulation(1200, 800);
 
         color = d3.scaleOrdinal(d3.schemeCategory10);
         console.log(color);
 
         renderLinks();
-        const nodesWithLabels = renderNodesWithLabels();
+        const nodesWithLabels = renderNodes();
 
         // Update positions on simulation "tick"
         force.on("tick", () => {
@@ -185,7 +185,7 @@
         d.fy = null;
     }
 
-    export function renderNodesWithLabels() {
+    export function renderNodes() {
         const maxIdsInSingleFile = d3.max(nodes, node => node.totalKeysCnt) || 0;
 
         // Create a scale function to map total_id_cnt to node size
@@ -199,12 +199,12 @@
             .append("g")
             .attr("class", "node");
 
-        // Append a circle for each node with dynamic radius
         let drag = d3.drag<SVGCircleElement, SimulationNodeDatum>()
             .on("start", (event, d) => dragStarted(event, d, force))
             .on("drag", dragged)
             .on("end", (event, d) => dragEnded(event, d, force));
 
+        // Append a circle for each node with dynamic radius
         nodesWithLabels.append("circle")
             .attr("r", d => {
                 let totalIdCnt = d.totalKeysCnt;
@@ -212,7 +212,10 @@
             })
             .attr("data-node-id", node => node.id)
             .attr("class", "circle")
-            .style("fill", "#00000040")
+            .style("fill", (node) => {
+                let folder = node.id.split("/").slice(-2, -1)[0];
+                return node.hasDuplicates ? color(folder) : "#00000040";
+            })
             .call(drag as any)
             .on("mouseover", function (event: any) {
                 const node: any = event.target.__data__;
@@ -334,6 +337,41 @@
         height: 100%;
         overflow: auto;
     }
+
+    /* Nodes */
+    :global(.circle) {
+        stroke: rgba(0, 0, 0, 0.3);
+        stroke-width: 2px;
+        transition: box-shadow 0.2s ease-in-out, stroke-width 0.2s ease-in-out, stroke 0.2s ease-in-out;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.3); /* Box shadow */
+    }
+
+    :global(.circle:hover) {
+        stroke: #adbcff;
+        stroke-width: 2px;
+    }
+
+    :global(.circle:focus) {
+        color: red;
+        stroke: #ffffff;
+        stroke-width: 2px;
+    }
+
+    /* Links */
+    :global(.link) {
+        stroke: #abb2bf; /* Lighter link color */
+        stroke-opacity: 0.3;
+        transition: stroke-opacity 0.2s ease-in-out, stroke 0.2s, stroke-width 0.2s;
+        /*filter: drop-shadow(0 0 10px rgba(0, 0, 0, 0.3)); !* SVG filter for box shadow *!*/
+    }
+
+    :global(.link:hover) {
+        stroke: #ffffff; /* Lighter link color */
+        stroke-opacity: 1;
+        /*stroke-width: 2px;*/
+        filter: drop-shadow(0 0 5px rgba(255, 0, 0, 1)); /* SVG filter for box shadow */
+    }
+
 </style>
 
 <div id="graph-container"></div>
