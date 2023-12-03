@@ -1,3 +1,14 @@
+<!-- HTML -->
+<div>
+    <button
+            role="switch"
+            aria-checked={checked}
+            aria-labelledby={`switch-${uniqueID}`}
+            on:click={handleClick}>
+    </button>
+</div>
+
+<!-- JS -->
 <script lang="ts">
     export let checked = false;
     const uniqueID = Math.floor(Math.random() * 100)
@@ -11,15 +22,7 @@
     }
 </script>
 
-<div>
-    <button
-            role="switch"
-            aria-checked={checked}
-            aria-labelledby={`switch-${uniqueID}`}
-            on:click={handleClick}>
-    </button>
-</div>
-
+<!-- CSS -->
 <style>
     :root {
         --accent-color: #ff9c5a;

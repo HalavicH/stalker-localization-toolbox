@@ -34,6 +34,11 @@ def reorganize_component(component_path):
     # Strip leading and trailing empty lines from the remaining content
     rest_section = content.strip('\n')
 
+    # Remove previous root comments if present
+    rest_section = rest_section.replace('<!-- HTML -->', '')
+    rest_section = rest_section.replace('<!-- JS -->', '')
+    rest_section = rest_section.replace('<!-- CSS -->', '')
+
     # Reorganize sections in the desired order
     reorganized_content = f"""<!-- HTML -->
 {rest_section.strip()}

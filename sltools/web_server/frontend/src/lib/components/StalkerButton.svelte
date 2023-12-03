@@ -1,12 +1,15 @@
+<!-- HTML -->
 <button id={id} on:click={onClick}>
     <slot></slot>
 </button>
 
+<!-- JS -->
 <script lang="ts">
     export let id: string;
     export let onClick: any;
 </script>
 
+<!-- CSS -->
 <style>
     /* STALKER button */
     button {

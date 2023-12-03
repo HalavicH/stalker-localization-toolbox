@@ -1,3 +1,7 @@
+<!-- HTML -->
+<div id="graph-container"></div>
+
+<!-- JS -->
 <script lang="ts">
     import {onMount} from 'svelte';
     import * as d3 from 'd3';
@@ -331,6 +335,7 @@
 
 </script>
 
+<!-- CSS -->
 <style>
     #graph-container {
         width: 100%;
@@ -373,5 +378,3 @@
     }
 
 </style>
-
-<div id="graph-container"></div>
